@@ -1,4 +1,4 @@
-# Tama2 移动APP
+# Tama2 移动APP （练手用，不完整）
 
 基于Flutter开发的移动端应用，仿抖音风格的视频分享平台。
 
@@ -77,7 +77,7 @@ flutter run -d ios
 - **主要接口**:
   - `POST /auth/login` - 用户登录
   - `POST /auth/register` - 用户注册
-  - `GET /articles/recommended2` - 获取推荐视频
+  - `GET /articles/recommendeds` - 获取推荐视频
   - `GET /my/getMyFollows` - 获取关注列表
 
 ## 功能说明
@@ -111,17 +111,10 @@ flutter run -d ios
 
 ## 注意事项
 
-1. 确保后端API服务正在运行（端口3003）
+1. 确保后端API服务正在运行
 2. 视频播放需要网络连接
 3. 首次运行可能需要较长时间下载依赖
 4. Android需要允许网络明文传输（开发环境）
-
-## 贡献指南
-
-1. Fork项目
-2. 创建功能分支
-3. 提交更改
-4. 发起Pull Request
 
 ## 许可证
 
