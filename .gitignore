@@ -1,0 +1,219 @@
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/flutter_assets/
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/Runner/Info.plist
+**/ios/Runner/Runner-Bridging-Header.h
+**/ios/Runner/Runner-Info.plist
+**/ios/Runner/Runner-Prefix.pch
+**/ios/Runner/Runner.entitlements
+**/ios/Runner/Runner.xcodeproj/project.xcworkspace/xcshareddata/
+**/ios/Runner/Runner.xcodeproj/xcuserdata/
+**/ios/Runner.xcworkspace/xcshareddata/
+**/ios/Runner.xcworkspace/xcuserdata/
+
+# Android related
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties
+*.jks
+
+# macOS related
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/macos/Flutter/ephemeral/
+**/macos/Runner/GeneratedPluginRegistrant.swift
+**/macos/Runner.xcworkspace/xcshareddata/
+**/macos/Runner.xcworkspace/xcuserdata/
+
+# Linux related
+**/linux/flutter/generated_plugin_registrant.cc
+**/linux/flutter/generated_plugin_registrant.h
+**/linux/flutter/generated_plugins.cmake
+
+# Windows related
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugin_registrant.h
+**/windows/flutter/generated_plugins.cmake
+
+# Web related
+**/web/firebase-messaging-sw.js
+**/web/VideoViewPlugin.js
+
+# Flutter/Dart/Pub related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Flutter build outputs
+**/build/
+**/dist/
+**/out/
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+*.config.dart
+
+# Flutter specific generated files
+**/ios/Runner/GeneratedPluginRegistrant.swift
+**/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+**/macos/Runner/GeneratedPluginRegistrant.swift
+**/linux/flutter/generated_plugin_registrant.cc
+**/linux/flutter/generated_plugin_registrant.h
+**/linux/flutter/generated_plugins.cmake
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugin_registrant.h
+**/windows/flutter/generated_plugins.cmake
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Test outputs
+test_runner.dart
+test_runner.html
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Flutter specific
+*.lock
+!pubspec.lock
+
+# Flutter environment files
+.env.flutter
+.flutter-plugins-dependencies
+.flutter-plugins
+
+# Flutter build cache
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/flutter_assets/
+
+# Flutter test files
+**/test/coverage/
+**/test/.coverage
+**/test/coverage.xml
+
+# Flutter web specific
+**/web/firebase-messaging-sw.js
+**/web/VideoViewPlugin.js
+**/web/manifest.json
+**/web/icons/
+
+# Flutter desktop specific
+**/windows/runner/
+**/macos/Runner/
+**/linux/runner/
+
+# Flutter mobile specific
+**/android/app/src/main/res/mipmap-*
+**/android/app/src/main/res/drawable-*
+**/ios/Runner/Assets.xcassets/
+**/ios/Runner/Base.lproj/
