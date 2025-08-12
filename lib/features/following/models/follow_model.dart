@@ -9,21 +9,18 @@ class FollowModel {
   final String nickname;
   final String? avatar;
   final String? bio;
-  @JsonKey(name: 'member_grade')
-  final int memberGrade;
-  @JsonKey(name: 'is_baba')
-  final int isBaba;
-  @JsonKey(name: 'created_at')
-  final String createdAt;
+  @JsonKey(name: 'space_bg')
+  final String? spaceBg;
+  @JsonKey(name: 'follow_time')
+  final String followTime;
 
   const FollowModel({
     required this.id,
     required this.nickname,
     this.avatar,
     this.bio,
-    this.memberGrade = 0,
-    this.isBaba = 0,
-    required this.createdAt,
+    this.spaceBg,
+    required this.followTime,
   });
 
   factory FollowModel.fromJson(Map<String, dynamic> json) => _$FollowModelFromJson(json);
@@ -33,7 +30,7 @@ class FollowModel {
     if (avatar != null && avatar!.isNotEmpty) {
       return avatar!.startsWith('http') 
           ? avatar! 
-          : '${AppConstants.baseUrl}/api/media/img/$avatar';
+          : '${AppConstants.baseUrl}/api/image/$avatar';
     }
     return '';
   }

@@ -18,6 +18,7 @@ class FollowingProvider extends ChangeNotifier {
   String? get error => _error;
 
   Future<void> loadMyFollows({bool refresh = false}) async {
+    print('🔍 FollowingProvider - loadMyFollows 方法开始执行');
     if (_isLoading) return;
 
     try {
@@ -30,31 +31,54 @@ class FollowingProvider extends ChangeNotifier {
       _setLoading(true);
       _clearError();
 
+      print('🔍 FollowingProvider - 开始加载关注用户，页码: $_currentPage');
+
       final response = await FollowingService.getMyFollows(
         page: _currentPage,
         limit: 20,
       );
+
+      print('🔍 FollowingProvider - API响应: $response');
 
       if (response['status'] == 'SUCCESS') {
         // 处理分页数据结构
         dynamic data = response['data'];
         List<dynamic> followData = [];
         
+        print('🔍 FollowingProvider - 原始data: $data');
+        print('🔍 FollowingProvider - data类型: ${data.runtimeType}');
+        
         if (data is Map<String, dynamic>) {
-          // 如果data是Map，尝试获取items字段
-          followData = data['items'] ?? data['data'] ?? [];
+          // 如果data是Map，尝试获取items字段或嵌套的data字段
+          followData = data['data'] ?? data['items'] ?? [];
+          print('🔍 FollowingProvider - 从Map中提取的followData: $followData');
         } else if (data is List) {
           // 如果data直接是List
           followData = data;
+          print('🔍 FollowingProvider - data直接是List: $followData');
         } else {
           print('🔍 FollowingProvider - 未知的关注数据结构: ${data.runtimeType}');
           followData = [];
         }
         
-        print('🔍 FollowingProvider - 解析到的关注数据: ${followData.length} 条');
+        print('🔍 FollowingProvider - 最终解析到的关注数据: ${followData.length} 条');
+        
+        if (followData.isNotEmpty) {
+          print('🔍 FollowingProvider - 第一条数据示例: ${followData.first}');
+        }
         
         final List<FollowModel> newFollows = followData
-            .map((json) => FollowModel.fromJson(json))
+            .map((json) {
+              try {
+                final follow = FollowModel.fromJson(json);
+                print('🔍 FollowingProvider - 成功解析用户: ${follow.nickname}');
+                return follow;
+              } catch (e) {
+                print('❌ FollowingProvider - 解析用户失败: $e');
+                print('❌ FollowingProvider - 失败的数据: $json');
+                rethrow;
+              }
+            })
             .toList();
 
         if (refresh) {
@@ -65,13 +89,18 @@ class FollowingProvider extends ChangeNotifier {
 
         _currentPage++;
         _hasMore = newFollows.length >= 20;
+        
+        print('🔍 FollowingProvider - 加载完成，当前关注用户总数: ${_follows.length}');
       } else {
+        print('❌ FollowingProvider - API返回失败状态: ${response['message']}');
         _setError(response['message'] ?? '加载失败');
       }
     } catch (e) {
+      print('❌ FollowingProvider - 加载关注用户时发生错误: $e');
       _setError('网络错误：$e');
     } finally {
       _setLoading(false);
+      print('🔍 FollowingProvider - 加载状态设置为false');
     }
   }
 
@@ -105,11 +134,11 @@ class FollowingProvider extends ChangeNotifier {
           // 如果data直接是List
           videoData = data;
         } else {
-          print('🔍 FollowingProvider - 未知的数据结构: ${data.runtimeType}');
+          // print('🔍 FollowingProvider - 未知的数据结构: ${data.runtimeType}');
           videoData = [];
         }
         
-        print('🔍 FollowingProvider - 解析到的视频数据: ${videoData.length} 条');
+        // print('🔍 FollowingProvider - 解析到的视频数据: ${videoData.length} 条');
         
         final List<VideoModel> newVideos = videoData
             .map((json) => VideoModel.fromJsonSafe(json)) // 使用安全的解析方法

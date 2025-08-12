@@ -4,7 +4,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../providers/following_provider.dart';
 import '../../../shared/widgets/video_grid_widget.dart';
-import '../widgets/following_users_widget.dart';
+import '../../../shared/widgets/user_card.dart';
 
 class FollowingScreen extends StatefulWidget {
   const FollowingScreen({super.key});
@@ -16,7 +16,8 @@ class FollowingScreen extends StatefulWidget {
 class _FollowingScreenState extends State<FollowingScreen>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late TabController _tabController;
-  final RefreshController _refreshController = RefreshController();
+  final RefreshController _videosRefreshController = RefreshController();
+  final RefreshController _usersRefreshController = RefreshController();
 
   @override
   bool get wantKeepAlive => true;
@@ -24,45 +25,28 @@ class _FollowingScreenState extends State<FollowingScreen>
   @override
   void initState() {
     super.initState();
+    print('🔍 FollowingScreen - initState 被调用');
     _tabController = TabController(length: 2, vsync: this);
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('🔍 FollowingScreen - addPostFrameCallback 被调用');
       final followingProvider = context.read<FollowingProvider>();
+      print('🔍 FollowingScreen - 获取到 FollowingProvider: ${followingProvider.runtimeType}');
+      
+      // 只加载当前激活tab的数据，避免loading状态冲突
+      print('🔍 FollowingScreen - 开始调用 loadFollowingVideos');
       followingProvider.loadFollowingVideos(refresh: true);
-      followingProvider.loadMyFollows(refresh: true);
+      
+      print('🔍 FollowingScreen - loadFollowingVideos 调用完成');
     });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
-    _refreshController.dispose();
+    _videosRefreshController.dispose();
+    _usersRefreshController.dispose();
     super.dispose();
-  }
-
-  Future<void> _onRefresh() async {
-    final followingProvider = context.read<FollowingProvider>();
-    if (_tabController.index == 0) {
-      await followingProvider.refreshFollowingVideos();
-    } else {
-      await followingProvider.refreshFollows();
-    }
-    _refreshController.refreshCompleted();
-  }
-
-  Future<void> _onLoading() async {
-    final followingProvider = context.read<FollowingProvider>();
-    if (_tabController.index == 0) {
-      await followingProvider.loadFollowingVideos(refresh: false);
-    } else {
-      await followingProvider.loadMyFollows(refresh: false);
-    }
-    
-    if (followingProvider.hasMore) {
-      _refreshController.loadComplete();
-    } else {
-      _refreshController.loadNoData();
-    }
   }
 
   @override
@@ -89,8 +73,17 @@ class _FollowingScreenState extends State<FollowingScreen>
                 Tab(text: '用户'),
               ],
               onTap: (index) {
+                print('🔍 FollowingScreen - Tab切换到索引: $index');
                 // 切换tab时重置刷新控制器
-                _refreshController.resetNoData();
+                _videosRefreshController.resetNoData();
+                _usersRefreshController.resetNoData();
+                
+                // 如果切换到用户tab，加载用户数据
+                if (index == 1) {
+                  final followingProvider = context.read<FollowingProvider>();
+                  print('🔍 FollowingScreen - 切换到用户tab，开始加载用户数据');
+                  followingProvider.loadMyFollows(refresh: true);
+                }
               },
             ),
           ),
@@ -189,24 +182,24 @@ class _FollowingScreenState extends State<FollowingScreen>
 
         return VideoGridWidget(
           videos: followingProvider.followingVideos,
-          refreshController: _refreshController,
+          refreshController: _videosRefreshController,
           onRefresh: () async {
             await followingProvider.refreshFollowingVideos();
-            _refreshController.refreshCompleted();
+            _videosRefreshController.refreshCompleted();
           },
           onLoading: () async {
             await followingProvider.loadFollowingVideos(refresh: false);
             if (followingProvider.hasMore) {
-              _refreshController.loadComplete();
+              _videosRefreshController.loadComplete();
             } else {
-              _refreshController.loadNoData();
+              _videosRefreshController.loadNoData();
             }
           },
           hasMore: followingProvider.hasMore,
           isLoading: followingProvider.isLoading,
           onVideoTap: (video) {
             // TODO: 处理视频点击，跳转到视频播放页面
-            print('点击视频: ${video.title}');
+            // print('点击视频: ${video.title}');
           },
         );
       },
@@ -214,14 +207,100 @@ class _FollowingScreenState extends State<FollowingScreen>
   }
 
   Widget _buildFollowingUsersTab() {
+    print('🔍 FollowingScreen - _buildFollowingUsersTab 被调用');
     return Consumer<FollowingProvider>(
       builder: (context, followingProvider, child) {
+        print('🔍 FollowingScreen - Consumer builder 被调用，follows数量: ${followingProvider.follows.length}');
+        print('🔍 FollowingScreen - isLoading: ${followingProvider.isLoading}, error: ${followingProvider.error}');
+        
+        if (followingProvider.isLoading && followingProvider.follows.isEmpty) {
+          return const Center(
+            child: CircularProgressIndicator(color: Colors.blue),
+          );
+        }
+
+        if (followingProvider.error != null && followingProvider.follows.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64,
+                  color: Colors.grey[600],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  followingProvider.error!,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    followingProvider.loadMyFollows(refresh: true);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('重试'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (followingProvider.follows.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.people_outline,
+                  size: 64,
+                  color: Colors.grey[600],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  '暂无关注的用户',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '去关注一些有趣的用户吧',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
         return SmartRefresher(
-          controller: _refreshController,
+          controller: _usersRefreshController,
           enablePullDown: true,
           enablePullUp: true,
-          onRefresh: _onRefresh,
-          onLoading: _onLoading,
+          onRefresh: () async {
+            await followingProvider.refreshFollows();
+            _usersRefreshController.refreshCompleted();
+          },
+          onLoading: () async {
+            await followingProvider.loadMyFollows(refresh: false);
+            if (followingProvider.hasMore) {
+              _usersRefreshController.loadComplete();
+            } else {
+              _usersRefreshController.loadNoData();
+            }
+          },
           header: const WaterDropHeader(
             waterDropColor: Colors.blue,
             complete: Text('刷新完成', style: TextStyle(color: Colors.white)),
@@ -231,7 +310,7 @@ class _FollowingScreenState extends State<FollowingScreen>
             builder: (context, mode) {
               Widget body;
               if (mode == LoadStatus.idle) {
-                body = const Text('上拉加载更多', style: TextStyle(color: Colors.grey));
+                body = const Text('继续上拉加载更多', style: TextStyle(color: Colors.grey));
               } else if (mode == LoadStatus.loading) {
                 body = const CircularProgressIndicator(color: Colors.blue);
               } else if (mode == LoadStatus.failed) {
@@ -247,7 +326,27 @@ class _FollowingScreenState extends State<FollowingScreen>
               );
             },
           ),
-          child: FollowingUsersWidget(follows: followingProvider.follows),
+          child: ListView.builder(
+            itemCount: followingProvider.follows.length,
+            itemBuilder: (context, index) {
+              final follow = followingProvider.follows[index];
+              return UserCard(
+                userId: follow.id,
+                nickname: follow.nickname,
+                avatar: follow.avatar,
+                bio: follow.bio,
+                isFollowing: true, // 在关注列表中，默认都是已关注状态
+                onFollowTap: () async {
+                  // 处理取消关注
+                  await followingProvider.unfollowUser(follow.id);
+                },
+                onCardTap: () {
+                  // TODO: 跳转到用户详情页面
+                  print('点击用户: ${follow.nickname}');
+                },
+              );
+            },
+          ),
         );
       },
     );

@@ -6,12 +6,18 @@ class FollowingService {
     int limit = 20,
   }) async {
     try {
-      print('🔍 FollowingService - 调用 getMyFollows API: /my/getMyFollows');
-      final response = await DioClient.instance.get('/my/getMyFollows', queryParameters: {
-        'page': page,
-        'page_size': limit, // 修复：使用page_size而不是limit
-      });
-      print('🔍 FollowingService - getMyFollows 响应: ${response.data}');
+      final url = '/my/followings';
+      final params = {'page': page, 'size': limit};
+      
+      print('🔍 FollowingService - 调用 getMyFollows API');
+      print('🔍 FollowingService - URL: $url');
+      print('🔍 FollowingService - 参数: $params');
+      
+      final response = await DioClient.instance.get(url, queryParameters: params);
+      
+      print('🔍 FollowingService - 响应状态码: ${response.statusCode}');
+      print('🔍 FollowingService - 响应数据: ${response.data}');
+      
       return response.data;
     } catch (e) {
       print('❌ FollowingService - getMyFollows 错误: $e');
@@ -24,12 +30,12 @@ class FollowingService {
     int limit = 20,
   }) async {
     try {
-      print('🔍 FollowingService - 调用 getFollowingArticles API: /articles/following');
+      // print('🔍 FollowingService - 调用 getFollowingArticles API: /articles/following');
       final response = await DioClient.instance.get('/articles/following', queryParameters: {
         'page': page,
         'page_size': limit, // 修复：使用page_size而不是limit
       });
-      print('🔍 FollowingService - getFollowingArticles 响应: ${response.data}');
+      // print('🔍 FollowingService - getFollowingArticles 响应: ${response.data}');
       return response.data;
     } catch (e) {
       print('❌ FollowingService - getFollowingArticles 错误: $e');
