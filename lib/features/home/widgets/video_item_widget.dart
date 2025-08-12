@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -25,13 +24,10 @@ class VideoItemWidget extends StatefulWidget {
 
 class _VideoItemWidgetState extends State<VideoItemWidget> {
   bool _showInfo = true;
-  bool _isFollowing = false; // 关注状态
-
 
   @override
   void initState() {
     super.initState();
-    _isFollowing = widget.video.isFollowing ?? false;
     
     // 打印调试信息
     if (kIsWeb) {
@@ -54,13 +50,6 @@ class _VideoItemWidgetState extends State<VideoItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // 获取屏幕尺寸
-    final screenSize = MediaQuery.of(context).size;
-    final screenHeight = screenSize.height;
-    
-    // 重新计算底部信息区域的高度
-    final bottomInfoHeight = screenHeight * 0.25; // 减少到25%
-    
     return Container(
       color: Colors.black,
       child: Stack(
@@ -74,143 +63,91 @@ class _VideoItemWidgetState extends State<VideoItemWidget> {
             ),
           ),
 
-          // 右侧用户头像和关注状态
-          Positioned(
-            right: 16,
-            bottom: bottomInfoHeight + 20,
-            child: Column(
-              children: [
-                // 用户头像
-                Container(
-                  width: 68,
-                  height: 68,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: CircleAvatar(
-                    radius: 23,
-                    backgroundColor: Colors.grey[800],
-                    backgroundImage: widget.video.avatar != null
-                        ? CachedNetworkImageProvider('http://localhost:5200/api/media/img/${widget.video.avatar}?w=68&h=68')
-                        : null,
-                    child: widget.video.avatar == null
-                        ? const Icon(Icons.person, color: Colors.white, size: 24)
-                        : null,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // 关注状态指示器
-                Transform.translate(
-                  offset: const Offset(0, -8),
-                  child: Container(
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _isFollowing ? Colors.green : Colors.red,
-                    ),
-                    child: Icon(
-                      _isFollowing ? Icons.check : Icons.add,
-                      color: Colors.white,
-                      size: 10,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+
 
           // 底部信息区域
           if (_showInfo)
             Positioned(
-              left: 16,
+              left: 5,
               right: 100,
               bottom: 20,
-              height: bottomInfoHeight,
-              child: AnimatedOpacity(
-                opacity: _showInfo ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 300),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.7),
-                        Colors.black.withValues(alpha: 0.9),
-                      ],
-                      stops: const [0.0, 0.5, 1.0],
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // 用户昵称和时间
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.video.nickname ?? '未知用户',
+              child: GestureDetector(
+                onTap: _showContentOffcanvas,
+                child: AnimatedOpacity(
+                  opacity: _showInfo ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: Container(
+                    // decoration: BoxDecoration(
+                    //   gradient: LinearGradient(
+                    //     begin: Alignment.topCenter,
+                    //     end: Alignment.bottomCenter,
+                    //     colors: [
+                    //       Colors.transparent,
+                    //       Colors.black.withValues(alpha: 0.7),
+                    //       Colors.black.withValues(alpha: 0.9),
+                    //     ],
+                    //     stops: const [0.0, 0.5, 1.0],
+                    //   ),
+                    // ),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // 第一行：作者名和时间
+                        Row(
+                          children: [
+                            Text(
+                              '@${widget.video.nickname ?? '未知用户'}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              _formatTime(widget.video.createdAt),
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.5),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        // 第二行：视频描述（标题+标签）
+                        RichText(
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                            children: [
+                              // 视频标题
+                              TextSpan(
+                                text: widget.video.title,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              // 标签
+                              if (widget.video.tagList.isNotEmpty) ...[
+                                const TextSpan(text: ' '),
+                                ...widget.video.tagList.map((tag) => TextSpan(
+                                  text: '#$tag ',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
-                                ),
-                                Text(
-                                  _formatTime(widget.video.createdAt),
-                                  style: TextStyle(
-                                    color: Colors.grey[400],
-                                    fontSize: 12,
-                                  ),
-                                ),
+                                )),
                               ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      // 视频标题
-                      Text(
-                        widget.video.title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
-                      // 点击查看完整内容的提示
-                      GestureDetector(
-                        onTap: _showContentOffcanvas,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Text(
-                            '点击查看完整内容',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -218,8 +155,8 @@ class _VideoItemWidgetState extends State<VideoItemWidget> {
 
           // 右侧操作按钮
           Positioned(
-            right: 16,
-            bottom: bottomInfoHeight + 100,
+            right: 10,
+            bottom: 20,
             child: VideoActionButtons(
               video: widget.video,
               onLike: () async {
