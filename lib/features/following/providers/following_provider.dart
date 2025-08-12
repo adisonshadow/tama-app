@@ -36,7 +36,23 @@ class FollowingProvider extends ChangeNotifier {
       );
 
       if (response['status'] == 'SUCCESS') {
-        final List<dynamic> followData = response['data'] ?? [];
+        // 处理分页数据结构
+        dynamic data = response['data'];
+        List<dynamic> followData = [];
+        
+        if (data is Map<String, dynamic>) {
+          // 如果data是Map，尝试获取items字段
+          followData = data['items'] ?? data['data'] ?? [];
+        } else if (data is List) {
+          // 如果data直接是List
+          followData = data;
+        } else {
+          print('🔍 FollowingProvider - 未知的关注数据结构: ${data.runtimeType}');
+          followData = [];
+        }
+        
+        print('🔍 FollowingProvider - 解析到的关注数据: ${followData.length} 条');
+        
         final List<FollowModel> newFollows = followData
             .map((json) => FollowModel.fromJson(json))
             .toList();
@@ -78,9 +94,25 @@ class FollowingProvider extends ChangeNotifier {
       );
 
       if (response['status'] == 'SUCCESS') {
-        final List<dynamic> videoData = response['data'] ?? [];
+        // 处理分页数据结构
+        dynamic data = response['data'];
+        List<dynamic> videoData = [];
+        
+        if (data is Map<String, dynamic>) {
+          // 如果data是Map，尝试获取items字段
+          videoData = data['items'] ?? data['data'] ?? [];
+        } else if (data is List) {
+          // 如果data直接是List
+          videoData = data;
+        } else {
+          print('🔍 FollowingProvider - 未知的数据结构: ${data.runtimeType}');
+          videoData = [];
+        }
+        
+        print('🔍 FollowingProvider - 解析到的视频数据: ${videoData.length} 条');
+        
         final List<VideoModel> newVideos = videoData
-            .map((json) => VideoModel.fromJson(json))
+            .map((json) => VideoModel.fromJsonSafe(json)) // 使用安全的解析方法
             .toList();
 
         if (refresh) {
