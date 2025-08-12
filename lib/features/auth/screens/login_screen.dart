@@ -68,11 +68,20 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizedBox(height: 60),
               
-              // Logo或标题
+              // Logo
+              const Image(
+                image: AssetImage('images/logo.png'),
+                width: 80,
+                height: 80,
+              ),
+              
+              const SizedBox(height: 20),
+              
+              // 标题
               const Text(
-                'TAMA',
+                'TAMALOOK',
                 style: TextStyle(
-                  fontSize: 48,
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),

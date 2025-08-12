@@ -51,7 +51,7 @@ class _VideoItemWidgetState extends State<VideoItemWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black,
+      color: Colors.transparent, // 改为透明背景，让模糊背景层显示
       child: Stack(
         children: [
           // 视频播放器

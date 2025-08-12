@@ -125,15 +125,30 @@ class VideoModel {
   }
 
   String get thumbnailUrl {
-    // 参考web端的逻辑：根据cover_type和cover_url生成封面图
+    // 基于web项目的实现逻辑
     if (coverType == 1 && coverUrl != null && coverUrl!.isNotEmpty) {
-      // 如果有自定义封面图
-      return '${AppConstants.baseUrl}/api/media/img/$coverUrl';
-    } else if (videoHash != null) {
-      // 否则根据视频hash生成封面图
-      return '${AppConstants.baseUrl}/api/media/getCover?hash=$videoHash&index=1';
+      // 如果有自定义封面图，使用 /api/image/ 接口
+      return '${AppConstants.baseUrl}/api/image/$coverUrl';
+    } else if (videoHash != null && videoHash!.isNotEmpty) {
+      // 否则根据视频hash生成封面图，使用 /api/media/getCover 接口
+      const coverIndex = 1; // 默认使用第1帧作为封面
+      return '${AppConstants.baseUrl}/api/media/getCover?hash=$videoHash&index=$coverIndex';
     }
     return '';
+  }
+
+  /// 获取带resize参数的封面图URL，完全匹配web项目的实现
+  String getCoverByRecord([String? resize]) {
+    var cover = '';
+    resize = resize ?? '';
+    
+    if (coverType == 1 || (coverUrl != null && coverUrl!.isNotEmpty)) {
+      cover = '${AppConstants.baseUrl}/api/image/$coverUrl?$resize';
+    } else if (videoHash != null && videoHash!.isNotEmpty) {
+      const coverIndex = 1; // 对应web项目中的 selected_screen_index || 1
+      cover = '${AppConstants.baseUrl}/api/media/getCover?hash=$videoHash&index=$coverIndex&$resize';
+    }
+    return cover;
   }
 
   List<String> get tagList {

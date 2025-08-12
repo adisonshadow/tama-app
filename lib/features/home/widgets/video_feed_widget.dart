@@ -5,10 +5,12 @@ import 'video_item_widget.dart';
 
 class VideoFeedWidget extends StatefulWidget {
   final List<VideoModel> videos;
+  final Function(String?)? onVideoChanged; // 添加回调参数
 
   const VideoFeedWidget({
     super.key,
     required this.videos,
+    this.onVideoChanged,
   });
 
   @override
@@ -71,6 +73,17 @@ class _VideoFeedWidgetState extends State<VideoFeedWidget> {
         setState(() {
           _currentIndex = index;
         });
+        
+        // 调用回调，传递当前视频的封面URL
+        if (widget.onVideoChanged != null) {
+          final currentVideo = widget.videos[index];
+          // 使用新的getCoverByRecord方法，支持resize参数
+          final coverUrl = currentVideo.getCoverByRecord('w=360&h=202'); // 使用web项目中的默认尺寸
+          print('🔍 VideoFeedWidget - 视频切换，封面URL: $coverUrl'); // 添加调试信息
+          if (coverUrl.isNotEmpty) {
+            widget.onVideoChanged!(coverUrl);
+          }
+        }
       },
       itemCount: widget.videos.length,
       itemBuilder: (context, index) {
