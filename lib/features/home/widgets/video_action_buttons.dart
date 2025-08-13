@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../../shared/widgets/follow_button.dart';
 import '../models/video_model.dart';
 
 class VideoActionButtons extends StatefulWidget {
@@ -31,7 +32,6 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
   bool _isStarred = false;
   bool _isLiking = false;
   bool _isStarring = false;
-  bool _isFollowing = false; // 新增：关注状态
   
   late AnimationController _likeAnimationController;
   late AnimationController _starAnimationController;
@@ -51,7 +51,6 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
     // 初始化状态
     _isLiked = widget.video.isLiked ?? false;
     _isStarred = widget.video.isStarred ?? false;
-    _isFollowing = widget.video.isFollowing ?? false; // 初始化关注状态
     
     // 打印调试信息
     if (kIsWeb) {
@@ -60,7 +59,6 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
       debugPrint('🔍 VideoActionButtons - Is Starred: ${widget.video.isStarred}');
       debugPrint('🔍 VideoActionButtons - Liked Count: ${widget.video.likedCount}');
       debugPrint('🔍 VideoActionButtons - Starred Count: ${widget.video.starredCount}');
-      debugPrint('🔍 VideoActionButtons - Is Following: ${widget.video.isFollowing}');
     }
   }
 
@@ -186,24 +184,15 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
             // 关注按钮 - 在头像下方，上半部分与头像重叠50%
             Positioned(
               bottom: 0,
-              child: GestureDetector(
-                onTap: _handleFollow,
-                child: Container(
-                  width: 26,
-                  height: 26,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _isFollowing ? Colors.white : Colors.red,
-                    border: Border.all(color: Colors.white, width: 1), // 添加白色边框增加视觉效果
-                  ),
-                  child: Center(
-                    child: Icon(
-                      _isFollowing ? Icons.check : Icons.add,
-                      color: _isFollowing ? Colors.grey[700] : Colors.white,
-                      size: 14,
-                    ),
-                  ),
-                ),
+              child: FollowButton(
+                userId: widget.video.userId,
+                mode: FollowButtonMode.icon, // 使用圆形图标模式
+                width: 26,
+                height: 26,
+                fontSize: 10,
+                onFollowChanged: () {
+                  print('关注状态已改变: ${widget.video.nickname}');
+                },
               ),
             ),
           ],
@@ -296,36 +285,6 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
       }
     }
   }
-
-  void _handleFollow() {
-    setState(() {
-      _isFollowing = !_isFollowing;
-    });
-    
-    if (_isFollowing) {
-      // 显示关注成功提示
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('已关注'),
-          duration: Duration(seconds: 1),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      // 显示取消关注提示
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('已取消关注'),
-          duration: Duration(seconds: 1),
-          backgroundColor: Colors.orange,
-        ),
-      );
-    }
-    
-    // TODO: 调用关注/取消关注的API
-  }
-
-
 
   String _formatCount(int count) {
     if (count >= 1000000) {

@@ -9,6 +9,7 @@ class VideoCard extends StatelessWidget {
   final VoidCallback? onTap;
   final double? width;
   final double? height;
+  final bool showUserInfo;
 
   const VideoCard({
     super.key,
@@ -16,6 +17,7 @@ class VideoCard extends StatelessWidget {
     this.onTap,
     this.width,
     this.height,
+    this.showUserInfo = true,
   });
 
   @override
@@ -122,100 +124,101 @@ class VideoCard extends StatelessWidget {
               ),
             ),
             
-            // 行3: 作者信息 + 点赞信息
-            Container(
-              height: 40, // 固定高度，避免溢出
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-              child: Row(
-                children: [
-                  // 左边：作者头像 + 昵称
-                  Expanded(
-                    child: Row(
+            // 行3: 左边 作者头像（宽高16）、作者昵称 右边：点赞icon + 点赞数量
+            if (showUserInfo)
+              Container(
+                height: 40, // 固定高度，避免溢出
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+                child: Row(
+                  children: [
+                    // 左边：作者头像 + 昵称
+                    Expanded(
+                      child: Row(
+                        children: [
+                          // 作者头像
+                          Container(
+                            width: 16,
+                            height: 16,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 1,
+                              ),
+                            ),
+                            child: ClipOval(
+                              child: video.avatar != null && video.avatar!.isNotEmpty
+                                  ? CachedNetworkImage(
+                                      imageUrl: '${AppConstants.baseUrl}/api/image/${video.avatar}',
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Container(
+                                        color: Colors.grey[600],
+                                        child: const Icon(
+                                          Icons.person,
+                                          color: Colors.white,
+                                          size: 10,
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) => Container(
+                                        color: Colors.grey[600],
+                                        child: const Icon(
+                                          Icons.person,
+                                          color: Colors.white,
+                                          size: 10,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      color: Colors.grey[600],
+                                      child: const Icon(
+                                        Icons.person,
+                                        color: Colors.white,
+                                        size: 10,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          // 作者昵称
+                          Expanded(
+                            child: Text(
+                              video.nickname ?? '未知用户',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    // 右边：点赞icon + 数量
+                    Row(
                       children: [
-                        // 作者头像
-                        Container(
-                          width: 16,
-                          height: 16,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: video.avatar != null && video.avatar!.isNotEmpty
-                                ? CachedNetworkImage(
-                                    imageUrl: '${AppConstants.baseUrl}/api/image/${video.avatar}',
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Container(
-                                      color: Colors.grey[600],
-                                      child: const Icon(
-                                        Icons.person,
-                                        color: Colors.white,
-                                        size: 10,
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) => Container(
-                                      color: Colors.grey[600],
-                                      child: const Icon(
-                                        Icons.person,
-                                        color: Colors.white,
-                                        size: 10,
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    color: Colors.grey[600],
-                                    child: const Icon(
-                                      Icons.person,
-                                      color: Colors.white,
-                                      size: 10,
-                                    ),
-                                  ),
-                          ),
+                        Icon(
+                          video.isLiked == true ? Icons.favorite : Icons.favorite_border,
+                          color: video.isLiked == true ? Colors.red : Colors.grey[400],
+                          size: 16,
                         ),
-                        const SizedBox(width: 6),
-                        // 作者昵称
-                        Expanded(
-                          child: Text(
-                            video.nickname ?? '未知用户',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                        const SizedBox(width: 4),
+                        Text(
+                          '${video.likedCount}',
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  
-                  // 右边：点赞icon + 数量
-                  Row(
-                    children: [
-                      Icon(
-                        video.isLiked == true ? Icons.favorite : Icons.favorite_border,
-                        color: video.isLiked == true ? Colors.red : Colors.grey[400],
-                        size: 16,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${video.likedCount}',
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),

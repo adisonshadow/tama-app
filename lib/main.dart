@@ -6,6 +6,7 @@ import 'core/network/dio_client.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/home/providers/video_provider.dart';
 import 'features/following/providers/following_provider.dart';
+import 'shared/providers/follow_provider.dart';
 import 'shared/services/storage_service.dart';
 import 'shared/services/video_token_manager.dart';
 import 'app_router.dart';
@@ -49,6 +50,7 @@ class Tama2App extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => VideoProvider()),
         ChangeNotifierProvider(create: (_) => FollowingProvider()),
+        ChangeNotifierProvider(create: (_) => FollowProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {

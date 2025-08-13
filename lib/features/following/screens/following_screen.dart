@@ -5,6 +5,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../providers/following_provider.dart';
 import '../../../shared/widgets/video_grid_widget.dart';
 import '../../../shared/widgets/user_card.dart';
+import '../../user_space/screens/user_space_screen.dart';
 
 class FollowingScreen extends StatefulWidget {
   const FollowingScreen({super.key});
@@ -341,8 +342,26 @@ class _FollowingScreenState extends State<FollowingScreen>
                   await followingProvider.unfollowUser(follow.id);
                 },
                 onCardTap: () {
-                  // TODO: 跳转到用户详情页面
-                  print('点击用户: ${follow.nickname}');
+                  // 打印调试信息
+                  print('跳转到用户空间页面:');
+                  print('  userId: ${follow.id}');
+                  print('  nickname: ${follow.nickname}');
+                  print('  avatar: ${follow.avatar}');
+                  print('  bio: ${follow.bio}');
+                  print('  spaceBg: ${follow.spaceBg}');
+                  
+                  // 跳转到用户空间页面
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => UserSpaceScreen(
+                        userId: follow.id,
+                        nickname: follow.nickname,
+                        avatar: follow.avatar ?? 'default_avatar.png', // 提供默认头像
+                        bio: follow.bio,
+                        spaceBg: follow.spaceBg ?? '', // 使用实际的spaceBg
+                      ),
+                    ),
+                  );
                 },
               );
             },

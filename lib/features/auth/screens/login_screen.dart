@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               
               // Logo
               const Image(
-                image: AssetImage('images/logo.png'),
+                image: AssetImage('assets/images/logo.png'),
                 width: 80,
                 height: 80,
               ),

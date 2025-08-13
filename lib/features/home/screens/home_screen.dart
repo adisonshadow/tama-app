@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
             const Row(
               children: [
                 Image(
-                  image: AssetImage('images/logo.png'),
+                  image: AssetImage('assets/images/logo.png'),
                   width: 28,
                   height: 28,
                 ),
