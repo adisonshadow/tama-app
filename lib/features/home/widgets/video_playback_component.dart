@@ -8,6 +8,7 @@ import 'dart:ui';
 import '../../../core/constants/app_constants.dart';
 import '../models/video_model.dart';
 import '../providers/video_provider.dart';
+import '../screens/tag_videos_screen.dart';
 import 'video_player_widget.dart';
 import 'video_action_buttons.dart';
 
@@ -114,26 +115,35 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
                       ),
                       const SizedBox(height: 16),
                       // 标签
-                      if (widget.video.tagList.isNotEmpty) ...[
+                      if (widget.video.tags != null && widget.video.tags!.isNotEmpty) ...[
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
-                          children: widget.video.tagList.map((tag) => Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.3),
-                                width: 1,
+                          children: widget.video.tagList.map((tag) => GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => TagVideosScreen(tagName: tag),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.3),
+                                  width: 1,
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              '#$tag',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                              child: Text(
+                                '#$tag',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           )).toList(),

@@ -93,4 +93,26 @@ class VideoService {
       rethrow;
     }
   }
+
+  /// 根据标签获取推荐视频
+  /// 接口: GET /api/my/articles/getRecommendsByTag/{tagname}
+  /// 功能: 获取指定标签下的推荐视频列表
+  static Future<Map<String, dynamic>> getVideosByTag({
+    required String tagName,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
+    try {
+      final response = await DioClient.instance.get(
+        '/my/articles/getRecommendsByTag/$tagName',
+        queryParameters: {
+          'page': page,
+          'page_size': pageSize,
+        },
+      );
+      return DioClient.handleApiResponse(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
