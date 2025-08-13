@@ -6,7 +6,7 @@ import 'dart:ui';
 
 import '../providers/video_provider.dart';
 import '../widgets/video_feed_widget.dart';
-import '../../../shared/utils/error_utils.dart';
+import '../../../shared/widgets/search_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -125,12 +125,9 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 IconButton(
                   icon: const Icon(Icons.search, color: Colors.white),
                   onPressed: () {
-                    // TODO: 实现搜索功能
-                    ErrorUtils.showWarning(
-                      context,
-                      '搜索功能暂未开放',
-                    );
+                    SearchManager.showSearch(context);
                   },
+                  tooltip: '搜索视频',
                 ),
                 // Consumer<AuthProvider>(
                 //   builder: (context, authProvider, child) {

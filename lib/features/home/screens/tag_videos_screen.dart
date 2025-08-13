@@ -8,6 +8,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../models/video_model.dart';
 import '../services/video_service.dart';
 import '../../../shared/widgets/video_card.dart';
+import '../../../shared/widgets/search_manager.dart';
 // import '../../../shared/widgets/main_navigation.dart';
 
 class TagVideosScreen extends StatefulWidget {
@@ -194,10 +195,7 @@ class _TagVideosScreenState extends State<TagVideosScreen> {
           // 右侧：搜索按钮
           GestureDetector(
             onTap: () {
-              // TODO: 实现搜索功能
-              if (kIsWeb) {
-                debugPrint('🔍 搜索按钮被点击');
-              }
+              SearchManager.showSearch(context);
             },
             child: Container(
               width: 40,
