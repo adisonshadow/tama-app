@@ -70,22 +70,24 @@ class VideoService {
     }
   }
 
+  /// 切换视频点赞状态
+  /// 接口: GET /api/my/toggleLikeArticle/{articleId}
+  /// 功能: 切换点赞状态
   static Future<Map<String, dynamic>> likeVideo(String videoId) async {
     try {
-      final response = await DioClient.instance.post('/my/like', data: {
-        'article_id': videoId,
-      });
+      final response = await DioClient.instance.get('/my/toggleLikeArticle/$videoId');
       return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
   }
 
+  /// 切换视频收藏状态
+  /// 接口: GET /api/my/toggleStarArticle/{articleId}
+  /// 功能: 切换收藏状态
   static Future<Map<String, dynamic>> starVideo(String videoId) async {
     try {
-      final response = await DioClient.instance.post('/my/star', data: {
-        'article_id': videoId,
-      });
+      final response = await DioClient.instance.get('/my/toggleStarArticle/$videoId');
       return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;

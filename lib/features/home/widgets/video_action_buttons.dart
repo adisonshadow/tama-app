@@ -13,6 +13,7 @@ class VideoActionButtons extends StatefulWidget {
   final VoidCallback onStar;
   final VoidCallback onShare;
   final VoidCallback onComment;
+  final VoidCallback? onAvatarTap; // 新增：头像点击回调
 
   const VideoActionButtons({
     super.key,
@@ -21,6 +22,7 @@ class VideoActionButtons extends StatefulWidget {
     required this.onStar,
     required this.onShare,
     required this.onComment,
+    this.onAvatarTap, // 新增：头像点击回调
   });
 
   @override
@@ -153,9 +155,7 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
 
   Widget _buildAuthorAvatar() {
     return GestureDetector(
-      onTap: () {
-        // TODO: 处理作者头像点击事件
-      },
+      onTap: widget.onAvatarTap,
       child: Container(
         padding: const EdgeInsets.all(8),
         // 增加容器高度，让关注按钮能够完全显示

@@ -1,3 +1,4 @@
+// APP 主导航栏
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,24 +25,24 @@ class MainNavigation extends StatelessWidget {
         onTap: (index) => _onTabTapped(context, index),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.explore),
             label: '推荐',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
+            icon: Icon(Icons.face_retouching_natural),
             label: '关注',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box),
-            label: '发布',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.add_box),
+          //   label: '发布',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble),
             label: '消息',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: '我的',
+            label: '我',
           ),
         ],
       ),
@@ -69,13 +70,13 @@ class MainNavigation extends StatelessWidget {
       case 1:
         context.go('/following');
         break;
-      case 2:
-        // TODO: 实现发布功能
-        ErrorUtils.showWarning(
-          context,
-          '发布功能暂未开放',
-        );
-        break;
+      // case 2:
+      //   // TODO: 实现发布功能
+      //   ErrorUtils.showWarning(
+      //     context,
+      //     '发布功能暂未开放',
+      //   );
+      //   break;
       case 3:
         // TODO: 实现消息功能
         ErrorUtils.showWarning(

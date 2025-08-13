@@ -139,6 +139,8 @@ class VideoProvider extends ChangeNotifier {
     await StorageService.addPlayedVideoId(videoId);
   }
 
+  /// 切换视频点赞状态
+  /// 接口: GET /api/my/toggleLikeArticle/{articleId}
   Future<bool> likeVideo(String videoId) async {
     try {
       final response = await VideoService.likeVideo(videoId);
@@ -146,7 +148,8 @@ class VideoProvider extends ChangeNotifier {
         // 更新本地视频的点赞状态
         final videoIndex = _videos.indexWhere((video) => video.id == videoId);
         if (videoIndex != -1) {
-          // 这里可以添加点赞状态更新逻辑
+          // TODO: 根据API返回结果更新点赞状态和数量
+          // 当前只是通知UI刷新，实际状态更新需要根据API返回的数据
           notifyListeners();
         }
         return true;
@@ -158,6 +161,8 @@ class VideoProvider extends ChangeNotifier {
     }
   }
 
+  /// 切换视频收藏状态
+  /// 接口: GET /api/my/toggleStarArticle/{articleId}
   Future<bool> starVideo(String videoId) async {
     try {
       final response = await VideoService.starVideo(videoId);
@@ -165,7 +170,8 @@ class VideoProvider extends ChangeNotifier {
         // 更新本地视频的收藏状态
         final videoIndex = _videos.indexWhere((video) => video.id == videoId);
         if (videoIndex != -1) {
-          // 这里可以添加收藏状态更新逻辑
+          // TODO: 根据API返回结果更新收藏状态和数量
+          // 当前只是通知UI刷新，实际状态更新需要根据API返回的数据
           notifyListeners();
         }
         return true;

@@ -8,6 +8,7 @@ import '../../../shared/widgets/video_card.dart';
 
 import '../../../shared/widgets/follow_button.dart';
 import '../providers/user_space_provider.dart';
+import '../../video_player/screens/video_player_screen.dart';
 
 class UserSpaceScreen extends StatefulWidget {
   final String userId;
@@ -409,8 +410,16 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
                 showUserInfo: false, // 不显示用户信息
                 
                 onTap: () {
-                  // TODO: 处理视频点击，跳转到视频播放页面
-                  print('点击视频: ${video.title}');
+                  // 跳转到视频播放页面
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => VideoPlayerScreen(
+                        userId: widget.userId,
+                        videos: userSpaceProvider.videos,
+                        initialVideoIndex: index,
+                      ),
+                    ),
+                  );
                 },
               );
             },
