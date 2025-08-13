@@ -11,6 +11,7 @@ import '../providers/video_provider.dart';
 import '../screens/tag_videos_screen.dart';
 import 'video_player_widget.dart';
 import 'video_action_buttons.dart';
+import 'comment_sheet.dart';
 
 class VideoPlaybackComponent extends StatefulWidget {
   final VideoModel video;
@@ -60,6 +61,18 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => _buildContentOffcanvas(),
+    );
+  }
+
+  void _showCommentSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => CommentSheet(
+        videoId: widget.video.id,
+        currentTime: 0.0, // TODO: 获取当前视频播放时间
+      ),
     );
   }
 
@@ -318,10 +331,7 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
                 }
               },
               onComment: () {
-                // TODO: 实现评论功能
-                if (kIsWeb) {
-                  debugPrint('🔍 评论按钮被点击');
-                }
+                _showCommentSheet();
               },
               onAvatarTap: widget.onAvatarTap,
             ),
