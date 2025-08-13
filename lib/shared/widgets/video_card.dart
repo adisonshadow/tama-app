@@ -1,4 +1,27 @@
 // 视频卡片组件
+// 
+// 参数说明:
+// - width: 外部容器的宽度，height 根据高度自适应
+// - aspect: 封面图片的宽高比，可以是 16:9、4:3 等，默认为 3:4
+// - titleLine: 标题的行数，默认为 2
+// 
+// 封面图片尺寸计算:
+// - 宽度固定为 300px
+// - 高度根据 aspect 动态计算: h = 300 / aspect
+// 
+// 使用示例:
+// VideoCard(
+//   video: video,
+//   width: 200,
+//   aspect: 16 / 9,  // 16:9 比例 -> 图片尺寸: 300x169
+//   titleLine: 3,    // 3 行标题
+// )
+// 
+// aspect 值对应的图片尺寸:
+// - 3/4 (默认): 300x400
+// - 16/9: 300x169  
+// - 4/3: 300x225
+// - 1/1: 300x300
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,6 +35,8 @@ class VideoCard extends StatelessWidget {
   final double? width;
   final double? height;
   final bool showUserInfo;
+  final double aspect; // 封面图片的宽高比，默认为 3:4
+  final int titleLine; // 标题行数，默认为 2
 
   const VideoCard({
     super.key,
@@ -20,6 +45,8 @@ class VideoCard extends StatelessWidget {
     this.width,
     this.height,
     this.showUserInfo = true,
+    this.aspect = 3 / 4, // 默认 3:4 比例
+    this.titleLine = 2, // 默认 2 行标题
   });
 
   @override
@@ -36,10 +63,11 @@ class VideoCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // 关键：让 Column 根据内容自适应高度
           children: [
-            // 行1: 3:4比例的封面图片
+            // 行1: 根据 aspect 参数设置封面图片比例
             AspectRatio(
-              aspectRatio: 3 / 4, // 强制3:4比例
+              aspectRatio: aspect,
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
@@ -54,7 +82,7 @@ class VideoCard extends StatelessWidget {
                     topRight: Radius.circular(4),
                   ),
                   child: CachedNetworkImage(
-                    imageUrl: video.getCoverByRecord('w=300&h=400'),
+                    imageUrl: video.getCoverByRecord('w=300&h=${(300 / aspect).round()}'),
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
                       color: Colors.grey[800],
@@ -80,49 +108,46 @@ class VideoCard extends StatelessWidget {
               ),
             ),
             
-            // 行2: title + tag组合文字
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 标题
-                    if (video.title.isNotEmpty)
-                      Expanded(
-                        child: Text(
-                          video.title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+            // 行2: title + tag组合文字 - 移除 Expanded，让高度自适应
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min, // 让内容自适应高度
+                children: [
+                  // 标题
+                  if (video.title.isNotEmpty)
+                    Text(
+                      video.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: titleLine, // 根据 titleLine 参数设置行数
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  
+                  // 标签
+                  if (video.tagList.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Wrap(
+                      spacing: 4,
+                      runSpacing: 2,
+                      children: video.tagList.take(3).map((tag) {
+                        return Text(
+                          '#$tag',
+                          style: TextStyle(
+                            color: Colors.blue[300],
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
                           ),
-                          maxLines: 3, // 最多显示3行
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    
-                    // 标签
-                    if (video.tagList.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Wrap(
-                        spacing: 4,
-                        runSpacing: 2,
-                        children: video.tagList.take(3).map((tag) {
-                          return Text(
-                            '#$tag',
-                            style: TextStyle(
-                              color: Colors.blue[300],
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ],
+                        );
+                      }).toList(),
+                    ),
                   ],
-                ),
+                ],
               ),
             ),
             

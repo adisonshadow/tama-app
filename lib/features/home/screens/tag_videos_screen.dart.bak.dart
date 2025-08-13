@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 // import 'package:provider/provider.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 
@@ -235,15 +234,23 @@ class _TagVideosScreenState extends State<TagVideosScreen> {
       onRefresh: _refresh,
       color: Colors.white,
       backgroundColor: Colors.black,
-      child: MasonryGridView.count(
-        // 使用 MasonryGridView 实现瀑布流布局，每个网格项高度完全自适应
-        // crossAxisCount: 2 - 固定2列，每列宽度自适应
+      child: GridView.builder(
+        // 使用 SliverGridDelegateWithMaxCrossAxisExtent 实现响应式网格布局
+        // maxCrossAxisExtent: 200 - 每个网格项最大宽度200px，自动计算列数
+        // 不设置 childAspectRatio - 让每个网格项高度完全自适应，避免溢出
         // 这样 VideoCard 就能根据内容自适应高度，真正实现高度自适应
+        shrinkWrap: true, // 关键：让 GridView 根据内容自适应高度
+        physics: const NeverScrollableScrollPhysics(), // 禁止滚动
+        // mainAxisSize: MainAxisSize.min, // 关键：让 GridView 根据内容自适应高度
+
         controller: _scrollController,
         padding: const EdgeInsets.all(16),
-        crossAxisCount: 2, // 固定2列
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200, // 最大宽度200，自动计算列数
+          // 移除 childAspectRatio，让每个网格项高度自适应
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
         itemCount: _videos.length + (_hasMore ? 1 : 0),
         itemBuilder: (context, index) {
           if (index == _videos.length) {

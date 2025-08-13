@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../features/home/models/video_model.dart';
 import 'video_card.dart';
@@ -82,14 +83,12 @@ class VideoGridWidget extends StatelessWidget {
           );
         },
       ),
-      child: GridView.builder(
+      child: MasonryGridView.count(
+        // 使用 MasonryGridView 实现瀑布流布局，每个网格项高度完全自适应
         padding: const EdgeInsets.all(8),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // 2列
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-          childAspectRatio: 0.53, // 增加高度，给卡片更多空间避免溢出
-        ),
+        crossAxisCount: 2, // 固定2列
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
         itemCount: videos.length,
         itemBuilder: (context, index) {
           final video = videos[index];

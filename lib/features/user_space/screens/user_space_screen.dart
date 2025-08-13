@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../shared/widgets/video_card.dart';
@@ -394,14 +395,12 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
               );
             },
           ),
-          child: GridView.builder(
+          child: MasonryGridView.count(
+            // 使用 MasonryGridView 实现瀑布流布局，每个网格项高度完全自适应
             padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.53,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-            ),
+            crossAxisCount: 2, // 固定2列
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
             itemCount: userSpaceProvider.videos.length,
             itemBuilder: (context, index) {
               final video = userSpaceProvider.videos[index];
