@@ -33,7 +33,7 @@ class VideoTokenManager {
   /// 获取新的视频播放token并缓存
   Future<String> _fetchNewToken() async {
     try {
-      final response = await MediaService.generateVideoToken();
+      final response = await MediaService.generateToken();
       
       if (response['status'] == 'SUCCESS' && response['data'] != null) {
         final tokenData = response['data'];

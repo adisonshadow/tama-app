@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../shared/widgets/video_card.dart';
-import '../../../shared/providers/follow_provider.dart';
+
 import '../../../shared/widgets/follow_button.dart';
 import '../providers/user_space_provider.dart';
 
@@ -34,23 +35,15 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
   @override
   void initState() {
     super.initState();
-    // 打印调试信息
-    print('UserSpaceScreen 初始化:');
-    print('  userId: ${widget.userId}');
-    print('  nickname: ${widget.nickname}');
-    print('  avatar: ${widget.avatar}');
-    print('  bio: ${widget.bio}');
-    print('  spaceBg: ${widget.spaceBg}');
     
-    // 验证数据完整性
-    if (widget.nickname.isEmpty) {
-      print('警告: nickname 为空');
-    }
-    if (widget.avatar.isEmpty) {
-      print('警告: avatar 为空');
-    }
-    if (widget.bio == null || widget.bio!.isEmpty) {
-      print('信息: bio 为空或未设置');
+    // 添加调试信息
+    if (kIsWeb) {
+      debugPrint('🔍 UserSpaceScreen initState');
+      debugPrint('🔍 userId: ${widget.userId}');
+      debugPrint('🔍 nickname: ${widget.nickname}');
+      debugPrint('🔍 avatar: ${widget.avatar}');
+      debugPrint('🔍 bio: ${widget.bio}');
+      debugPrint('🔍 spaceBg: ${widget.spaceBg}');
     }
   }
 
@@ -62,20 +55,15 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => UserSpaceProvider()),
-        ChangeNotifierProvider(create: (context) => FollowProvider()),
-      ],
-      child: Consumer2<UserSpaceProvider, FollowProvider>(
-        builder: (context, userSpaceProvider, followProvider, child) {
+    return ChangeNotifierProvider(
+      create: (context) => UserSpaceProvider(),
+      child: Consumer<UserSpaceProvider>(
+        builder: (context, userSpaceProvider, child) {
           // 初始化数据
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (userSpaceProvider.videos.isEmpty && !userSpaceProvider.isLoading) {
               userSpaceProvider.loadUserVideos(widget.userId, refresh: true);
             }
-            // 检查关注状态
-            followProvider.checkFollowStatus(widget.userId);
           });
           
           return Scaffold(
@@ -85,10 +73,7 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
                 // 行1: 用户信息头部（带背景图片）
                 _buildUserHeader(),
                 
-                // 行2: 关注按钮
-                _buildFollowButton(),
-                
-                // 行3: 作品列表
+                // 行2: 作品列表
                 Expanded(
                   child: _buildVideosList(),
                 ),
@@ -183,6 +168,22 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
                   ),
                 ),
               ),
+            ),
+          ),
+          
+          // 关注按钮 - 在返回按钮右侧
+          Positioned(
+            top: 20,
+            right: 20,
+            child: FollowButton(
+              userId: widget.userId,
+              mode: FollowButtonMode.button,
+              // width: 120,
+              height: 40,
+              // fontSize: 16,
+              onFollowChanged: () {
+                print('关注状态已改变');
+              },
             ),
           ),
           
@@ -282,19 +283,7 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
     );
   }
 
-  Widget _buildFollowButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: FollowButton(
-        userId: widget.userId,
-        mode: FollowButtonMode.button, // 使用完整按钮模式
-        onFollowChanged: () {
-          // 关注状态改变后的回调
-          print('关注状态已改变');
-        },
-      ),
-    );
-  }
+
 
   Widget _buildVideosList() {
     return Consumer<UserSpaceProvider>(
@@ -418,6 +407,7 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
               return VideoCard(
                 video: video,
                 showUserInfo: false, // 不显示用户信息
+                
                 onTap: () {
                   // TODO: 处理视频点击，跳转到视频播放页面
                   print('点击视频: ${video.title}');

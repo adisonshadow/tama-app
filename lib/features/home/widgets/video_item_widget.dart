@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+import '../../../core/constants/app_constants.dart';
 import '../models/video_model.dart';
 import '../providers/video_provider.dart';
 import 'video_player_widget.dart';
@@ -34,7 +35,7 @@ class _VideoItemWidgetState extends State<VideoItemWidget> {
       debugPrint('🔍 Video Item Widget - Video ID: ${widget.video.id}');
       debugPrint('🔍 Video Item Widget - Avatar: ${widget.video.avatar}');
       if (widget.video.avatar != null) {
-        final avatarUrl = 'http://localhost:5200/api/media/img/${widget.video.avatar}';
+        final avatarUrl = '${AppConstants.baseUrl}/api/media/img/${widget.video.avatar}';
         debugPrint('🔍 Video Item Widget - Full Avatar URL: $avatarUrl');
       }
     }

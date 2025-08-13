@@ -11,7 +11,7 @@ class UserSpaceService {
         'page': page,
         'page_size': limit,
       });
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }

@@ -1,21 +1,16 @@
 import '../../../core/network/dio_client.dart';
 
 class VideoService {
-  static Future<Map<String, dynamic>> getRandomRecommendedVideos({
-    int count = 20,
-    List<String> excludeIds = const [],
+  static Future<Map<String, dynamic>> getRandomVideos({
+    int page = 1,
+    int limit = 20,
   }) async {
     try {
-      final Map<String, dynamic> queryParams = {
-        'count': count,
+      final queryParams = {
+        'count': limit,
       };
-      
-      if (excludeIds.isNotEmpty) {
-        queryParams['excludeIds'] = excludeIds.join(',');
-      }
-      
       final response = await DioClient.instance.get('/articles/random', queryParameters: queryParams);
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
@@ -28,9 +23,9 @@ class VideoService {
     try {
       final response = await DioClient.instance.get('/articles/recommended2', queryParameters: {
         'page': page,
-        'limit': limit,
+        'page_size': limit,
       });
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
@@ -43,9 +38,9 @@ class VideoService {
     try {
       final response = await DioClient.instance.get('/articles/hot', queryParameters: {
         'page': page,
-        'limit': limit,
+        'page_size': limit,
       });
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
@@ -58,9 +53,9 @@ class VideoService {
     try {
       final response = await DioClient.instance.get('/articles/short', queryParameters: {
         'page': page,
-        'limit': limit,
+        'page_size': limit,
       });
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
@@ -69,7 +64,7 @@ class VideoService {
   static Future<Map<String, dynamic>> getVideoDetail(String videoId) async {
     try {
       final response = await DioClient.instance.get('/articles/$videoId');
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
@@ -80,7 +75,7 @@ class VideoService {
       final response = await DioClient.instance.post('/my/like', data: {
         'article_id': videoId,
       });
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
@@ -91,7 +86,7 @@ class VideoService {
       final response = await DioClient.instance.post('/my/star', data: {
         'article_id': videoId,
       });
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }

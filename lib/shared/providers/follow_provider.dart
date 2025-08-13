@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../services/follow_service.dart';
+import '../../core/network/dio_client.dart';
 
 class FollowProvider extends ChangeNotifier {
   final Map<String, bool> _followStatus = {};
@@ -11,6 +12,11 @@ class FollowProvider extends ChangeNotifier {
     return _followStatus[userId] ?? false;
   }
 
+  /// 检查是否已经有指定用户的关注状态缓存
+  bool hasFollowStatus(String userId) {
+    return _followStatus.containsKey(userId);
+  }
+
   /// 获取指定用户的加载状态
   bool isLoading(String userId) {
     return _loadingStatus[userId] ?? false;
@@ -18,20 +24,37 @@ class FollowProvider extends ChangeNotifier {
 
   /// 检查关注状态
   Future<void> checkFollowStatus(String userId) async {
+    // 如果已经有状态且不在加载中，直接返回
+    if (_followStatus.containsKey(userId) && _loadingStatus[userId] != true) {
+      return;
+    }
+
     try {
+      _loadingStatus[userId] = true;
+      notifyListeners();
+
       final response = await FollowService.checkFollowStatus(userId);
-      if (response['status'] == 'SUCCESS') {
-        _followStatus[userId] = response['data']['isFollowed'] ?? false;
-        notifyListeners();
+      
+      if (DioClient.isApiSuccess(response)) {
+        final newStatus = response['data']['isFollowed'] ?? false;
+        // 只有当状态真正改变时才更新和通知
+        if (_followStatus[userId] != newStatus) {
+          _followStatus[userId] = newStatus;
+          notifyListeners();
+        }
       } else {
-        // 显示错误消息
-        _showToastMessage(response['message'] ?? '检查关注状态失败');
+        // 记录错误日志，但不显示Toast（由UI组件处理）
+        if (kIsWeb) {
+          debugPrint('❌ 检查关注状态失败: ${DioClient.getApiErrorMessage(response)}');
+        }
       }
     } catch (e) {
       if (kIsWeb) {
-        debugPrint('❌ 检查关注状态失败: $e');
+        debugPrint('❌ 检查关注状态异常: $e');
       }
-      _showToastMessage('网络错误，请稍后重试');
+    } finally {
+      _loadingStatus[userId] = false;
+      notifyListeners();
     }
   }
 
@@ -45,15 +68,9 @@ class FollowProvider extends ChangeNotifier {
 
       final response = await FollowService.toggleFollow(userId);
       
-      if (response['status'] == 'SUCCESS') {
+      if (DioClient.isApiSuccess(response)) {
         final newStatus = response['data']['isFollowed'] ?? false;
         _followStatus[userId] = newStatus;
-        
-        // 显示成功消息
-        _showToastMessage(
-          newStatus ? '关注成功' : '取消关注成功',
-          isSuccess: true,
-        );
         
         if (kIsWeb) {
           debugPrint('✅ 关注状态切换成功: $userId -> ${newStatus ? "已关注" : "未关注"}');
@@ -62,10 +79,8 @@ class FollowProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        // 显示错误消息
-        final errorMessage = response['message'] ?? '操作失败';
-        _showToastMessage(errorMessage);
-        
+        // 记录错误日志，但不显示Toast（由UI组件处理）
+        final errorMessage = DioClient.getApiErrorMessage(response);
         if (kIsWeb) {
           debugPrint('❌ 关注状态切换失败: $errorMessage');
         }
@@ -75,7 +90,6 @@ class FollowProvider extends ChangeNotifier {
       if (kIsWeb) {
         debugPrint('❌ 关注状态切换异常: $e');
       }
-      _showToastMessage('网络错误，请稍后重试');
       return false;
     } finally {
       _loadingStatus[userId] = false;
@@ -102,15 +116,6 @@ class FollowProvider extends ChangeNotifier {
     _followStatus.clear();
     _loadingStatus.clear();
     notifyListeners();
-  }
-
-  /// 显示Toast消息
-  void _showToastMessage(String message, {bool isSuccess = false}) {
-    // 使用全局的ScaffoldMessenger来显示消息
-    // 这里需要传入BuildContext，所以我们改为在调用处处理
-    if (kIsWeb) {
-      debugPrint('${isSuccess ? "✅" : "❌"} Toast: $message');
-    }
   }
 
   /// 显示Toast消息（需要BuildContext）

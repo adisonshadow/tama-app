@@ -28,12 +28,8 @@ class VideoProvider extends ChangeNotifier {
       _setLoading(true);
       _clearError();
 
-      // 获取播放过的视频ID列表
-      final List<String> excludeIds = await StorageService.getPlayedVideoIds();
-      
-      final response = await VideoService.getRandomRecommendedVideos(
-        count: 20,
-        excludeIds: excludeIds,
+      final response = await VideoService.getRandomVideos(
+        limit: 20,
       );
 
       // 添加调试信息

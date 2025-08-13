@@ -7,8 +7,7 @@ class AuthService {
         'email': email,
         'password': password,
       });
-      
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
@@ -21,8 +20,7 @@ class AuthService {
         'password': password,
         'nickname': nickname,
       });
-      
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
@@ -31,7 +29,7 @@ class AuthService {
   static Future<Map<String, dynamic>> getCurrentUser() async {
     try {
       final response = await DioClient.instance.get('/auth/current');
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
@@ -40,7 +38,7 @@ class AuthService {
   static Future<Map<String, dynamic>> logout() async {
     try {
       final response = await DioClient.instance.post('/auth/logout');
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }
@@ -49,7 +47,7 @@ class AuthService {
   static Future<Map<String, dynamic>> refreshToken() async {
     try {
       final response = await DioClient.instance.post('/auth/refresh');
-      return response.data;
+      return DioClient.handleApiResponse(response);
     } catch (e) {
       rethrow;
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../core/constants/app_constants.dart';
 
 import '../../../shared/widgets/follow_button.dart';
 import '../models/video_model.dart';
@@ -174,7 +175,7 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
                 radius: 31,
                 backgroundColor: Colors.grey[800],
                 backgroundImage: widget.video.avatar != null
-                    ? CachedNetworkImageProvider('http://localhost:5200/api/media/img/${widget.video.avatar}?w=68&h=68')
+                    ? CachedNetworkImageProvider('${AppConstants.baseUrl}/api/media/img/${widget.video.avatar}?w=68&h=68')
                     : null,
                 child: widget.video.avatar == null
                     ? const Icon(Icons.person, color: Colors.white, size: 24)

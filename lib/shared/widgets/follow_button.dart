@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/follow_provider.dart';
+import '../services/follow_service.dart';
+import '../../core/network/dio_client.dart';
 
 /// 关注按钮组件，支持两种显示模式
 /// 
@@ -30,141 +30,220 @@ enum FollowButtonMode {
   button,  // 完整按钮模式（用于用户空间页面）
 }
 
-class FollowButton extends StatelessWidget {
+class FollowButton extends StatefulWidget {
   final String userId;
   final FollowButtonMode mode;
+  final VoidCallback? onFollowChanged;
   final double? width;
   final double? height;
   final double? fontSize;
-  final EdgeInsetsGeometry? padding;
-  final BorderRadius? borderRadius;
-  final Color? followingColor;
-  final Color? unfollowingColor;
-  final Color? textColor;
-  final VoidCallback? onFollowChanged;
+  final double? borderRadius;
 
   const FollowButton({
     super.key,
     required this.userId,
     this.mode = FollowButtonMode.button,
-    this.width,
-    this.height = 48,
-    this.fontSize = 16,
-    this.padding,
-    this.borderRadius,
-    this.followingColor,
-    this.unfollowingColor,
-    this.textColor,
     this.onFollowChanged,
+    this.width,
+    this.height,
+    this.fontSize,
+    this.borderRadius,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<FollowProvider>(
-      builder: (context, followProvider, child) {
-        final isFollowing = followProvider.isFollowing(userId);
-        final isLoading = followProvider.isLoading(userId);
+  State<FollowButton> createState() => _FollowButtonState();
+}
 
-        if (mode == FollowButtonMode.icon) {
-          // 圆形图标模式
-          return GestureDetector(
-            onTap: isLoading ? null : () async {
-              final success = await followProvider.toggleFollow(userId);
-              if (success && onFollowChanged != null) {
-                onFollowChanged!();
-              }
-            },
-            child: Container(
-              width: width ?? 26,
-              height: height ?? 26,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isFollowing 
-                    ? (followingColor ?? const Color.fromARGB(255, 203, 203, 203))
-                    : (unfollowingColor ?? Colors.red),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1,
-                ),
-              ),
-              child: Center(
-                child: isLoading
-                    ? SizedBox(
-                        width: 12,
-                        height: 12,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            isFollowing ? const Color.fromARGB(255, 51, 51, 51) : Colors.white,
-                          ),
-                        ),
-                      )
-                    : Icon(
-                        isFollowing ? Icons.check : Icons.add,
-                        size: (fontSize ?? 16) * 1.4, // 图标大小相对于按钮尺寸
-                        color: isFollowing ? const Color.fromARGB(255, 51, 51, 51) : Colors.white,
-                      ),
-              ),
-            ),
+class _FollowButtonState extends State<FollowButton> {
+  bool _isFollowing = false;
+  bool _isLoading = true;
+  bool _hasInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFollowStatus();
+  }
+
+  Future<void> _initializeFollowStatus() async {
+    if (_hasInitialized) return;
+    
+    try {
+      final response = await FollowService.checkFollowStatus(widget.userId);
+      if (mounted) {
+        setState(() {
+          if (DioClient.isApiSuccess(response)) {
+            _isFollowing = response['data']['isFollowed'] ?? false;
+          }
+          _isLoading = false;
+          _hasInitialized = true;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _hasInitialized = true;
+        });
+      }
+    }
+  }
+
+  Future<void> _handleFollowTap() async {
+    if (_isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final response = await FollowService.toggleFollow(widget.userId);
+      
+      if (mounted) {
+        if (DioClient.isApiSuccess(response)) {
+          final newStatus = response['data']['isFollowed'] ?? false;
+          setState(() {
+            _isFollowing = newStatus;
+            _isLoading = false;
+          });
+          
+          // 显示成功消息
+          _showToastMessage(
+            newStatus ? '关注成功' : '取消关注成功',
+            isSuccess: true,
           );
         } else {
-          // 完整按钮模式
-          return SizedBox(
-            width: width ?? double.infinity,
-            height: height,
-            child: ElevatedButton(
-              onPressed: isLoading ? null : () async {
-                final success = await followProvider.toggleFollow(userId);
-                if (success && onFollowChanged != null) {
-                  onFollowChanged!();
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isFollowing 
-                    ? (followingColor ?? Colors.grey.withValues(alpha: 0.2))
-                    : (unfollowingColor ?? Colors.red),
-                foregroundColor: textColor ?? Colors.white,
-                padding: padding ?? const EdgeInsets.symmetric(horizontal: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: borderRadius ?? BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-              child: isLoading
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          textColor ?? Colors.white,
-                        ),
-                      ),
-                    )
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          isFollowing ? Icons.check : Icons.add,
-                          size: fontSize ?? 16,
-                          color: isFollowing ? Colors.grey[700] : Colors.white,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          isFollowing ? '已关注' : '关注',
-                          style: TextStyle(
-                            fontSize: fontSize,
-                            fontWeight: FontWeight.bold,
-                            color: isFollowing ? Colors.grey[700] : Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-            ),
-          );
+          // 显示错误消息
+          final errorMessage = DioClient.getApiErrorMessage(response);
+          _showToastMessage(errorMessage);
+          setState(() {
+            _isLoading = false;
+          });
         }
-      },
+      }
+    } catch (e) {
+      if (mounted) {
+        _showToastMessage('网络错误，请稍后重试');
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+    
+    // 调用回调
+    widget.onFollowChanged?.call();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.mode == FollowButtonMode.icon) {
+      return GestureDetector(
+        onTap: _isLoading ? null : _handleFollowTap,
+        child: Container(
+          width: widget.width ?? 32,
+          height: widget.height ?? 32,
+          decoration: BoxDecoration(
+            color: _isFollowing ? const Color.fromARGB(255, 203, 203, 203) : Colors.red,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.white,
+              width: 2,
+            ),
+          ),
+          child: _isLoading
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+              : Icon(
+                  _isFollowing ? Icons.check : Icons.add,
+                  size: (widget.fontSize ?? 16) * 1.4,
+                  color: _isFollowing ? const Color.fromARGB(255, 51, 51, 51) : Colors.white,
+                ),
+        ),
+      );
+    } else {
+      return SizedBox(
+        width: widget.width,
+        height: widget.height,
+        child: ElevatedButton(
+          onPressed: _isLoading ? null : _handleFollowTap,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _isFollowing ? const Color.fromARGB(239, 167, 167, 167) : Colors.red,
+            foregroundColor: _isFollowing ? const Color.fromARGB(255, 74, 74, 74) : Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(widget.borderRadius ?? 8),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+          child: _isLoading
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _isFollowing ? Icons.check : Icons.add,
+                      size: widget.fontSize ?? 24,
+                      color: _isFollowing ? const Color.fromARGB(255, 66, 66, 66) : Colors.white,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      _isFollowing ? '已关注' : '关注',
+                      style: TextStyle(
+                        fontSize: widget.fontSize ?? 18,
+                        fontWeight: FontWeight.bold,
+                        color: _isFollowing ? const Color.fromARGB(255, 66, 66, 66) : Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      );
+    }
+  }
+
+  void _showToastMessage(String message, {bool isSuccess = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              isSuccess ? Icons.check_circle : Icons.error,
+              color: Colors.white,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: isSuccess ? Colors.green : Colors.red,
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        margin: const EdgeInsets.all(16),
+      ),
     );
   }
 }

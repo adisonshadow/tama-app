@@ -125,14 +125,14 @@ class VideoCard extends StatelessWidget {
             ),
             
             // 行3: 左边 作者头像（宽高16）、作者昵称 右边：点赞icon + 点赞数量
-            if (showUserInfo)
-              Container(
-                height: 40, // 固定高度，避免溢出
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-                child: Row(
-                  children: [
-                    // 左边：作者头像 + 昵称
+            Container(
+              height: 40, // 固定高度，避免溢出
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+              child: Row(
+                children: [
+                  // 左边：作者头像 + 昵称（根据showUserInfo控制）
+                  if (showUserInfo)
                     Expanded(
                       child: Row(
                         children: [
@@ -195,30 +195,33 @@ class VideoCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
-                    
-                    // 右边：点赞icon + 数量
-                    Row(
-                      children: [
-                        Icon(
-                          video.isLiked == true ? Icons.favorite : Icons.favorite_border,
-                          color: video.isLiked == true ? Colors.red : Colors.grey[400],
-                          size: 16,
+                    )
+                  else
+                    // 当不显示用户信息时，添加一个空的Expanded来保持布局
+                    const Expanded(child: SizedBox()),
+                  
+                  // 右边：点赞icon + 数量（始终显示）
+                  Row(
+                    children: [
+                      Icon(
+                        video.isLiked == true ? Icons.favorite : Icons.favorite_border,
+                        color: video.isLiked == true ? Colors.red : Colors.grey[400],
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${video.likedCount}',
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${video.likedCount}',
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
+            ),
           ],
         ),
       ),
