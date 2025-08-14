@@ -296,7 +296,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     final screenHeight = screenSize.height;
 
     // 计算16:9视频在当前屏幕下的实际尺寸
-    final videoAspectRatio = 16.0 / 9.0;
+    const videoAspectRatio = 16.0 / 9.0;
     double videoWidth, videoHeight;
     
     if (screenWidth / screenHeight > videoAspectRatio) {
@@ -318,8 +318,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     final buttonTop = videoTop + videoHeight + 20; // 视频底部下方20px
 
     print('🔍 全屏按钮位置计算:');
-    print('🔍 屏幕尺寸: ${screenWidth}x${screenHeight}');
-    print('🔍 视频尺寸: ${videoWidth.toStringAsFixed(1)}x${videoHeight.toStringAsFixed(1)}');
+    print('🔍 屏幕尺寸: $screenWidth x $screenHeight');
+    print('🔍 视频尺寸: ${videoWidth.toStringAsFixed(1)} x ${videoHeight.toStringAsFixed(1)}');
     print('🔍 视频位置: (${videoLeft.toStringAsFixed(1)}, ${videoTop.toStringAsFixed(1)})');
     print('🔍 按钮位置: (${buttonLeft.toStringAsFixed(1)}, ${buttonTop.toStringAsFixed(1)})');
 

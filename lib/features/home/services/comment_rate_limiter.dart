@@ -15,7 +15,7 @@ class CommentRateLimiter {
   /// 检查用户是否可以发表评论
   bool canComment(String userId) {
     final now = DateTime.now();
-    final timeWindow = Duration(minutes: timeWindowMinutes);
+    const timeWindow = Duration(minutes: timeWindowMinutes);
     final cutoffTime = now.subtract(timeWindow);
 
     // 获取用户的评论时间队列
@@ -50,7 +50,7 @@ class CommentRateLimiter {
     userTimes.addLast(now);
 
     // 清理过期记录
-    final timeWindow = Duration(minutes: timeWindowMinutes);
+    const timeWindow = Duration(minutes: timeWindowMinutes);
     final cutoffTime = now.subtract(timeWindow);
     
     while (userTimes.isNotEmpty && userTimes.first.isBefore(cutoffTime)) {
@@ -61,7 +61,7 @@ class CommentRateLimiter {
   /// 获取用户剩余可评论数量
   int getRemainingComments(String userId) {
     final now = DateTime.now();
-    final timeWindow = Duration(minutes: timeWindowMinutes);
+    const timeWindow = Duration(minutes: timeWindowMinutes);
     final cutoffTime = now.subtract(timeWindow);
 
     if (!_userCommentTimes.containsKey(userId)) {
@@ -91,14 +91,14 @@ class CommentRateLimiter {
 
     // 找到最早需要等待的评论时间
     final earliestComment = userTimes.first;
-    final timeWindow = Duration(minutes: timeWindowMinutes);
+    const timeWindow = Duration(minutes: timeWindowMinutes);
     return earliestComment.add(timeWindow);
   }
 
   /// 清理过期数据
   void cleanup() {
     final now = DateTime.now();
-    final timeWindow = Duration(minutes: timeWindowMinutes);
+    const timeWindow = Duration(minutes: timeWindowMinutes);
     final cutoffTime = now.subtract(timeWindow);
 
     _userCommentTimes.forEach((userId, userTimes) {

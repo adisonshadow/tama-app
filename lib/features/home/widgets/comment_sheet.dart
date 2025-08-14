@@ -38,6 +38,13 @@ class _CommentSheetState extends State<CommentSheet> {
   void initState() {
     super.initState();
     _loadComments();
+    
+    // 延迟一帧后自动聚焦输入框，确保UI完全构建
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _commentFocusNode.requestFocus();
+      }
+    });
   }
 
   @override
@@ -154,9 +161,11 @@ class _CommentSheetState extends State<CommentSheet> {
       if (kIsWeb) {
         debugPrint('🔍 发布评论失败: $e');
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('发布评论失败: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('发布评论失败: $e')),
+        );
+      }
     } finally {
       setState(() {
         _isSubmitting = false;
@@ -214,6 +223,9 @@ class _CommentSheetState extends State<CommentSheet> {
     _commentController.selection = TextSelection.collapsed(
       offset: selection.start + emoji.length,
     );
+    
+    // 重新获取焦点
+    _commentFocusNode.requestFocus();
   }
 
   @override
@@ -248,14 +260,15 @@ class _CommentSheetState extends State<CommentSheet> {
                   ),
                 ),
                 // 关闭按钮
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close, size: 24),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.grey[100],
-                    shape: const CircleBorder(),
-                  ),
-                ),
+                // IconButton(
+                //   onPressed: () => Navigator.of(context).pop(),
+                //   icon: const Icon(Icons.close, size: 24),
+                //   style: IconButton.styleFrom(
+                //     backgroundColor: Colors.grey[100],
+                //     foregroundColor: const Color.fromARGB(255, 96, 96, 96),
+                //     shape: const CircleBorder(),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -338,6 +351,7 @@ class _CommentSheetState extends State<CommentSheet> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(221, 91, 91, 91),
                         ),
                       ),
                       IconButton(
@@ -347,6 +361,11 @@ class _CommentSheetState extends State<CommentSheet> {
                           });
                         },
                         icon: const Icon(Icons.close),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.grey[100],
+                          foregroundColor: const Color.fromARGB(255, 96, 96, 96),
+                          shape: const CircleBorder(),
+                        ),
                       ),
                     ],
                   ),
@@ -363,6 +382,10 @@ class _CommentSheetState extends State<CommentSheet> {
                         return GestureDetector(
                           onTap: () {
                             _insertEmoji(emoji);
+                            // 自动关闭表情面板
+                            setState(() {
+                              _showEmojiPicker = false;
+                            });
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -397,12 +420,12 @@ class _CommentSheetState extends State<CommentSheet> {
             child: Row(
               children: [
                 // 用户头像
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey[200],
-                  child: const Icon(Icons.person, color: Colors.grey),
-                ),
-                const SizedBox(width: 12),
+                // CircleAvatar(
+                //   radius: 20,
+                //   backgroundColor: Colors.grey[200],
+                //   child: const Icon(Icons.person, color: Colors.grey),
+                // ),
+                // const SizedBox(width: 12),
                 
                 // 表情按钮
                 IconButton(
@@ -498,62 +521,83 @@ class _CommentSheetState extends State<CommentSheet> {
   Widget _buildCommentItem(CommentModel comment) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 用户昵称
-          Text(
-            comment.nickname,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
+          // 用户头像
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: comment.avatar != null
+                ? NetworkImage('http://localhost:5200/api/media/img/${comment.avatar}')
+                : null,
+            child: comment.avatar == null
+                ? const Icon(Icons.person, color: Colors.grey)
+                : null,
           ),
           
-          const SizedBox(height: 4),
+          const SizedBox(width: 12),
           
-          // 评论内容
-          Text(
-            comment.content,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-            ),
-          ),
-          
-          const SizedBox(height: 8),
-          
-          // 发布时间和视频时间
-          Row(
-            children: [
-              Text(
-                _formatTime(comment.createdAt),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(width: 16),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 2,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.blue[100],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  _formatVideoTime(comment.start),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.blue[700],
-                    fontWeight: FontWeight.w500,
+          // 评论内容区域
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 用户昵称
+                Text(
+                  comment.nickname,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
                 ),
-              ),
-            ],
+                
+                const SizedBox(height: 4),
+                
+                // 评论内容
+                Text(
+                  comment.content,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                ),
+                
+                const SizedBox(height: 8),
+                
+                // 发布时间和视频时间
+                Row(
+                  children: [
+                    Text(
+                      _formatTime(comment.createdAt),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[100],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        _formatVideoTime(comment.start),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.blue[700],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../core/constants/app_constants.dart';
+import 'follow_button.dart';
 
 class UserCard extends StatelessWidget {
   final String userId;
@@ -130,28 +131,14 @@ class UserCard extends StatelessWidget {
             const SizedBox(width: 16),
             
             // 右侧：关注按钮
-            GestureDetector(
-              onTap: onFollowTap,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: isFollowing 
-                      ? Colors.grey.withValues(alpha: 0.2) // 已关注：灰色背景 20%透明度
-                      : Colors.red, // 未关注：红色背景
-                  borderRadius: BorderRadius.circular(20),
-                  border: isFollowing 
-                      ? Border.all(color: Colors.grey[400]!, width: 1)
-                      : null,
-                ),
-                child: Text(
-                  isFollowing ? '已关注' : '关注',
-                  style: TextStyle(
-                    color: isFollowing ? Colors.grey[400] : Colors.white, // 已关注：灰色文字，未关注：白色文字
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+            FollowButton(
+              userId: userId,
+              mode: FollowButtonMode.button,
+              width: 100,
+              height: 32,
+              fontSize: 14,
+              borderRadius: 16,
+              onFollowChanged: onFollowTap,
             ),
           ],
         ),

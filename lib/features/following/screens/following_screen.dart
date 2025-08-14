@@ -181,6 +181,9 @@ class _FollowingScreenState extends State<FollowingScreen>
           );
         }
 
+        print('🔍 FollowingScreen - 准备构建VideoGridWidget');
+        print('🔍 FollowingScreen - 视频数量: ${followingProvider.followingVideos.length}');
+        
         return VideoGridWidget(
           videos: followingProvider.followingVideos,
           refreshController: _videosRefreshController,
@@ -198,10 +201,7 @@ class _FollowingScreenState extends State<FollowingScreen>
           },
           hasMore: followingProvider.hasMore,
           isLoading: followingProvider.isLoading,
-          onVideoTap: (video) {
-            // TODO: 处理视频点击，跳转到视频播放页面
-            // print('点击视频: ${video.title}');
-          },
+          // 不传递onVideoTap，让VideoGridWidget使用默认的跳转行为
         );
       },
     );
@@ -336,10 +336,10 @@ class _FollowingScreenState extends State<FollowingScreen>
                 nickname: follow.nickname,
                 avatar: follow.avatar,
                 bio: follow.bio,
-                isFollowing: true, // 在关注列表中，默认都是已关注状态
                 onFollowTap: () async {
-                  // 处理取消关注
-                  await followingProvider.unfollowUser(follow.id);
+                  // 处理关注状态变化
+                  print('🔍 FollowingScreen - 关注状态变化，用户ID: ${follow.id}');
+                  // 可以在这里添加额外的逻辑，比如刷新列表等
                 },
                 onCardTap: () {
                   // 打印调试信息

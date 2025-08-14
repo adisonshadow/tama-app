@@ -92,9 +92,9 @@ class _CommentDebugPageState extends State<CommentDebugPage> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[300]!),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     '调试说明：',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -122,14 +122,14 @@ class _CommentDebugPageState extends State<CommentDebugPage> {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.blue[200]!),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     '当前配置：',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   Text('API基础URL: http://localhost:5200'),
                   Text('评论列表接口: /articles/danmus/{article_id}'),
                   Text('发布评论接口: /my/createDanmaku'),

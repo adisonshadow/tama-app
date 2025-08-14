@@ -6,7 +6,7 @@ class FollowingService {
     int limit = 20,
   }) async {
     try {
-      final url = '/my/followings';
+      const url = '/my/followings';
       final params = {'page': page, 'size': limit};
       
       print('🔍 FollowingService - 调用 getMyFollows API');

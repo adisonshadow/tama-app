@@ -42,7 +42,7 @@ class FollowingProvider extends ChangeNotifier {
 
       if (response['status'] == 'SUCCESS') {
         // 处理分页数据结构
-        dynamic data = response['data'];
+        final dynamic data = response['data'];
         List<dynamic> followData = [];
         
         print('🔍 FollowingProvider - 原始data: $data');
@@ -124,7 +124,7 @@ class FollowingProvider extends ChangeNotifier {
 
       if (response['status'] == 'SUCCESS') {
         // 处理分页数据结构
-        dynamic data = response['data'];
+        final dynamic data = response['data'];
         List<dynamic> videoData = [];
         
         if (data is Map<String, dynamic>) {

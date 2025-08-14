@@ -5,7 +5,7 @@ import 'dart:ui';
 
 import '../services/search_service.dart';
 import '../../features/home/models/video_model.dart';
-import '../../features/video_player/screens/video_player_screen.dart';
+// import '../../features/video_player/screens/video_player_screen.dart';
 import 'video_card.dart';
 
 class SearchOverlay extends StatefulWidget {

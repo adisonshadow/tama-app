@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
 import '../../home/models/video_model.dart';
 import '../services/user_space_service.dart';
@@ -36,7 +36,7 @@ class UserSpaceProvider extends ChangeNotifier {
       );
 
       if (response['status'] == 'SUCCESS') {
-        dynamic data = response['data'];
+        final dynamic data = response['data'];
         List<dynamic> videoData = [];
         
         if (data is Map<String, dynamic>) {
