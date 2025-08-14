@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'dart:ui';
 import '../../home/models/video_model.dart';
 import '../../home/widgets/video_playback_component.dart';
 import '../providers/video_player_provider.dart';
 import '../../user_space/screens/user_space_screen.dart';
+import '../../../shared/widgets/search_manager.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   final String userId;
@@ -23,9 +25,17 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+  String? _currentVideoCoverUrl;
+
   @override
   void initState() {
     super.initState();
+    
+    // 设置初始封面
+    if (widget.videos.isNotEmpty) {
+      final initialVideo = widget.videos[widget.initialVideoIndex];
+      _currentVideoCoverUrl = initialVideo.getCoverByRecord('w=360&h=202');
+    }
     
     // 添加调试信息
     if (kIsWeb) {
@@ -49,22 +59,69 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     });
   }
 
+  void _onVideoChanged(String? coverUrl) {
+    if (mounted) {
+      setState(() {
+        _currentVideoCoverUrl = coverUrl;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // 顶部Bar
-            _buildTopBar(),
-            
-            // 视频播放区域
-            Expanded(
-              child: _buildVideoPlayer(),
+      extendBodyBehindAppBar: true, // 让body延伸到AppBar后面
+      body: Stack(
+        children: [
+          // 第1层: 模糊背景层 - 从屏幕顶部到底部
+          if (_currentVideoCoverUrl != null)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Stack(
+                children: [
+                  // 模糊图片背景
+                  ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0), // 大模糊效果
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(_currentVideoCoverUrl!),
+                          fit: BoxFit.cover,
+                          colorFilter: ColorFilter.mode(
+                            Colors.black.withValues(alpha: 0.3), // 添加半透明黑色遮罩
+                            BlendMode.dstATop,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          
+          // 第2层: 视频播放区域（从top: 0开始）
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _buildVideoPlayer(),
+          ),
+          
+          // 第3层: 悬浮的顶部导航栏（最上层）
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildTopBar(),
+          ),
+        ],
       ),
     );
   }
@@ -73,15 +130,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.8),
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.white.withValues(alpha: 0.1),
-            width: 1,
-          ),
-        ),
-      ),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top), // 考虑状态栏高度
       child: Row(
         children: [
           // 返回按钮
@@ -113,10 +162,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           // 搜索按钮
           GestureDetector(
             onTap: () {
-              // TODO: 实现搜索功能
-              if (kIsWeb) {
-                debugPrint('🔍 搜索按钮被点击');
-              }
+              // 跳转到搜索页面
+              SearchManager.showSearch(context);
             },
             child: Container(
               width: 40,
@@ -159,7 +206,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         return PageView.builder(
           controller: provider.pageController,
           scrollDirection: Axis.vertical,
-          onPageChanged: provider.onPageChanged,
+          onPageChanged: (index) {
+            provider.onPageChanged(index);
+            // 更新封面URL
+            final currentVideo = videos[index];
+            final coverUrl = currentVideo.getCoverByRecord('w=360&h=202');
+            _onVideoChanged(coverUrl);
+          },
           itemCount: videos.length,
           itemBuilder: (context, index) {
             final video = videos[index];

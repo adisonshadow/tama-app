@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // 在调试模式下自动填充测试账号
     if (!const bool.fromEnvironment('dart.vm.product')) {
       _emailController.text = 'yoyo@love.com';
-      _passwordController.text = '111111';
+      _passwordController.text = '123456';
     }
   }
 

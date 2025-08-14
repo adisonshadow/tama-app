@@ -10,6 +10,9 @@ import '../services/video_service.dart';
 import '../../../shared/widgets/video_card.dart';
 import '../../../shared/widgets/search_manager.dart';
 // import '../../../shared/widgets/main_navigation.dart';
+import '../widgets/video_playback_component.dart';
+import '../screens/tag_videos_screen.dart';
+import '../../video_player/screens/video_player_screen.dart';
 
 class TagVideosScreen extends StatefulWidget {
   final String tagName;
@@ -253,10 +256,16 @@ class _TagVideosScreenState extends State<TagVideosScreen> {
           return VideoCard(
             video: video,
             onTap: () {
-              // TODO: 跳转到视频播放页面
-              if (kIsWeb) {
-                debugPrint('🔍 视频被点击: ${video.id}');
-              }
+              // 跳转到视频播放页面
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => VideoPlayerScreen(
+                    userId: video.userId,
+                    videos: _videos,
+                    initialVideoIndex: index,
+                  ),
+                ),
+              );
             },
           );
         },

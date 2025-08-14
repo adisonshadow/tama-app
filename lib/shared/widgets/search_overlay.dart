@@ -5,7 +5,7 @@ import 'dart:ui';
 
 import '../services/search_service.dart';
 import '../../features/home/models/video_model.dart';
-// import '../../features/video_player/screens/video_player_screen.dart';
+import '../../features/video_player/screens/video_player_screen.dart';
 import 'video_card.dart';
 
 class SearchOverlay extends StatefulWidget {
@@ -357,64 +357,22 @@ class _SearchOverlayState extends State<SearchOverlay> {
               video: video,
               aspect: 16/9,
               onTap: () async {
-                // 添加调试信息
-                print('🔍 搜索视频被点击: ${video.id}');
-                print('🔍 用户ID: ${video.userId}');
-                print('🔍 搜索结果数量: ${_searchResults.length}');
-                print('🔍 当前索引: $index');
-                
-                // 先测试基本的点击功能
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('点击了视频: ${video.title}'),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-                
-                // 直接尝试导航，不延迟
                 try {
-                  print('🔍 开始导航到 VideoPlayerScreen');
-                  print('🔍 当前路由: ${ModalRoute.of(context)?.settings.name}');
-                  print('🔍 Navigator.canPop: ${Navigator.canPop(context)}');
-                  
-                  // 先测试简单的导航
-                  print('🔍 测试简单导航...');
-                  final result = await Navigator.of(context).push(
+                  // 跳转到视频播放页面
+                  await Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => Scaffold(
-                        backgroundColor: Colors.black,
-                        appBar: AppBar(
-                          title: Text('测试页面 - ${video.title}'),
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.white,
-                        ),
-                        body: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '视频标题: ${video.title}',
-                                style: const TextStyle(color: Colors.white, fontSize: 18),
-                              ),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('返回'),
-                              ),
-                            ],
-                          ),
-                        ),
+                      builder: (context) => VideoPlayerScreen(
+                        userId: video.userId,
+                        videos: _searchResults,
+                        initialVideoIndex: index,
                       ),
                     ),
                   );
-                  
-                  print('🔍 导航完成，返回结果: $result');
                   
                   // 关闭搜索覆盖层
                   widget.onClose();
                 } catch (e) {
                   print('🔍 导航错误: $e');
-                  print('🔍 错误堆栈: ${StackTrace.current}');
                   // 如果导航失败，至少关闭搜索覆盖层
                   widget.onClose();
                 }
