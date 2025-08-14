@@ -57,6 +57,8 @@ class MainNavigation extends StatelessWidget {
         return 0;
       case '/following':
         return 1;
+      case '/message':
+        return 2;
       default:
         return 0;
     }
@@ -77,14 +79,10 @@ class MainNavigation extends StatelessWidget {
       //     '发布功能暂未开放',
       //   );
       //   break;
-      case 3:
-        // TODO: 实现消息功能
-        ErrorUtils.showWarning(
-          context,
-          '消息功能暂未开放',
-        );
+      case 2:
+        context.go('/message');
         break;
-      case 4:
+      case 3:
         // TODO: 实现个人中心
         ErrorUtils.showWarning(
           context,
