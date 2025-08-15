@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 import '../providers/auth_provider.dart';
 import '../../../shared/utils/error_utils.dart';
+import '../../../shared/widgets/language_selector.dart';
+import '../../../shared/providers/language_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -52,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (mounted) {
       ErrorUtils.showError(
         context,
-        authProvider.error ?? '登录失败',
+        authProvider.error ?? FlutterI18n.translate(context, 'auth.login.login_failed'),
       );
     }
   }
@@ -86,173 +89,211 @@ class _LoginScreenState extends State<LoginScreen> {
             width: double.infinity,
             height: double.infinity,
             child: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 22),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 60),
-                    
-                    // Logo
-                    const Image(
-                      image: AssetImage('assets/images/logo.png'),
-                      width: 80,
-                      height: 80,
+              child: Column(
+                children: [
+                  // 语言选择器 - 右上角
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16, right: 16),
+                      child: const LanguageSelector(),
                     ),
-                    
-                    const SizedBox(height: 20),
-                    
-                    // 标题
-                    const Text(
-                      'TAMALOOK',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    
-                    const SizedBox(height: 80),
-                    
-                    // 登录表单
-                    Form(
-                      key: _formKey,
+                  ),
+                  // 主要内容
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 22),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          TextFormField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              labelText: '邮箱',
-                              labelStyle: const TextStyle(color: Colors.grey),
-                              prefixIcon: const Icon(Icons.email, color: Colors.grey),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.blue),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return '请输入邮箱';
-                              }
-                              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                return '请输入有效的邮箱地址';
-                              }
-                              return null;
-                            },
+                          const SizedBox(height: 60),
+                          
+                          // Logo
+                          const Image(
+                            image: AssetImage('assets/images/logo.png'),
+                            width: 80,
+                            height: 80,
                           ),
-                          const SizedBox(height: 30),
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: _obscurePassword,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              labelText: '密码',
-                              labelStyle: const TextStyle(color: Colors.grey),
-                              prefixIcon: const Icon(Icons.lock, color: Colors.grey),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                                  color: Colors.grey,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _obscurePassword = !_obscurePassword;
-                                  });
-                                },
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Colors.blue),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return '请输入密码';
-                              }
-                              if (value.length < 6) {
-                                return '密码至少6位';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 32),
-
-                          // 登录按钮
-                          Consumer<AuthProvider>(
-                            builder: (context, authProvider, child) {
-                              return SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: ElevatedButton(
-                                  onPressed: authProvider.isLoading ? null : _handleLogin,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: authProvider.isLoading
-                                      ? const CircularProgressIndicator(color: Colors.white)
-                                      : const Text(
-                                          '登录',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
+                          
+                          const SizedBox(height: 20),
+                          
+                          // 标题
+                          Consumer<LanguageProvider>(
+                            builder: (context, languageProvider, _) {
+                              return Text(
+                                FlutterI18n.translate(context, 'auth.login.title'),
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               );
                             },
                           ),
+                          
+                          const SizedBox(height: 8),
+                          
+                          // 副标题
+                          Consumer<LanguageProvider>(
+                            builder: (context, languageProvider, _) {
+                              return Text(
+                                FlutterI18n.translate(context, 'auth.login.subtitle'),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              );
+                            },
+                          ),
+                          
+                          const SizedBox(height: 80),
+                          
+                          // 登录表单
+                          Consumer<LanguageProvider>(
+                            builder: (context, languageProvider, _) {
+                              return Form(
+                                key: _formKey,
+                                child: Column(
+                              children: [
+                                TextFormField(
+                                  controller: _emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    labelText: FlutterI18n.translate(context, 'auth.login.email'),
+                                    labelStyle: const TextStyle(color: Colors.grey),
+                                    prefixIcon: const Icon(Icons.email, color: Colors.grey),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Colors.grey),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Colors.blue),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return FlutterI18n.translate(context, 'auth.login.email_required');
+                                    }
+                                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                                      return FlutterI18n.translate(context, 'auth.login.email_invalid');
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 30),
+                                TextFormField(
+                                  controller: _passwordController,
+                                  obscureText: _obscurePassword,
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    labelText: FlutterI18n.translate(context, 'auth.login.password'),
+                                    labelStyle: const TextStyle(color: Colors.grey),
+                                    prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                        color: Colors.grey,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscurePassword = !_obscurePassword;
+                                        });
+                                      },
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Colors.grey),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Colors.blue),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return FlutterI18n.translate(context, 'auth.login.password_required');
+                                    }
+                                    if (value.length < 6) {
+                                      return FlutterI18n.translate(context, 'auth.login.password_min_length');
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 32),
+
+                                // 登录按钮
+                                Consumer<AuthProvider>(
+                                  builder: (context, authProvider, child) {
+                                    return SizedBox(
+                                      width: double.infinity,
+                                      height: 50,
+                                      child: ElevatedButton(
+                                        onPressed: authProvider.isLoading ? null : _handleLogin,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.blue,
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        child: authProvider.isLoading
+                                            ? const CircularProgressIndicator(color: Colors.white)
+                                            : Text(
+                                                FlutterI18n.translate(context, 'auth.login.login_button'),
+                                                style: const TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                            },
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // 注册链接
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                FlutterI18n.translate(context, 'auth.login.no_account'),
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  context.go('/auth/register');
+                                },
+                                child: Text(
+                                  FlutterI18n.translate(context, 'auth.login.sign_up'),
+                                  style: const TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
-
-                    const SizedBox(height: 24),
-
-                    // 注册链接
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          '还没有账号？',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.go('/auth/register');
-                          },
-                          child: const Text(
-                            '立即注册',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

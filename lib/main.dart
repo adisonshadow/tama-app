@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 import 'core/error_handling/global_error_handler.dart';
 import 'core/network/dio_client.dart';
@@ -8,6 +10,7 @@ import 'features/auth/providers/auth_provider.dart';
 import 'features/home/providers/video_provider.dart';
 import 'features/following/providers/following_provider.dart';
 import 'shared/providers/follow_provider.dart';
+import 'shared/providers/language_provider.dart';
 import 'features/video_player/providers/video_player_provider.dart';
 import 'shared/services/storage_service.dart';
 import 'shared/services/video_token_manager.dart';
@@ -56,15 +59,39 @@ class Tama2App extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => VideoProvider()),
         ChangeNotifierProvider(create: (_) => FollowingProvider()),
         ChangeNotifierProvider(create: (_) => FollowProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => VideoPlayerProvider()),
       ],
-      child: Consumer<AuthProvider>(
-        builder: (context, authProvider, _) {
+              child: Consumer2<AuthProvider, LanguageProvider>(
+        builder: (context, authProvider, languageProvider, _) {
           return MaterialApp.router(
             title: 'TAMA',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.theme,
             routerConfig: AppRouter.router,
+            
+            // 国际化配置
+            localizationsDelegates: [
+              FlutterI18nDelegate(
+                translationLoader: FileTranslationLoader(
+                  basePath: 'assets/flutter_i18n',
+                  useCountryCode: true,
+                  fallbackFile: 'en.json',
+                ),
+                missingTranslationHandler: (key, locale) {
+                  debugPrint('--- Missing Key: $key, languageCode: ${locale?.languageCode}');
+                },
+              ),
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'), // English
+              Locale('zh', 'TW'), // Traditional Chinese (Taiwan)
+            ],
+            locale: languageProvider.getLocaleFromLanguageCode(languageProvider.currentLanguage),
+            
             // 添加错误处理
             builder: (context, child) {
               // 捕获构建错误

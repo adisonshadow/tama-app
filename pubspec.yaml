@@ -11,6 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
   
+  # 国际化支持
+  flutter_localizations:
+    sdk: flutter
+  flutter_i18n: ^0.36.3
+  
   # 网络请求
   dio: ^5.3.2
   
@@ -43,7 +48,7 @@ dependencies:
   
   # 工具类
   json_annotation: ^4.8.1
-  intl: ^0.18.1
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +63,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/flutter_i18n/
   
   # fonts:
   #   - family: Roboto

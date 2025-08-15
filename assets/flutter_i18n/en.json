@@ -1,0 +1,59 @@
+{
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to continue your journey",
+      "email": "Email",
+      "password": "Password",
+      "login_button": "Sign In",
+      "forgot_password": "Forgot Password?",
+      "no_account": "Don't have an account?",
+      "sign_up": "Sign Up",
+      "email_required": "Email is required",
+      "email_invalid": "Please enter a valid email",
+      "password_required": "Password is required",
+      "password_min_length": "Password must be at least 6 characters",
+      "login_failed": "Login failed",
+      "login_success": "Login successful"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join our community today",
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "nickname": "Nickname",
+      "register_button": "Create Account",
+      "already_account": "Already have an account?",
+      "sign_in": "Sign In",
+      "email_required": "Email is required",
+      "email_invalid": "Please enter a valid email",
+      "password_required": "Password is required",
+      "password_min_length": "Password must be at least 6 characters",
+      "confirm_password_required": "Please confirm your password",
+      "passwords_not_match": "Passwords do not match",
+      "nickname_required": "Nickname is required",
+      "nickname_min_length": "Nickname must be at least 2 characters",
+      "register_failed": "Registration failed",
+      "register_success": "Registration successful"
+    },
+    "common": {
+      "loading": "Loading...",
+      "error": "Error",
+      "success": "Success",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "back": "Back",
+      "next": "Next",
+      "submit": "Submit"
+    }
+  },
+  "app": {
+    "name": "TAMA",
+    "welcome": "Welcome to TAMA",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "ok": "OK"
+  }
+}
