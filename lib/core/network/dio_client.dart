@@ -66,11 +66,11 @@ class DioClient {
     ));
     
     // 添加日志拦截器（仅在调试模式下）
-    _dio.interceptors.add(LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-      logPrint: (object) => print(object),
-    ));
+    // _dio.interceptors.add(LogInterceptor(
+    //   requestBody: true,
+    //   responseBody: true,
+    //   logPrint: (object) => print(object),
+    // ));
   }
   
   static Dio get instance => _dio;

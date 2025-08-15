@@ -48,6 +48,48 @@
       "submit": "Submit"
     }
   },
+  "tabbar": {
+    "home": "Home",
+    "following": "Following",
+    "create": "Create",
+    "message": "Message",
+    "profile": "Profile"
+  },
+  "home": {
+    "recommend": "Recommend",
+    "trending": "Trending",
+    "latest": "Latest",
+    "popular": "Popular",
+    "following": "Following",
+    "refresh": "Pull to refresh",
+    "refresh_complete": "Refresh completed",
+    "refresh_failed": "Refresh failed",
+    "loading": "Loading videos...",
+    "no_more": "No more videos",
+    "load_failed": "Failed to load videos",
+    "load_failed_retry": "Load failed, tap to retry",
+    "retry": "Retry",
+    "pull_to_load": "Pull up to load more",
+    "release_to_load": "Release to load more",
+    "video_info": {
+      "likes": "likes",
+      "comments": "comments",
+      "shares": "shares",
+      "views": "views",
+      "time_ago": "ago",
+      "follow": "Follow",
+      "following": "Following",
+      "unfollow": "Unfollow"
+    },
+    "actions": {
+      "like": "Like",
+      "comment": "Comment",
+      "share": "Share",
+      "bookmark": "Bookmark",
+      "report": "Report",
+      "search": "Search videos"
+    }
+  },
   "app": {
     "name": "TAMA",
     "welcome": "Welcome to TAMA",

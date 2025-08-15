@@ -14,10 +14,14 @@ import 'shared/providers/language_provider.dart';
 import 'features/video_player/providers/video_player_provider.dart';
 import 'shared/services/storage_service.dart';
 import 'shared/services/video_token_manager.dart';
+import 'shared/services/screen_orientation_service.dart';
 import 'app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // 设置屏幕方向为竖屏模式
+  await ScreenOrientationService.setPortraitMode();
   
   // 初始化全局错误处理
   GlobalErrorHandler().initialize();
@@ -74,9 +78,9 @@ class Tama2App extends StatelessWidget {
             localizationsDelegates: [
               FlutterI18nDelegate(
                 translationLoader: FileTranslationLoader(
-                  basePath: 'assets/flutter_i18n',
+                  basePath: 'flutter_i18n',
                   useCountryCode: true,
-                  fallbackFile: 'en.json',
+                  fallbackFile: 'en', // .json 
                 ),
                 missingTranslationHandler: (key, locale) {
                   debugPrint('--- Missing Key: $key, languageCode: ${locale?.languageCode}');
@@ -92,8 +96,13 @@ class Tama2App extends StatelessWidget {
             ],
             locale: languageProvider.getLocaleFromLanguageCode(languageProvider.currentLanguage),
             
-            // 添加错误处理
+            // 添加错误处理和屏幕方向控制
             builder: (context, child) {
+              // 确保应用始终保持竖屏模式
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                ScreenOrientationService.setPortraitMode();
+              });
+              
               // 捕获构建错误
               ErrorWidget.builder = (FlutterErrorDetails details) {
                 // 记录错误但不显示给用户

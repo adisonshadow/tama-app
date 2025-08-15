@@ -26,19 +26,19 @@ class _FollowingScreenState extends State<FollowingScreen>
   @override
   void initState() {
     super.initState();
-    print('🔍 FollowingScreen - initState 被调用');
+    // print('🔍 FollowingScreen - initState 被调用');
     _tabController = TabController(length: 2, vsync: this);
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('🔍 FollowingScreen - addPostFrameCallback 被调用');
+      // print('🔍 FollowingScreen - addPostFrameCallback 被调用');
       final followingProvider = context.read<FollowingProvider>();
-      print('🔍 FollowingScreen - 获取到 FollowingProvider: ${followingProvider.runtimeType}');
+      // print('🔍 FollowingScreen - 获取到 FollowingProvider: ${followingProvider.runtimeType}');
       
       // 只加载当前激活tab的数据，避免loading状态冲突
-      print('🔍 FollowingScreen - 开始调用 loadFollowingVideos');
+      // print('🔍 FollowingScreen - 开始调用 loadFollowingVideos');
       followingProvider.loadFollowingVideos(refresh: true);
       
-      print('🔍 FollowingScreen - loadFollowingVideos 调用完成');
+      // print('🔍 FollowingScreen - loadFollowingVideos 调用完成');
     });
   }
 
@@ -74,7 +74,7 @@ class _FollowingScreenState extends State<FollowingScreen>
                 Tab(text: '用户'),
               ],
               onTap: (index) {
-                print('🔍 FollowingScreen - Tab切换到索引: $index');
+                // print('🔍 FollowingScreen - Tab切换到索引: $index');
                 // 切换tab时重置刷新控制器
                 _videosRefreshController.resetNoData();
                 _usersRefreshController.resetNoData();
@@ -82,7 +82,7 @@ class _FollowingScreenState extends State<FollowingScreen>
                 // 如果切换到用户tab，加载用户数据
                 if (index == 1) {
                   final followingProvider = context.read<FollowingProvider>();
-                  print('🔍 FollowingScreen - 切换到用户tab，开始加载用户数据');
+                  // print('🔍 FollowingScreen - 切换到用户tab，开始加载用户数据');
                   followingProvider.loadMyFollows(refresh: true);
                 }
               },
@@ -181,8 +181,8 @@ class _FollowingScreenState extends State<FollowingScreen>
           );
         }
 
-        print('🔍 FollowingScreen - 准备构建VideoGridWidget');
-        print('🔍 FollowingScreen - 视频数量: ${followingProvider.followingVideos.length}');
+        // print('🔍 FollowingScreen - 准备构建VideoGridWidget');
+        // print('🔍 FollowingScreen - 视频数量: ${followingProvider.followingVideos.length}');
         
         return VideoGridWidget(
           videos: followingProvider.followingVideos,
@@ -208,11 +208,11 @@ class _FollowingScreenState extends State<FollowingScreen>
   }
 
   Widget _buildFollowingUsersTab() {
-    print('🔍 FollowingScreen - _buildFollowingUsersTab 被调用');
+    // print('🔍 FollowingScreen - _buildFollowingUsersTab 被调用');
     return Consumer<FollowingProvider>(
       builder: (context, followingProvider, child) {
-        print('🔍 FollowingScreen - Consumer builder 被调用，follows数量: ${followingProvider.follows.length}');
-        print('🔍 FollowingScreen - isLoading: ${followingProvider.isLoading}, error: ${followingProvider.error}');
+        // print('🔍 FollowingScreen - Consumer builder 被调用，follows数量: ${followingProvider.follows.length}');
+        // print('🔍 FollowingScreen - isLoading: ${followingProvider.isLoading}, error: ${followingProvider.error}');
         
         if (followingProvider.isLoading && followingProvider.follows.isEmpty) {
           return const Center(
@@ -338,7 +338,7 @@ class _FollowingScreenState extends State<FollowingScreen>
                 bio: follow.bio,
                 onFollowTap: () async {
                   // 处理关注状态变化
-                  print('🔍 FollowingScreen - 关注状态变化，用户ID: ${follow.id}');
+                  // print('🔍 FollowingScreen - 关注状态变化，用户ID: ${follow.id}');
                   // 可以在这里添加额外的逻辑，比如刷新列表等
                 },
                 onCardTap: () {

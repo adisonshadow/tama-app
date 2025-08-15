@@ -48,6 +48,48 @@
       "submit": "提交"
     }
   },
+  "tabbar": {
+    "home": "首頁",
+    "following": "關注",
+    "create": "創作",
+    "message": "訊息",
+    "profile": "個人"
+  },
+  "home": {
+    "recommend": "推薦",
+    "trending": "熱門",
+    "latest": "最新",
+    "popular": "流行",
+    "following": "關注",
+    "refresh": "下拉重新整理",
+    "refresh_complete": "重新整理完成",
+    "refresh_failed": "重新整理失敗",
+    "loading": "載入影片中...",
+    "no_more": "沒有更多影片",
+    "load_failed": "載入影片失敗",
+    "load_failed_retry": "載入失敗，點擊重試",
+    "retry": "重試",
+    "pull_to_load": "上拉載入更多",
+    "release_to_load": "鬆開載入更多",
+    "video_info": {
+      "likes": "讚",
+      "comments": "評論",
+      "shares": "分享",
+      "views": "觀看",
+      "time_ago": "前",
+      "follow": "關注",
+      "following": "已關注",
+      "unfollow": "取消關注"
+    },
+    "actions": {
+      "like": "讚",
+      "comment": "評論",
+      "share": "分享",
+      "bookmark": "收藏",
+      "report": "檢舉",
+      "search": "搜尋影片"
+    }
+  },
   "app": {
     "name": "TAMA",
     "welcome": "歡迎使用 TAMA",

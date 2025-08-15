@@ -34,7 +34,7 @@ class VideoProvider extends ChangeNotifier {
 
       // 添加调试信息
       if (kIsWeb) {
-        debugPrint('🔍 Random Videos API Response: $response');
+        // debugPrint('🔍 Random Videos API Response: $response');
       }
 
       if (response['status'] == 'SUCCESS') {
@@ -44,7 +44,7 @@ class VideoProvider extends ChangeNotifier {
         if (kIsWeb) {
           debugPrint('🔍 Video Data Count: ${videoData.length}');
           if (videoData.isNotEmpty) {
-            debugPrint('🔍 First Video Data: ${videoData.first}');
+            // debugPrint('🔍 First Video Data: ${videoData.first}');
           }
         }
         

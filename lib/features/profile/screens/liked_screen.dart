@@ -48,8 +48,8 @@ class _LikedScreenState extends State<LikedScreen>
     
     return Consumer<LikedProvider>(
       builder: (context, likedProvider, child) {
-        print('🔍 LikedScreen - Consumer builder 被调用，likedVideos数量: ${likedProvider.likedVideos.length}');
-        print('🔍 LikedScreen - isLoading: ${likedProvider.isLoading}, error: ${likedProvider.error}');
+        // print('🔍 LikedScreen - Consumer builder 被调用，likedVideos数量: ${likedProvider.likedVideos.length}');
+        // print('🔍 LikedScreen - isLoading: ${likedProvider.isLoading}, error: ${likedProvider.error}');
         
         if (likedProvider.isLoading && likedProvider.likedVideos.isEmpty) {
           return const Center(
@@ -123,8 +123,8 @@ class _LikedScreenState extends State<LikedScreen>
           );
         }
 
-        print('🔍 LikedScreen - 准备构建VideoGridWidget');
-        print('🔍 LikedScreen - 视频数量: ${likedProvider.likedVideos.length}');
+        // print('🔍 LikedScreen - 准备构建VideoGridWidget');
+        // print('🔍 LikedScreen - 视频数量: ${likedProvider.likedVideos.length}');
         
         return VideoGridWidget(
           videos: likedProvider.likedVideos,

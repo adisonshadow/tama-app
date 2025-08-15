@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../../../core/constants/app_constants.dart';
 
 import '../../../shared/widgets/follow_button.dart';
@@ -57,11 +58,11 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
     
     // 打印调试信息
     if (kIsWeb) {
-      debugPrint('🔍 VideoActionButtons - Video ID: ${widget.video.id}');
-      debugPrint('🔍 VideoActionButtons - Is Liked: ${widget.video.isLiked}');
-      debugPrint('🔍 VideoActionButtons - Is Starred: ${widget.video.isStarred}');
-      debugPrint('🔍 VideoActionButtons - Liked Count: ${widget.video.likedCount}');
-      debugPrint('🔍 VideoActionButtons - Starred Count: ${widget.video.starredCount}');
+      // debugPrint('🔍 VideoActionButtons - Video ID: ${widget.video.id}');
+      // debugPrint('🔍 VideoActionButtons - Is Liked: ${widget.video.isLiked}');
+      // debugPrint('🔍 VideoActionButtons - Is Starred: ${widget.video.isStarred}');
+      // debugPrint('🔍 VideoActionButtons - Liked Count: ${widget.video.likedCount}');
+      // debugPrint('🔍 VideoActionButtons - Starred Count: ${widget.video.starredCount}');
     }
   }
 
@@ -111,7 +112,7 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
             color: Colors.white,
             size: 38,
           ),
-          count: '评论',
+          count: FlutterI18n.translate(context, 'home.video_info.comments'),
           onTap: widget.onComment,
         ),
         
@@ -146,7 +147,7 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
             color: Colors.white,
             size: 38,
           ),
-          count: '分享',
+          count: FlutterI18n.translate(context, 'home.video_info.shares'),
           onTap: widget.onShare,
         ),
 

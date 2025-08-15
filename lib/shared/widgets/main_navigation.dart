@@ -1,6 +1,9 @@
 // APP 主导航栏
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:provider/provider.dart';
+import '../providers/language_provider.dart';
 
 // import '../utils/error_utils.dart';
 
@@ -16,39 +19,43 @@ class MainNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _getCurrentIndex(context),
-        onTap: (index) => _onTabTapped(context, index),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: '推荐',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.face_retouching_natural),
-            label: '关注',
-          ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.add_box),
-          //   label: '发布',
-          // ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.people),
-          //   label: '粉丝',
-          // ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-            label: '消息',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '我',
-          ),
-        ],
+      bottomNavigationBar: Consumer<LanguageProvider>(
+        builder: (context, languageProvider, _) {
+          return BottomNavigationBar(
+            backgroundColor: Colors.black,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.grey,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _getCurrentIndex(context),
+            onTap: (index) => _onTabTapped(context, index),
+            items: [
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.explore),
+                label: FlutterI18n.translate(context, 'tabbar.home'),
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.face_retouching_natural),
+                label: FlutterI18n.translate(context, 'tabbar.following'),
+              ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.add_box),
+              //   label: FlutterI18n.translate(context, 'tabbar.create'),
+              // ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.people),
+              //   label: FlutterI18n.translate(context, 'tabbar.fans'),
+              // ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.chat_bubble),
+                label: FlutterI18n.translate(context, 'tabbar.message'),
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.person),
+                label: FlutterI18n.translate(context, 'tabbar.profile'),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

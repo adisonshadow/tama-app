@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'dart:ui';
 
 import '../providers/video_provider.dart';
 import '../widgets/video_feed_widget.dart';
 import '../../../shared/widgets/search_manager.dart';
+import '../../../shared/providers/language_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,11 +27,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   @override
   void initState() {
     super.initState();
-    print('🔍 HomeScreen - initState 开始');
-    print('🔍 HomeScreen - _currentVideoCoverUrl 初始值: $_currentVideoCoverUrl');
+    // print('🔍 HomeScreen - initState 开始');
+    // print('🔍 HomeScreen - _currentVideoCoverUrl 初始值: $_currentVideoCoverUrl');
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('🔍 HomeScreen - addPostFrameCallback 执行');
+      // print('🔍 HomeScreen - addPostFrameCallback 执行');
       context.read<VideoProvider>().loadRandomRecommendedVideos(refresh: true);
     });
   }
@@ -43,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
       final firstVideo = videoProvider.videos.first;
       // 使用新的getCoverByRecord方法，支持resize参数
       final coverUrl = firstVideo.getCoverByRecord('w=90&h=160'); // 使用web项目中的默认尺寸
-      print('🔍 HomeScreen - 设置初始封面: $coverUrl'); // 添加调试信息
+      // print('🔍 HomeScreen - 设置初始封面: $coverUrl'); // 添加调试信息
       if (coverUrl.isNotEmpty) {
         setState(() {
           _currentVideoCoverUrl = coverUrl;
@@ -76,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
   void _onVideoChanged(String? coverUrl) {
-    print('🔍 HomeScreen - 视频封面变化: $coverUrl'); // 添加调试信息
+    // print('🔍 HomeScreen - 视频封面变化: $coverUrl'); // 添加调试信息
     setState(() {
       _currentVideoCoverUrl = coverUrl;
     });
@@ -100,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Logo
-            const Row(
+            Row(
               children: [
                 Image(
                   image: AssetImage('assets/images/logo.png'),
@@ -108,13 +110,17 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   height: 28,
                 ),
                 SizedBox(width: 8),
-                Text(
-                  'TAMALOOK',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Consumer<LanguageProvider>(
+                  builder: (context, languageProvider, _) {
+                    return Text(
+                      FlutterI18n.translate(context, 'app.name'),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -127,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   onPressed: () {
                     SearchManager.showSearch(context);
                   },
-                  tooltip: '搜索视频',
+                  tooltip: FlutterI18n.translate(context, 'home.actions.search'),
                 ),
                 // Consumer<AuthProvider>(
                 //   builder: (context, authProvider, child) {
@@ -276,7 +282,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
                         ),
-                        child: const Text('重试'),
+                        child: Consumer<LanguageProvider>(
+                          builder: (context, languageProvider, _) {
+                            return Text(FlutterI18n.translate(context, 'home.retry'));
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -289,30 +299,56 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 enablePullUp: true,
                 onRefresh: _onRefresh,
                 onLoading: _onLoading,
-                header: const WaterDropHeader(
-                  waterDropColor: Colors.blue,
-                  complete: Text('刷新完成', style: TextStyle(color: Colors.white)),
-                  failed: Text('刷新失败', style: TextStyle(color: Colors.white)),
+                header: Consumer<LanguageProvider>(
+                  builder: (context, languageProvider, _) {
+                    return WaterDropHeader(
+                      waterDropColor: Colors.blue,
+                      complete: Text(
+                        FlutterI18n.translate(context, 'home.refresh_complete'),
+                        style: const TextStyle(color: Colors.white)
+                      ),
+                      failed: Text(
+                        FlutterI18n.translate(context, 'home.refresh_failed'),
+                        style: const TextStyle(color: Colors.white)
+                      ),
+                    );
+                  },
                 ),
-                footer: CustomFooter(
-                  builder: (context, mode) {
-                            Widget body;
-                            if (mode == LoadStatus.idle) {
-                              body = const Text('上拉加载更多', style: TextStyle(color: Colors.grey));
-                            } else if (mode == LoadStatus.loading) {
-                              body = const CircularProgressIndicator(color: Colors.blue);
-                            } else if (mode == LoadStatus.failed) {
-                              body = const Text('加载失败，点击重试', style: TextStyle(color: Colors.red));
-                            } else if (mode == LoadStatus.canLoading) {
-                              body = const Text('松开加载更多', style: TextStyle(color: Colors.grey));
-                            } else {
-                              body = const Text('没有更多内容了', style: TextStyle(color: Colors.grey));
-                            }
-                            return SizedBox(
-                              height: 55.0,
-                              child: Center(child: body),
-                            );
-                          },
+                footer: Consumer<LanguageProvider>(
+                  builder: (context, languageProvider, _) {
+                    return CustomFooter(
+                      builder: (context, mode) {
+                        Widget body;
+                        if (mode == LoadStatus.idle) {
+                          body = Text(
+                            FlutterI18n.translate(context, 'home.pull_to_load'),
+                            style: const TextStyle(color: Colors.grey)
+                          );
+                        } else if (mode == LoadStatus.loading) {
+                          body = const CircularProgressIndicator(color: Colors.blue);
+                        } else if (mode == LoadStatus.failed) {
+                          body = Text(
+                            FlutterI18n.translate(context, 'home.load_failed_retry'),
+                            style: const TextStyle(color: Colors.red)
+                          );
+                        } else if (mode == LoadStatus.canLoading) {
+                          body = Text(
+                            FlutterI18n.translate(context, 'home.release_to_load'),
+                            style: const TextStyle(color: Colors.grey)
+                          );
+                        } else {
+                          body = Text(
+                            FlutterI18n.translate(context, 'home.no_more'),
+                            style: const TextStyle(color: Colors.grey)
+                          );
+                        }
+                        return SizedBox(
+                          height: 55.0,
+                          child: Center(child: body),
+                        );
+                      },
+                    );
+                  },
                 ),
                 child: VideoFeedWidget(
                   videos: videoProvider.videos,
