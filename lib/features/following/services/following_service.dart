@@ -9,14 +9,14 @@ class FollowingService {
       const url = '/my/followings';
       final params = {'page': page, 'page_size': pageSize};
       
-      print('🔍 FollowingService - 调用 getMyFollows API');
-      print('🔍 FollowingService - URL: $url');
-      print('🔍 FollowingService - 参数: $params');
+      // print('🔍 FollowingService - 调用 getMyFollows API');
+      // print('🔍 FollowingService - URL: $url');
+      // print('🔍 FollowingService - 参数: $params');
       
       final response = await DioClient.instance.get(url, queryParameters: params);
       
-      print('🔍 FollowingService - 响应状态码: ${response.statusCode}');
-      print('🔍 FollowingService - 响应数据: ${response.data}');
+      // print('🔍 FollowingService - 响应状态码: ${response.statusCode}');
+      // print('🔍 FollowingService - 响应数据: ${response.data}');
       
       return response.data;
     } catch (e) {
@@ -45,11 +45,11 @@ class FollowingService {
 
   static Future<Map<String, dynamic>> followUser(String userId) async {
     try {
-      print('🔍 FollowingService - 调用 followUser API: /my/follow');
+      // print('🔍 FollowingService - 调用 followUser API: /my/follow');
       final response = await DioClient.instance.post('/my/follow', data: {
         'user_id': userId,
       });
-      print('🔍 FollowingService - followUser 响应: ${response.data}');
+      // print('🔍 FollowingService - followUser 响应: ${response.data}');
       return response.data;
     } catch (e) {
       print('❌ FollowingService - followUser 错误: $e');
@@ -59,11 +59,11 @@ class FollowingService {
 
   static Future<Map<String, dynamic>> unfollowUser(String userId) async {
     try {
-      print('🔍 FollowingService - 调用 unfollowUser API: /my/unfollow');
+      // print('🔍 FollowingService - 调用 unfollowUser API: /my/unfollow');
       final response = await DioClient.instance.delete('/my/unfollow', data: {
         'user_id': userId,
       });
-      print('🔍 FollowingService - unfollowUser 响应: ${response.data}');
+      // print('🔍 FollowingService - unfollowUser 响应: ${response.data}');
       return response.data;
     } catch (e) {
       print('❌ FollowingService - unfollowUser 错误: $e');

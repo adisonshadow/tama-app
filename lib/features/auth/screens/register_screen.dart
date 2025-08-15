@@ -73,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.7),
+              color: Colors.black.withValues(alpha: 0.3),
             ),
           ),
           // 主要内容 - 占满整个屏幕高度
@@ -88,15 +88,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     const SizedBox(height: 40),
                     
-                    // Logo区域
-                    const Icon(
-                      Icons.video_collection,
-                      size: 80,
-                      color: Colors.blue,
+                    // // Logo区域
+                    // const Icon(
+                    //   Icons.video_collection,
+                    //   size: 80,
+                    //   color: Colors.blue,
+                    // ),
+                    // Logo
+                    const Image(
+                      image: AssetImage('assets/images/logo.png'),
+                      width: 80,
+                      height: 80,
                     ),
+
                     const SizedBox(height: 16),
+                    
                     const Text(
-                      '注册 Tama2',
+                      '注册新账户',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -105,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      '创建账号，开启视频之旅',
+                      '创建账号，品尝更多美妙',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey,

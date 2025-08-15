@@ -372,7 +372,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
                   // 关闭搜索覆盖层
                   widget.onClose();
                 } catch (e) {
-                  print('🔍 导航错误: $e');
+                  print('❌ 导航错误: $e');
                   // 如果导航失败，至少关闭搜索覆盖层
                   widget.onClose();
                 }

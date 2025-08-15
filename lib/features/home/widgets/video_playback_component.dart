@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:ui';
 
-import '../../../core/constants/app_constants.dart';
+// import '../../../core/constants/app_constants.dart';
 import '../models/video_model.dart';
 import '../providers/video_provider.dart';
 import '../screens/tag_videos_screen.dart';
@@ -40,11 +40,11 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
     
     // 打印调试信息
     if (kIsWeb) {
-      debugPrint('🔍 Video Playback Component - Video ID: ${widget.video.id}');
-      debugPrint('🔍 Video Playback Component - Avatar: ${widget.video.avatar}');
+      // debugPrint('🔍 Video Playback Component - Video ID: ${widget.video.id}');
+      // debugPrint('🔍 Video Playback Component - Avatar: ${widget.video.avatar}');
       if (widget.video.avatar != null) {
-        final avatarUrl = '${AppConstants.baseUrl}/api/media/img/${widget.video.avatar}';
-        debugPrint('🔍 Video Playback Component - Full Avatar URL: $avatarUrl');
+        // final avatarUrl = '${AppConstants.baseUrl}/api/media/img/${widget.video.avatar}';
+        // debugPrint('🔍 Video Playback Component - Full Avatar URL: $avatarUrl');
       }
     }
   }
@@ -327,7 +327,7 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
               onShare: () {
                 // TODO: 实现分享功能
                 if (kIsWeb) {
-                  debugPrint('🔍 分享按钮被点击');
+                  // debugPrint('🔍 分享按钮被点击');
                 }
               },
               onComment: () {

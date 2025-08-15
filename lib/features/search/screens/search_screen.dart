@@ -85,8 +85,8 @@ class _SearchScreenState extends State<SearchScreen> {
         // 判断是否还有更多数据
         _hasMore = results.length >= 20;
         
-        print('🔍 搜索完成 - 当前页: $_currentPage, 结果数量: ${results.length}, 是否有更多: $_hasMore');
-        print('🔍 当前总结果数量: ${_searchResults.length}');
+        // print('🔍 搜索完成 - 当前页: $_currentPage, 结果数量: ${results.length}, 是否有更多: $_hasMore');
+        // print('🔍 当前总结果数量: ${_searchResults.length}');
         
         setState(() {
           _hasSearched = true;
@@ -267,18 +267,18 @@ class _SearchScreenState extends State<SearchScreen> {
             _refreshController.refreshCompleted();
           },
           onLoading: () async {
-            print('🔍 开始上拉加载更多，当前页: $_currentPage, 是否有更多: $_hasMore');
+            // print('🔍 开始上拉加载更多，当前页: $_currentPage, 是否有更多: $_hasMore');
             
             // 如果没有更多数据，直接显示"没有更多内容了"
             if (!_hasMore) {
-              print('🔍 没有更多数据，直接调用 loadNoData');
+              // print('🔍 没有更多数据，直接调用 loadNoData');
               _refreshController.loadNoData();
               return;
             }
             
             await _performSearch(refresh: false);
-            print('🔍 加载完成，当前页: $_currentPage, 是否有更多: $_hasMore');
-            print('🔍 决定调用: ${_hasMore ? "loadComplete" : "loadNoData"}');
+            // print('🔍 加载完成，当前页: $_currentPage, 是否有更多: $_hasMore');
+            // print('🔍 决定调用: ${_hasMore ? "loadComplete" : "loadNoData"}');
             
             if (_hasMore) {
               _refreshController.loadComplete();
@@ -295,7 +295,7 @@ class _SearchScreenState extends State<SearchScreen> {
             builder: (context, mode) {
               // 强制获取最新的 _hasMore 值
               final hasMore = _hasMore;
-              print('🔍 CustomFooter 状态: $mode, _hasMore: $hasMore');
+              // print('🔍 CustomFooter 状态: $mode, _hasMore: $hasMore');
               
               Widget body;
               if (mode == LoadStatus.idle) {

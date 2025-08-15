@@ -38,9 +38,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _bioController = TextEditingController(text: widget.user.bio ?? '');
     
     if (kIsWeb) {
-      debugPrint('🔍 EditProfileScreen initState');
-      debugPrint('🔍 用户昵称: ${widget.user.nickname}');
-      debugPrint('🔍 用户简介: ${widget.user.bio}');
+      // debugPrint('🔍 EditProfileScreen initState');
+      // debugPrint('🔍 用户昵称: ${widget.user.nickname}');
+      // debugPrint('🔍 用户简介: ${widget.user.bio}');
     }
   }
 
@@ -402,7 +402,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       if (kIsWeb) {
         // Web 平台暂时显示提示
-        debugPrint('🔍 Web平台：图片选择功能开发中');
+        // debugPrint('🔍 Web平台：图片选择功能开发中');
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -430,7 +430,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         });
         
         if (kIsWeb) {
-          debugPrint('🔍 选择了${type == 'avatar' ? '头像' : '封面'}图片: ${imageFile.path}');
+          // debugPrint('🔍 选择了${type == 'avatar' ? '头像' : '封面'}图片: ${imageFile.path}');
         }
         
         // 选择图片成功后，显示提示
@@ -439,7 +439,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             SnackBar(
               content: Text('已选择${type == 'avatar' ? '头像' : '封面'}图片，点击"裁剪${type == 'avatar' ? '头像' : '封面'}"进行裁剪'),
               backgroundColor: Colors.blue,
-              duration: Duration(seconds: 3),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
@@ -457,7 +457,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     } catch (e) {
       if (kIsWeb) {
-        debugPrint('🔍 选择图片失败: $e');
+        debugPrint('❌ 选择图片失败: $e');
       }
       
       if (mounted) {
@@ -512,7 +512,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             SnackBar(
               content: Text('Web平台${type == 'avatar' ? '头像' : '封面'}裁剪功能开发中，请使用移动端应用'),
               backgroundColor: Colors.orange,
-              duration: Duration(seconds: 3),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
@@ -564,7 +564,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       if (croppedFile != null) {
         if (kIsWeb) {
-          debugPrint('🔍 图片裁剪成功，准备上传');
+          // debugPrint('🔍 图片裁剪成功，准备上传');
         }
         
         // 更新选择的文件为裁剪后的文件
@@ -581,7 +581,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             SnackBar(
               content: Text('${type == 'avatar' ? '头像' : '封面'}裁剪成功！点击"保存"按钮上传'),
               backgroundColor: Colors.green,
-              duration: Duration(seconds: 3),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
@@ -602,7 +602,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     } catch (e) {
       if (kIsWeb) {
-        debugPrint('🔍 裁剪图片失败: $e');
+        debugPrint('❌ 裁剪图片失败: $e');
       }
       
       if (mounted) {
@@ -643,7 +643,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       // 上传头像
       if (_selectedAvatarFile != null) {
         if (kIsWeb) {
-          debugPrint('🔍 开始上传头像');
+          // debugPrint('🔍 开始上传头像');
         }
         
         newAvatar = await profileProvider.uploadImage(_selectedAvatarFile!);
@@ -652,14 +652,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }
         
         if (kIsWeb) {
-          debugPrint('🔍 头像上传成功: $newAvatar');
+          // debugPrint('🔍 头像上传成功: $newAvatar');
         }
       }
 
       // 上传封面
       if (_selectedCoverFile != null) {
         if (kIsWeb) {
-          debugPrint('🔍 开始上传封面');
+          // debugPrint('🔍 开始上传封面');
         }
         
         newSpaceBg = await profileProvider.uploadImage(_selectedCoverFile!);
@@ -668,7 +668,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }
         
         if (kIsWeb) {
-          debugPrint('🔍 封面上传成功: $newSpaceBg');
+          // debugPrint('🔍 封面上传成功: $newSpaceBg');
         }
       }
 
@@ -699,7 +699,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     } catch (e) {
       if (kIsWeb) {
-        debugPrint('🔍 保存用户信息失败: $e');
+        debugPrint('❌ 保存用户信息失败: $e');
       }
       
       if (mounted) {

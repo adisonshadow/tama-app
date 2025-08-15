@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -39,14 +39,14 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
     super.initState();
     
     // 添加调试信息
-    if (kIsWeb) {
-      debugPrint('🔍 UserSpaceScreen initState');
-      debugPrint('🔍 userId: ${widget.userId}');
-      debugPrint('🔍 nickname: ${widget.nickname}');
-      debugPrint('🔍 avatar: ${widget.avatar}');
-      debugPrint('🔍 bio: ${widget.bio}');
-      debugPrint('🔍 spaceBg: ${widget.spaceBg}');
-    }
+    // if (kIsWeb) {
+    //   debugPrint('🔍 UserSpaceScreen initState');
+    //   debugPrint('🔍 userId: ${widget.userId}');
+    //   debugPrint('🔍 nickname: ${widget.nickname}');
+    //   debugPrint('🔍 avatar: ${widget.avatar}');
+    //   debugPrint('🔍 bio: ${widget.bio}');
+    //   debugPrint('🔍 spaceBg: ${widget.spaceBg}');
+    // }
   }
 
   @override

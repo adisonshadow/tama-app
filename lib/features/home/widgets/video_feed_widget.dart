@@ -79,7 +79,7 @@ class _VideoFeedWidgetState extends State<VideoFeedWidget> {
           final currentVideo = widget.videos[index];
           // 使用新的getCoverByRecord方法，支持resize参数
           final coverUrl = currentVideo.getCoverByRecord('w=360&h=202'); // 使用web项目中的默认尺寸
-          print('🔍 VideoFeedWidget - 视频切换，封面URL: $coverUrl'); // 添加调试信息
+          // print('🔍 VideoFeedWidget - 视频切换，封面URL: $coverUrl'); // 添加调试信息
           if (coverUrl.isNotEmpty) {
             widget.onVideoChanged!(coverUrl);
           }

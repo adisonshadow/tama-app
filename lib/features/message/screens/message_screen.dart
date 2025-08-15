@@ -71,8 +71,8 @@ class _MessageScreenState extends State<MessageScreen> {
         // 判断是否还有更多数据
         _hasMore = response['data']['hasMore'] ?? false;
         
-        print('🔍 消息加载完成 - 当前页: $_currentPage, 结果数量: ${results.length}, 是否有更多: $_hasMore');
-        print('🔍 当前总消息数量: ${_messages.length}');
+        // print('🔍 消息加载完成 - 当前页: $_currentPage, 结果数量: ${results.length}, 是否有更多: $_hasMore');
+        // print('🔍 当前总消息数量: ${_messages.length}');
         
         setState(() {});
       } else {
@@ -84,7 +84,7 @@ class _MessageScreenState extends State<MessageScreen> {
         });
       }
     } catch (e) {
-      print('🔍 加载消息失败: $e');
+      // print('🔍 加载消息失败: $e');
       setState(() {
         _errorMessage = '网络错误，请稍后重试';
         if (refresh) {
@@ -323,7 +323,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 // 昵称
                 Text(
                   message.nickname,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

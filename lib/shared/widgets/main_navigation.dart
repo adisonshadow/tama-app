@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../utils/error_utils.dart';
+// import '../utils/error_utils.dart';
 
 class MainNavigation extends StatelessWidget {
   final Widget child;
@@ -36,10 +36,10 @@ class MainNavigation extends StatelessWidget {
           //   icon: Icon(Icons.add_box),
           //   label: '发布',
           // ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: '粉丝',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.people),
+          //   label: '粉丝',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble),
             label: '消息',
@@ -61,12 +61,12 @@ class MainNavigation extends StatelessWidget {
         return 0;
       case '/following':
         return 1;
-      case '/fans':
-        return 2;
+      // case '/fans':
+      //   return 2;
       case '/message':
-        return 3;
+        return 2;
       case '/profile':
-        return 4;
+        return 3;
       default:
         return 0;
     }
@@ -80,9 +80,9 @@ class MainNavigation extends StatelessWidget {
       case 1:
         context.go('/following');
         break;
-      case 2:
-        context.go('/fans');
-        break;
+      // case 2:
+      //   context.go('/fans');
+      //   break;
       // case 3:
       //   // TODO: 实现发布功能
       //   ErrorUtils.showWarning(
@@ -90,10 +90,10 @@ class MainNavigation extends StatelessWidget {
       //     '发布功能暂未开放',
       //   );
       //   break;
-      case 3:
+      case 2:
         context.go('/message');
         break;
-      case 4:
+      case 3:
         context.go('/profile');
         break;
     }

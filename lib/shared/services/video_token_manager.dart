@@ -93,11 +93,11 @@ class VideoTokenManager {
     final finalUrl = '$baseUrl${separator}token=$token$fragment';
     
     // 添加调试日志
-    print('🔍 VideoTokenManager - Original URL: $videoUrl');
-    print('🔍 VideoTokenManager - Base URL: $baseUrl');
-    print('🔍 VideoTokenManager - Fragment: $fragment');
-    print('🔍 VideoTokenManager - Token: $token');
-    print('🔍 VideoTokenManager - Final URL: $finalUrl');
+    // print('🔍 VideoTokenManager - Original URL: $videoUrl');
+    // print('🔍 VideoTokenManager - Base URL: $baseUrl');
+    // print('🔍 VideoTokenManager - Fragment: $fragment');
+    // print('🔍 VideoTokenManager - Token: $token');
+    // print('🔍 VideoTokenManager - Final URL: $finalUrl');
     
     return finalUrl;
   }

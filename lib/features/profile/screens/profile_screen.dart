@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
+import 'package:go_router/go_router.dart';
 import '../providers/profile_provider.dart';
 import '../providers/fan_provider.dart';
+import '../providers/liked_provider.dart';
+import '../providers/starred_provider.dart';
+import '../services/logout_service.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../features/auth/providers/auth_provider.dart';
 import 'edit_profile_screen.dart';
 import 'fans_screen.dart';
+import 'liked_screen.dart';
+import 'starred_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -25,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     _tabController = TabController(length: 3, vsync: this);
     
     if (kIsWeb) {
-      debugPrint('🔍 ProfileScreen initState');
+      // debugPrint('🔍 ProfileScreen initState');
     }
   }
 
@@ -41,6 +48,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => FanProvider()),
+        ChangeNotifierProvider(create: (context) => LikedProvider()),
+        ChangeNotifierProvider(create: (context) => StarredProvider()),
       ],
       child: Consumer<ProfileProvider>(
         builder: (context, profileProvider, child) {
@@ -86,34 +95,71 @@ class _ProfileScreenState extends State<ProfileScreen>
           Positioned(
             top: 20,
             right: 20,
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  if (kIsWeb) {
-                    debugPrint('🔍 编辑按钮被点击');
-                  }
-                  _navigateToEditProfile(context, user);
-                },
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.7),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 编辑按钮
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      if (kIsWeb) {
+                        // debugPrint('🔍 编辑按钮被点击');
+                      }
+                      _navigateToEditProfile(context, user);
+                    },
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.3),
-                      width: 1,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
                   ),
-                  child: const Icon(
-                    Icons.edit,
-                    color: Colors.white,
-                    size: 24,
+                ),
+                const SizedBox(width: 20),
+                // 退出按钮
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      if (kIsWeb) {
+                        // debugPrint('🔍 退出按钮被点击');
+                      }
+                      _showLogoutDialog(context);
+                    },
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
           Positioned(
@@ -181,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
           if (kIsWeb) {
-            debugPrint('🔍 封面图片加载失败: $error，使用默认背景');
+            debugPrint('❌ 封面图片加载失败: $error，使用默认背景');
           }
           return _buildDefaultBackground();
         },
@@ -197,7 +243,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
         if (kIsWeb) {
-          debugPrint('🔍 默认背景图片加载失败: $error，使用纯色背景');
+          debugPrint('❌ 默认背景图片加载失败: $error，使用纯色背景');
         }
         return Container(
           color: Colors.grey[900],
@@ -220,7 +266,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
           if (kIsWeb) {
-            debugPrint('🔍 头像加载失败: $error，使用默认头像');
+            debugPrint('❌ 头像加载失败: $error，使用默认头像');
           }
           return _buildDefaultAvatar();
         },
@@ -277,49 +323,11 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget _buildLikesTab() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.favorite_outline,
-            size: 64,
-            color: Colors.grey,
-          ),
-          SizedBox(height: 16),
-          Text(
-            '点赞功能暂未实现',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 18,
-            ),
-          ),
-        ],
-      ),
-    );
+    return const LikedScreen();
   }
 
   Widget _buildFavoritesTab() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.star_outline,
-            size: 64,
-            color: Colors.grey,
-          ),
-          SizedBox(height: 16),
-          Text(
-            '收藏功能暂未实现',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 18,
-            ),
-          ),
-        ],
-      ),
-    );
+    return const StarredScreen();
   }
 
   void _navigateToEditProfile(BuildContext context, user) {
@@ -334,7 +342,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
 
     if (kIsWeb) {
-      debugPrint('🔍 准备跳转到编辑资料页面');
+      // debugPrint('🔍 准备跳转到编辑资料页面');
     }
     
     Navigator.of(context).push(
@@ -342,5 +350,140 @@ class _ProfileScreenState extends State<ProfileScreen>
         builder: (context) => EditProfileScreen(user: user),
       ),
     );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.grey[900],
+          title: const Text(
+            '确认退出',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: const Text(
+            '确定要退出登录吗？',
+            style: TextStyle(color: Colors.white70),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                '取消',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _performLogout(context);
+              },
+              child: const Text(
+                '确定',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _performLogout(BuildContext context) async {
+    try {
+      if (kIsWeb) {
+        // debugPrint('🔍 开始执行登出操作');
+      }
+
+      // 显示加载指示器
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            backgroundColor: Colors.transparent,
+            content: Center(
+              child: CircularProgressIndicator(
+                color: Colors.blue,
+              ),
+            ),
+          );
+        },
+      );
+
+      // 调用登出API
+      final response = await LogoutService.logout();
+      
+      // 检查context是否仍然有效
+      if (!context.mounted) return;
+      
+      // 关闭加载指示器
+      Navigator.of(context).pop();
+
+      if (response['status'] == 'SUCCESS') {
+        if (kIsWeb) {
+          // debugPrint('🔍 登出成功');
+        }
+        
+        // 显示成功消息
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('登出成功'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+
+        // 清除本地用户数据并跳转到登录页
+        // 调用AuthProvider的登出方法来清除本地状态
+        if (context.mounted) {
+          final authProvider = context.read<AuthProvider>();
+          await authProvider.logout();
+          
+          // 使用go_router跳转到登录页
+          if (context.mounted) {
+            context.go('/auth/login');
+          }
+        }
+      } else {
+        if (kIsWeb) {
+          debugPrint('❌ 登出失败: ${response['message']}');
+        }
+        
+        // 显示错误消息
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('登出失败: ${response['message'] ?? '未知错误'}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // 检查context是否仍然有效
+      if (!context.mounted) return;
+      
+      // 关闭加载指示器
+      Navigator.of(context).pop();
+      
+      if (kIsWeb) {
+        debugPrint('❌ 登出过程中发生错误: $e');
+      }
+      
+      // 显示错误消息
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('登出失败: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-import '../../../core/constants/app_constants.dart';
+// import '../../../core/constants/app_constants.dart';
 import '../models/video_model.dart';
 import 'video_playback_component.dart';
 import '../../user_space/screens/user_space_screen.dart';
@@ -27,11 +27,11 @@ class _VideoItemWidgetState extends State<VideoItemWidget> {
     
     // 打印调试信息
     if (kIsWeb) {
-      debugPrint('🔍 Video Item Widget - Video ID: ${widget.video.id}');
-      debugPrint('🔍 Video Item Widget - Avatar: ${widget.video.avatar}');
+      // debugPrint('🔍 Video Item Widget - Video ID: ${widget.video.id}');
+      // debugPrint('🔍 Video Item Widget - Avatar: ${widget.video.avatar}');
       if (widget.video.avatar != null) {
-        final avatarUrl = '${AppConstants.baseUrl}/api/media/img/${widget.video.avatar}';
-        debugPrint('🔍 Video Item Widget - Full Avatar URL: $avatarUrl');
+        // final avatarUrl = '${AppConstants.baseUrl}/api/media/img/${widget.video.avatar}';
+        // debugPrint('🔍 Video Item Widget - Full Avatar URL: $avatarUrl');
       }
     }
   }

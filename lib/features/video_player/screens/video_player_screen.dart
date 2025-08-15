@@ -38,23 +38,23 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     }
     
     // 添加调试信息
-    if (kIsWeb) {
-      debugPrint('🔍 VideoPlayerScreen initState');
-      debugPrint('🔍 userId: ${widget.userId}');
-      debugPrint('🔍 videos count: ${widget.videos.length}');
-      debugPrint('🔍 initialVideoIndex: ${widget.initialVideoIndex}');
-    }
+    // if (kIsWeb) {
+    //   debugPrint('🔍 VideoPlayerScreen initState');
+    //   debugPrint('🔍 userId: ${widget.userId}');
+    //   debugPrint('🔍 videos count: ${widget.videos.length}');
+    //   debugPrint('🔍 initialVideoIndex: ${widget.initialVideoIndex}');
+    // }
     
     // 初始化视频播放Provider
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<VideoPlayerProvider>();
       if (kIsWeb) {
-        debugPrint('🔍 初始化VideoPlayerProvider');
-        debugPrint('🔍 Provider videos count before: ${provider.videos.length}');
+        // debugPrint('🔍 初始化VideoPlayerProvider');
+        // debugPrint('🔍 Provider videos count before: ${provider.videos.length}');
       }
       provider.initializeVideos(widget.videos, widget.initialVideoIndex);
       if (kIsWeb) {
-        debugPrint('🔍 Provider videos count after: ${provider.videos.length}');
+        // debugPrint('🔍 Provider videos count after: ${provider.videos.length}');
       }
     });
   }
@@ -221,9 +221,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               isActive: index == provider.currentIndex,
               onAvatarTap: () {
                 // 头像点击后跳转到用户Space
-                if (kIsWeb) {
-                  debugPrint('🔍 头像被点击，准备跳转到用户Space: ${video.userId}');
-                }
+                // if (kIsWeb) {
+                //   debugPrint('🔍 头像被点击，准备跳转到用户Space: ${video.userId}');
+                // }
                 _navigateToUserSpace(video);
               },
               key: ValueKey(video.id),

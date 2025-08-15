@@ -53,15 +53,15 @@ class VideoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('🔍 VideoCard - GestureDetector onTap被触发');
-        print('🔍 VideoCard - videoId: ${video.id}, title: ${video.title}');
-        print('🔍 VideoCard - onTap回调: ${onTap != null ? "存在" : "不存在"}');
+        // print('🔍 VideoCard - GestureDetector onTap被触发');
+        // print('🔍 VideoCard - videoId: ${video.id}, title: ${video.title}');
+        // print('🔍 VideoCard - onTap回调: ${onTap != null ? "存在" : "不存在"}');
         
         if (onTap != null) {
-          print('🔍 VideoCard - 执行onTap回调');
+          // print('🔍 VideoCard - 执行onTap回调');
           onTap!();
         } else {
-          print('🔍 VideoCard - onTap回调为空，不执行任何操作');
+          // print('🔍 VideoCard - onTap回调为空，不执行任何操作');
         }
       },
       child: Container(

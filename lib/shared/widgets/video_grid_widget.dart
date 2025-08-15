@@ -93,23 +93,23 @@ class VideoGridWidget extends StatelessWidget {
         itemCount: videos.length,
         itemBuilder: (context, index) {
           final video = videos[index];
-          print('🔍 VideoGridWidget - 构建视频卡片: index=$index, videoId=${video.id}, userId=${video.userId}');
+          // print('🔍 VideoGridWidget - 构建视频卡片: index=$index, videoId=${video.id}, userId=${video.userId}');
           
           return VideoCard(
             video: video,
             onTap: () {
-              print('🔍 VideoGridWidget - 视频被点击: index=$index, videoId=${video.id}, userId=${video.userId}');
-              print('🔍 VideoGridWidget - onVideoTap回调: ${onVideoTap != null ? "存在" : "不存在"}');
+              // print('🔍 VideoGridWidget - 视频被点击: index=$index, videoId=${video.id}, userId=${video.userId}');
+              // print('🔍 VideoGridWidget - onVideoTap回调: ${onVideoTap != null ? "存在" : "不存在"}');
               
               // 如果有自定义的onVideoTap回调，使用它
               if (onVideoTap != null) {
-                print('🔍 VideoGridWidget - 使用自定义onVideoTap回调');
+                // print('🔍 VideoGridWidget - 使用自定义onVideoTap回调');
                 onVideoTap!(video);
               } else {
                 // 默认行为：跳转到视频播放页面
-                print('🔍 VideoGridWidget - 使用默认跳转行为');
-                print('🔍 VideoGridWidget - 准备跳转到VideoPlayerScreen');
-                print('🔍 VideoGridWidget - 参数: userId=${video.userId}, videosCount=${videos.length}, initialVideoIndex=$index');
+                // print('🔍 VideoGridWidget - 使用默认跳转行为');
+                // print('🔍 VideoGridWidget - 准备跳转到VideoPlayerScreen');
+                // print('🔍 VideoGridWidget - 参数: userId=${video.userId}, videosCount=${videos.length}, initialVideoIndex=$index');
                 
                 try {
                   Navigator.of(context).push(
@@ -121,9 +121,9 @@ class VideoGridWidget extends StatelessWidget {
                       ),
                     ),
                   );
-                  print('🔍 VideoGridWidget - 跳转成功');
+                  // print('🔍 VideoGridWidget - 跳转成功');
                 } catch (e) {
-                  print('🔍 VideoGridWidget - 跳转失败: $e');
+                  print('❌ VideoGridWidget - 跳转失败: $e');
                 }
               }
             },

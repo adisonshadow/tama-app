@@ -32,18 +32,18 @@ class ProfileProvider extends ChangeNotifier {
         final userData = result['data'];
         _user = UserModel.fromJsonSafe(userData);
         if (kIsWeb) {
-          debugPrint('🔍 获取用户信息成功: ${_user?.nickname}');
+          // debugPrint('🔍 获取用户信息成功: ${_user?.nickname}');
         }
       } else {
         _error = result['message'] ?? '获取用户信息失败';
         if (kIsWeb) {
-          debugPrint('🔍 获取用户信息失败: $_error');
+          debugPrint('❌ 获取用户信息失败: $_error');
         }
       }
     } catch (e) {
       _error = '网络错误: $e';
       if (kIsWeb) {
-        debugPrint('🔍 获取用户信息异常: $e');
+        debugPrint('❌ 获取用户信息异常: $e');
       }
     } finally {
       _isLoading = false;
@@ -84,20 +84,20 @@ class ProfileProvider extends ChangeNotifier {
         }
         
         if (kIsWeb) {
-          debugPrint('🔍 更新用户信息成功');
+          // debugPrint('🔍 更新用户信息成功');
         }
         return true;
       } else {
         _error = result['message'] ?? '更新用户信息失败';
         if (kIsWeb) {
-          debugPrint('🔍 更新用户信息失败: $_error');
+          debugPrint('❌ 更新用户信息失败: $_error');
         }
         return false;
       }
     } catch (e) {
       _error = '网络错误: $e';
       if (kIsWeb) {
-        debugPrint('🔍 更新用户信息异常: $e');
+        debugPrint('❌ 更新用户信息异常: $e');
       }
       return false;
     } finally {
@@ -110,7 +110,7 @@ class ProfileProvider extends ChangeNotifier {
   Future<String?> uploadImage(File imageFile) async {
     try {
       if (kIsWeb) {
-        debugPrint('🔍 准备上传图片: ${imageFile.path}');
+        // debugPrint('🔍 准备上传图片: ${imageFile.path}');
       }
 
       // 创建FormData
@@ -127,20 +127,20 @@ class ProfileProvider extends ChangeNotifier {
       if (result['status'] == 'SUCCESS') {
         final filename = result['data']['filename'];
         if (kIsWeb) {
-          debugPrint('🔍 图片上传成功: $filename');
+          // debugPrint('🔍 图片上传成功: $filename');
         }
         return filename;
       } else {
         _error = result['message'] ?? '图片上传失败';
         if (kIsWeb) {
-          debugPrint('🔍 图片上传失败: $_error');
+          debugPrint('❌ 图片上传失败: $_error');
         }
         return null;
       }
     } catch (e) {
       _error = '图片上传异常: $e';
       if (kIsWeb) {
-        debugPrint('🔍 图片上传异常: $e');
+        debugPrint('❌ 图片上传异常: $e');
       }
       return null;
     }
@@ -151,7 +151,7 @@ class ProfileProvider extends ChangeNotifier {
     try {
       if (kIsWeb) {
         // Web 平台使用自定义的文件选择器
-        debugPrint('🔍 Web平台：使用自定义文件选择器');
+        // debugPrint('🔍 Web平台：使用自定义文件选择器');
         
         // 在 Web 平台上，我们无法直接使用 image_picker
         // 但可以通过其他方式实现
@@ -173,7 +173,7 @@ class ProfileProvider extends ChangeNotifier {
       return null;
     } catch (e) {
       if (kIsWeb) {
-        debugPrint('🔍 Web平台选择图片失败: $e');
+        debugPrint('❌ Web平台选择图片失败: $e');
       }
       return null;
     }
@@ -183,7 +183,7 @@ class ProfileProvider extends ChangeNotifier {
   Future<File?> cropImage(File imageFile, {String cropType = 'avatar', BuildContext? context}) async {
     try {
       if (kIsWeb) {
-        debugPrint('🔍 开始裁剪图片: ${imageFile.path}');
+        // debugPrint('🔍 开始裁剪图片: ${imageFile.path}');
       }
 
       final croppedFile = await ImageCropper().cropImage(
@@ -217,7 +217,7 @@ class ProfileProvider extends ChangeNotifier {
 
       if (croppedFile != null) {
         if (kIsWeb) {
-          debugPrint('🔍 图片裁剪成功');
+          // debugPrint('🔍 图片裁剪成功');
         }
         return File(croppedFile.path);
       }
@@ -225,7 +225,7 @@ class ProfileProvider extends ChangeNotifier {
       return null;
     } catch (e) {
       if (kIsWeb) {
-        debugPrint('🔍 图片裁剪失败: $e');
+        debugPrint('❌ 图片裁剪失败: $e');
       }
       return null;
     }

@@ -195,7 +195,7 @@ class _TagVideosScreenState extends State<TagVideosScreen> {
             onTap: () {
               // TODO: 实现搜索功能
               if (kIsWeb) {
-                debugPrint('🔍 搜索按钮被点击');
+                // debugPrint('🔍 搜索按钮被点击');
               }
             },
             child: Container(
@@ -264,7 +264,7 @@ class _TagVideosScreenState extends State<TagVideosScreen> {
             onTap: () {
               // TODO: 跳转到视频播放页面
               if (kIsWeb) {
-                debugPrint('🔍 视频被点击: ${video.id}');
+                // debugPrint('🔍 视频被点击: ${video.id}');
               }
             },
           );

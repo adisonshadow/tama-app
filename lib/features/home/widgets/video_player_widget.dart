@@ -29,8 +29,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   bool _hasError = false;
   bool _hasMarkedAsPlayed = false;
   bool _isPlaying = false;
-  bool _isFullscreen = false; // 新增：全屏状态
-  OverlayEntry? _fullscreenOverlay; // 新增：全屏覆盖层
+
+  OverlayEntry? _fullscreenOverlay; // 全屏覆盖层
 
   @override
   void initState() {
@@ -44,28 +44,28 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     
     if (oldWidget.video.id != widget.video.id) {
       // 打印当前选择视频的所有API data item信息
-      print('🔍 当前选择视频的所有API data item信息:');
-      print('🔍 Video ID: ${widget.video.id}');
-      print('🔍 Video Title: ${widget.video.title}');
-      print('🔍 Video Content: ${widget.video.content}');
-      print('🔍 Video URL: ${widget.video.videoUrl}');
-      print('🔍 Thumbnail URL: ${widget.video.thumbnailUrl}');
-      print('🔍 User ID: ${widget.video.userId}');
-      print('🔍 Nickname: ${widget.video.nickname}');
-      print('🔍 Avatar: ${widget.video.avatar}');
-      print('🔍 Video Hash: ${widget.video.videoHash}');
-      print('🔍 Cover URL: ${widget.video.coverUrl}');
-      print('🔍 Cover Type: ${widget.video.coverType}');
-      print('🔍 View Count: ${widget.video.viewCount}');
-      print('🔍 Liked Count: ${widget.video.likedCount}');
-      print('🔍 Starred Count: ${widget.video.starredCount}');
-      print('🔍 Is Short: ${widget.video.isShort}');
-      print('🔍 Is Liked: ${widget.video.isLiked}');
-      print('🔍 Is Starred: ${widget.video.isStarred}');
-      print('🔍 Is Following: ${widget.video.isFollowing}');
-      print('🔍 Created At: ${widget.video.createdAt}');
-      print('🔍 Tags: ${widget.video.tags}');
-      print('🔍 视频数据打印完成');
+      // print('🔍 当前选择视频的所有API data item信息:');
+      // print('🔍 Video ID: ${widget.video.id}');
+      // print('🔍 Video Title: ${widget.video.title}');
+      // print('🔍 Video Content: ${widget.video.content}');
+      // print('🔍 Video URL: ${widget.video.videoUrl}');
+      // print('🔍 Thumbnail URL: ${widget.video.thumbnailUrl}');
+      // print('🔍 User ID: ${widget.video.userId}');
+      // print('🔍 Nickname: ${widget.video.nickname}');
+      // print('🔍 Avatar: ${widget.video.avatar}');
+      // print('🔍 Video Hash: ${widget.video.videoHash}');
+      // print('🔍 Cover URL: ${widget.video.coverUrl}');
+      // print('🔍 Cover Type: ${widget.video.coverType}');
+      // print('🔍 View Count: ${widget.video.viewCount}');
+      // print('🔍 Liked Count: ${widget.video.likedCount}');
+      // print('🔍 Starred Count: ${widget.video.starredCount}');
+      // print('🔍 Is Short: ${widget.video.isShort}');
+      // print('🔍 Is Liked: ${widget.video.isLiked}');
+      // print('🔍 Is Starred: ${widget.video.isStarred}');
+      // print('🔍 Is Following: ${widget.video.isFollowing}');
+      // print('🔍 Created At: ${widget.video.createdAt}');
+      // print('🔍 Tags: ${widget.video.tags}');
+      // print('🔍 视频数据打印完成');
       
       _disposeController();
       _initializeVideo();
@@ -222,9 +222,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   /// 进入全屏模式
   void _enterFullscreen() {
-    print('🔍 进入全屏模式');
+    // print('🔍 进入全屏模式');
     setState(() {
-      _isFullscreen = true;
+      // 全屏状态已通过 OverlayEntry 管理
     });
     
     // 创建全屏覆盖层
@@ -234,13 +234,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     
     // 显示全屏覆盖层
     Overlay.of(context).insert(_fullscreenOverlay!);
-    
-    print('🔍 全屏状态: $_isFullscreen');
   }
 
   /// 退出全屏模式
   void _exitFullscreen() {
-    print('🔍 退出全屏模式');
+    // print('🔍 退出全屏模式');
     
     // 移除全屏覆盖层
     if (_fullscreenOverlay != null) {
@@ -249,9 +247,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     }
     
     setState(() {
-      _isFullscreen = false;
+      // 全屏状态已通过 OverlayEntry 管理
     });
-    print('🔍 全屏状态: $_isFullscreen');
   }
 
   /// 构建全屏覆盖层
@@ -285,11 +282,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   Widget _buildFullscreenButton() {
     // 如果是短视频(is_short = 1)，不显示全屏按钮
     if (widget.video.isShort == 1) {
-      print('🔍 短视频，不显示全屏按钮');
+      // print('🔍 短视频，不显示全屏按钮');
       return const SizedBox.shrink();
     }
 
-    print('🔍 横屏视频，显示全屏按钮');
+    // print('🔍 横屏视频，显示全屏按钮');
     // 获取屏幕尺寸
     final screenSize = MediaQuery.of(context).size;
     final screenWidth = screenSize.width;
@@ -317,18 +314,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     final buttonLeft = videoLeft + (videoWidth - 60) / 2; // 按钮宽度60
     final buttonTop = videoTop + videoHeight + 20; // 视频底部下方20px
 
-    print('🔍 全屏按钮位置计算:');
-    print('🔍 屏幕尺寸: $screenWidth x $screenHeight');
-    print('🔍 视频尺寸: ${videoWidth.toStringAsFixed(1)} x ${videoHeight.toStringAsFixed(1)}');
-    print('🔍 视频位置: (${videoLeft.toStringAsFixed(1)}, ${videoTop.toStringAsFixed(1)})');
-    print('🔍 按钮位置: (${buttonLeft.toStringAsFixed(1)}, ${buttonTop.toStringAsFixed(1)})');
+    // print('🔍 全屏按钮位置计算:');
+    // print('🔍 屏幕尺寸: $screenWidth x $screenHeight');
+    // print('🔍 视频尺寸: ${videoWidth.toStringAsFixed(1)} x ${videoHeight.toStringAsFixed(1)}');
+    // print('🔍 视频位置: (${videoLeft.toStringAsFixed(1)}, ${videoTop.toStringAsFixed(1)})');
+    // print('🔍 按钮位置: (${buttonLeft.toStringAsFixed(1)}, ${buttonTop.toStringAsFixed(1)})');
 
     return Positioned(
       left: buttonLeft,
       top: buttonTop,
       child: GestureDetector(
         onTap: () {
-          print('🔍 全屏按钮被点击');
+          // print('🔍 全屏按钮被点击');
           _enterFullscreen();
         },
         behavior: HitTestBehavior.opaque, // 确保点击事件能够正确响应
@@ -393,8 +390,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print('🔍 VideoPlayerWidget build - 全屏状态: $_isFullscreen, isShort: ${widget.video.isShort}');
-    
     if (_hasError || widget.video.videoUrl.isEmpty) {
       return _buildThumbnailView();
     }
@@ -410,34 +405,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       );
     }
 
-    // 全屏模式 - 现在使用OverlayEntry，这里不再需要
-    // if (_isFullscreen) {
-    //   print('🔍 渲染全屏模式');
-    //   return Scaffold(
-    //     backgroundColor: Colors.black,
-    //     body: Stack(
-    //       children: [
-    //         // 全屏视频播放器 - 旋转90度
-    //         Center(
-    //           child: Transform.rotate(
-    //             angle: 90 * 3.14159 / 180, // 90度转换为弧度
-    //             child: SizedBox(
-    //               width: MediaQuery.of(context).size.height, // 使用屏幕高度作为宽度
-    //               height: MediaQuery.of(context).size.width,  // 使用屏幕宽度作为高度
-    //               child: VideoView(
-    //                 controller: _controller!,
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //         // 全屏关闭按钮
-    //         _buildFullscreenCloseButton(),
-    //       ],
-    //     ),
-    //   );
-    // }
 
-    print('🔍 渲染普通模式');
+
+    // print('🔍 渲染普通模式');
     // 普通模式
     return Stack(
       children: [

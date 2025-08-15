@@ -62,22 +62,22 @@ class _CommentSheetState extends State<CommentSheet> {
     });
 
     try {
-      print('🔍 开始加载评论，videoId: ${widget.videoId}');
+      // print('🔍 开始加载评论，videoId: ${widget.videoId}');
       final comments = await _commentService.getComments(widget.videoId);
-      print('🔍 成功获取评论数量: ${comments.length}');
+      // print('🔍 成功获取评论数量: ${comments.length}');
       
       setState(() {
         _comments = comments;
         _isLoading = false;
       });
     } catch (e) {
-      print('🔍 加载评论失败: $e');
+      print('❌ 加载评论失败: $e');
       setState(() {
         _errorMessage = e.toString();
         _isLoading = false;
       });
       if (kIsWeb) {
-        debugPrint('🔍 加载评论失败: $e');
+        debugPrint('❌ 加载评论失败: $e');
       }
     }
   }
@@ -154,12 +154,12 @@ class _CommentSheetState extends State<CommentSheet> {
         }
         
         if (mounted && kIsWeb) {
-          debugPrint('🔍 评论发布成功');
+          // debugPrint('🔍 评论发布成功');
         }
       }
     } catch (e) {
       if (kIsWeb) {
-        debugPrint('🔍 发布评论失败: $e');
+        debugPrint('❌ 发布评论失败: $e');
       }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -8,25 +8,25 @@ class CommentService {
   /// 获取视频评论列表
   Future<List<CommentModel>> getComments(String articleId) async {
     try {
-      print('🔍 正在获取评论，articleId: $articleId');
+      // print('🔍 正在获取评论，articleId: $articleId');
       final response = await _dio.get('/articles/danmus/$articleId');
       
-      print('🔍 API响应状态码: ${response.statusCode}');
-      print('🔍 API响应数据: ${response.data}');
+      // print('🔍 API响应状态码: ${response.statusCode}');
+      // print('🔍 API响应数据: ${response.data}');
       
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data['data'] ?? [];
-        print('🔍 解析到的评论数据: $data');
+        // print('🔍 解析到的评论数据: $data');
         
         final comments = data.map((json) => CommentModel.fromJson(json)).toList();
-        print('🔍 解析后的评论对象: $comments');
+        // print('🔍 解析后的评论对象: $comments');
         
         return comments;
       } else {
         throw Exception('获取评论失败: ${response.statusCode}');
       }
     } catch (e) {
-      print('🔍 获取评论异常: $e');
+      print('❌ 获取评论异常: $e');
       throw Exception('获取评论失败: $e');
     }
   }

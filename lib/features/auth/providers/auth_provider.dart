@@ -32,7 +32,7 @@ class AuthProvider extends ChangeNotifier {
       
       // 添加调试信息
       if (kIsWeb) {
-        debugPrint('🔍 Login API Response: $response');
+        // debugPrint('🔍 Login API Response: $response');
       }
       
       if (response['status'] == 'SUCCESS') {
@@ -40,7 +40,7 @@ class AuthProvider extends ChangeNotifier {
         
         // 添加调试信息
         if (kIsWeb) {
-          debugPrint('🔍 User Data: $userData');
+          // debugPrint('🔍 User Data: $userData');
         }
         
         try {
@@ -93,7 +93,7 @@ class AuthProvider extends ChangeNotifier {
       
       // 添加调试信息
       if (kIsWeb) {
-        debugPrint('🔍 Register API Response: $response');
+        // debugPrint('🔍 Register API Response: $response');
       }
       
       if (response['status'] == 'SUCCESS') {

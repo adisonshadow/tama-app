@@ -23,17 +23,17 @@ class _FansScreenState extends State<FansScreen>
   @override
   void initState() {
     super.initState();
-    print('🔍 FansScreen - initState 被调用');
+    // print('🔍 FansScreen - initState 被调用');
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('🔍 FansScreen - addPostFrameCallback 被调用');
+      // print('🔍 FansScreen - addPostFrameCallback 被调用');
       final fanProvider = context.read<FanProvider>();
-      print('🔍 FansScreen - 获取到 FanProvider: ${fanProvider.runtimeType}');
+      // print('🔍 FansScreen - 获取到 FanProvider: ${fanProvider.runtimeType}');
       
-      print('🔍 FansScreen - 开始调用 loadMyFollowers');
+      // print('🔍 FansScreen - 开始调用 loadMyFollowers');
       fanProvider.loadMyFollowers(refresh: true);
       
-      print('🔍 FansScreen - loadMyFollowers 调用完成');
+      // print('🔍 FansScreen - loadMyFollowers 调用完成');
     });
   }
 
@@ -49,8 +49,8 @@ class _FansScreenState extends State<FansScreen>
     
     return Consumer<FanProvider>(
       builder: (context, fanProvider, child) {
-        print('🔍 FansScreen - Consumer builder 被调用，fans数量: ${fanProvider.fans.length}');
-        print('🔍 FansScreen - isLoading: ${fanProvider.isLoading}, error: ${fanProvider.error}');
+        // print('🔍 FansScreen - Consumer builder 被调用，fans数量: ${fanProvider.fans.length}');
+        // print('🔍 FansScreen - isLoading: ${fanProvider.isLoading}, error: ${fanProvider.error}');
         
         if (fanProvider.isLoading && fanProvider.fans.isEmpty) {
           return const Center(
