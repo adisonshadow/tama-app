@@ -28,6 +28,10 @@ dependencies:
   # 图片缓存
   cached_network_image: ^3.3.0
   
+  # 图片选择和裁剪
+  image_picker: ^1.1.2
+  image_cropper: ^9.1.0
+  
   # 本地存储
   shared_preferences: ^2.2.2
   
@@ -35,6 +39,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   flutter_spinkit: ^5.2.0
   flutter_staggered_grid_view: ^0.7.0
+  lottie: ^3.3.1
   
   # 工具类
   json_annotation: ^4.8.1

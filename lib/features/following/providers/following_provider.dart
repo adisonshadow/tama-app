@@ -35,7 +35,7 @@ class FollowingProvider extends ChangeNotifier {
 
       final response = await FollowingService.getMyFollows(
         page: _currentPage,
-        limit: 20,
+        pageSize: 20,
       );
 
       print('🔍 FollowingProvider - API响应: $response');
@@ -70,7 +70,16 @@ class FollowingProvider extends ChangeNotifier {
         final List<FollowModel> newFollows = followData
             .map((json) {
               try {
-                final follow = FollowModel.fromJson(json);
+                // 处理null值，确保必需字段有默认值
+                final processedJson = Map<String, dynamic>.from(json);
+                if (processedJson['follow_time'] == null) {
+                  processedJson['follow_time'] = ''; // 提供默认值
+                }
+                if (processedJson['isFollowing'] == null) {
+                  processedJson['isFollowing'] = false; // 提供默认值
+                }
+                
+                final follow = FollowModel.fromJson(processedJson);
                 print('🔍 FollowingProvider - 成功解析用户: ${follow.nickname}');
                 return follow;
               } catch (e) {
@@ -119,7 +128,7 @@ class FollowingProvider extends ChangeNotifier {
 
       final response = await FollowingService.getFollowingArticles(
         page: _currentPage,
-        limit: 20,
+        pageSize: 20,
       );
 
       if (response['status'] == 'SUCCESS') {

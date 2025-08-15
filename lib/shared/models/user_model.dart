@@ -11,6 +11,7 @@ class UserModel {
   final String nickname;
   final String? avatar;
   final String? bio;
+  final String? spaceBg;
   
   @JsonKey(name: 'member_grade', defaultValue: 0)
   final int memberGrade;
@@ -26,6 +27,7 @@ class UserModel {
     required this.nickname,
     this.avatar,
     this.bio,
+    this.spaceBg,
     required this.memberGrade,
     this.isBaba = 0,
     this.token,
@@ -42,6 +44,7 @@ class UserModel {
         nickname: json['nickname']?.toString() ?? '',
         avatar: json['avatar']?.toString(),
         bio: json['bio']?.toString(),
+        spaceBg: json['space_bg']?.toString(),
         memberGrade: _safeIntFromJson(json['member_grade']),
         isBaba: _safeIntFromJson(json['is_baba']),
         token: json['token']?.toString(),
@@ -71,6 +74,7 @@ class UserModel {
     String? nickname,
     String? avatar,
     String? bio,
+    String? spaceBg,
     int? memberGrade,
     int? isBaba,
     String? token,
@@ -81,6 +85,7 @@ class UserModel {
       nickname: nickname ?? this.nickname,
       avatar: avatar ?? this.avatar,
       bio: bio ?? this.bio,
+      spaceBg: spaceBg ?? this.spaceBg,
       memberGrade: memberGrade ?? this.memberGrade,
       isBaba: isBaba ?? this.isBaba,
       token: token ?? this.token,

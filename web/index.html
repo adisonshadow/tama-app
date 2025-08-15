@@ -31,6 +31,51 @@
 
   <title>tama2_app</title>
   <link rel="manifest" href="manifest.json">
+  
+  <!-- cropperjs for image_cropper plugin -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  
+  <!-- image_picker web support -->
+  <script>
+    // 为 image_picker 提供 Web 平台支持
+    if (typeof window !== 'undefined') {
+      // 创建文件输入元素
+      window.createFileInput = function(accept, multiple) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = accept || 'image/*';
+        input.multiple = multiple || false;
+        input.style.display = 'none';
+        document.body.appendChild(input);
+        return input;
+      };
+      
+      // 模拟文件选择
+      window.pickImage = function(accept) {
+        return new Promise((resolve, reject) => {
+          const input = window.createFileInput(accept);
+          
+          input.onchange = function(e) {
+            const files = e.target.files;
+            if (files && files.length > 0) {
+              resolve(files[0]);
+            } else {
+              reject(new Error('No file selected'));
+            }
+            document.body.removeChild(input);
+          };
+          
+          input.onerror = function() {
+            reject(new Error('File selection failed'));
+            document.body.removeChild(input);
+          };
+          
+          input.click();
+        });
+      };
+    }
+  </script>
 </head>
 <body>
   <script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.compiled.js"></script>

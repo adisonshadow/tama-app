@@ -13,7 +13,7 @@ class SearchService {
         queryParameters: {
           'q': query,
           'page': page,
-          'pageSize': pageSize,
+          'page_size': pageSize,
         },
       );
       return DioClient.handleApiResponse(response);

@@ -149,6 +149,9 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
           count: '分享',
           onTap: widget.onShare,
         ),
+
+        const SizedBox(height: 15),
+        
       ],
     );
   }

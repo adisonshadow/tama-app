@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     if (videoProvider.videos.isNotEmpty && _currentVideoCoverUrl == null) {
       final firstVideo = videoProvider.videos.first;
       // 使用新的getCoverByRecord方法，支持resize参数
-      final coverUrl = firstVideo.getCoverByRecord('w=360&h=202'); // 使用web项目中的默认尺寸
+      final coverUrl = firstVideo.getCoverByRecord('w=90&h=160'); // 使用web项目中的默认尺寸
       print('🔍 HomeScreen - 设置初始封面: $coverUrl'); // 添加调试信息
       if (coverUrl.isNotEmpty) {
         setState(() {
@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   Container(
                     width: double.infinity,
                     height: double.infinity,
-                    color: Colors.green.withValues(alpha: 0.2), // 20%透明度的绿色
+                    color: const Color.fromARGB(255, 1, 1, 1).withValues(alpha: 0.1), // 20%透明度的绿色
                   ),
                 ],
               ),

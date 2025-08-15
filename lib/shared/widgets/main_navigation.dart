@@ -37,6 +37,10 @@ class MainNavigation extends StatelessWidget {
           //   label: '发布',
           // ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: '粉丝',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble),
             label: '消息',
           ),
@@ -57,8 +61,12 @@ class MainNavigation extends StatelessWidget {
         return 0;
       case '/following':
         return 1;
-      case '/message':
+      case '/fans':
         return 2;
+      case '/message':
+        return 3;
+      case '/profile':
+        return 4;
       default:
         return 0;
     }
@@ -72,22 +80,21 @@ class MainNavigation extends StatelessWidget {
       case 1:
         context.go('/following');
         break;
-      // case 2:
+      case 2:
+        context.go('/fans');
+        break;
+      // case 3:
       //   // TODO: 实现发布功能
       //   ErrorUtils.showWarning(
       //     context,
       //     '发布功能暂未开放',
       //   );
       //   break;
-      case 2:
+      case 3:
         context.go('/message');
         break;
-      case 3:
-        // TODO: 实现个人中心
-        ErrorUtils.showWarning(
-          context,
-          '个人中心功能暂未开放',
-        );
+      case 4:
+        context.go('/profile');
         break;
     }
   }

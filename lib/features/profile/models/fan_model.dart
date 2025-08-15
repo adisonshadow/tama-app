@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 import '../../../core/constants/app_constants.dart';
 
-part 'follow_model.g.dart';
+part 'fan_model.g.dart';
 
 @JsonSerializable()
-class FollowModel {
+class FanModel {
   final String id;
   final String nickname;
   final String? avatar;
@@ -16,7 +16,7 @@ class FollowModel {
   @JsonKey(name: 'isFollowing')
   final bool? isFollowing;
 
-  const FollowModel({
+  const FanModel({
     required this.id,
     required this.nickname,
     this.avatar,
@@ -26,8 +26,8 @@ class FollowModel {
     this.isFollowing,
   });
 
-  factory FollowModel.fromJson(Map<String, dynamic> json) => _$FollowModelFromJson(json);
-  Map<String, dynamic> toJson() => _$FollowModelToJson(this);
+  factory FanModel.fromJson(Map<String, dynamic> json) => _$FanModelFromJson(json);
+  Map<String, dynamic> toJson() => _$FanModelToJson(this);
 
   String get avatarUrl {
     if (avatar != null && avatar!.isNotEmpty) {

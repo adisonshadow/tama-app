@@ -7,6 +7,8 @@ import 'features/auth/screens/register_screen.dart';
 import 'features/home/screens/home_screen.dart';
 import 'features/following/screens/following_screen.dart';
 import 'features/message/screens/message_screen.dart';
+import 'features/profile/screens/profile_screen.dart';
+import 'features/profile/screens/fans_screen.dart';
 import 'features/home/widgets/video_test_page.dart';
 import 'shared/widgets/main_navigation.dart';
 
@@ -57,6 +59,14 @@ class AppRouter {
           GoRoute(
             path: '/message',
             builder: (context, state) => const MessageScreen(),
+          ),
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) => const ProfileScreen(),
+          ),
+          GoRoute(
+            path: '/fans',
+            builder: (context, state) => const FansScreen(),
           ),
           GoRoute(
             path: '/video-test',

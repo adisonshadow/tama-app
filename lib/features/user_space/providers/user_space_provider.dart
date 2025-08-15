@@ -32,7 +32,7 @@ class UserSpaceProvider extends ChangeNotifier {
       final response = await UserSpaceService.getUserVideos(
         userId: userId,
         page: _currentPage,
-        limit: 20,
+        pageSize: 20,
       );
 
       if (response['status'] == 'SUCCESS') {

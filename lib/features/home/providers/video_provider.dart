@@ -29,7 +29,7 @@ class VideoProvider extends ChangeNotifier {
       _clearError();
 
       final response = await VideoService.getRandomVideos(
-        limit: 20,
+        pageSize: 20,
       );
 
       // 添加调试信息
@@ -98,7 +98,7 @@ class VideoProvider extends ChangeNotifier {
 
       final response = await VideoService.getRecommendedVideos(
         page: _currentPage,
-        limit: 20,
+        pageSize: 20,
       );
 
       if (response['status'] == 'SUCCESS') {

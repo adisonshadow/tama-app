@@ -30,7 +30,7 @@ class VideoPlayerService {
       final response = await UserSpaceService.getUserVideos(
         userId: userId,
         page: (startIndex ~/ count) + 1,
-        limit: count,
+        pageSize: count,
       );
       
       if (response['status'] == 'SUCCESS') {

@@ -3,11 +3,11 @@ import '../../../core/network/dio_client.dart';
 class VideoService {
   static Future<Map<String, dynamic>> getRandomVideos({
     int page = 1,
-    int limit = 20,
+    int pageSize = 20,
   }) async {
     try {
       final queryParams = {
-        'count': limit,
+        'page_size': pageSize,
       };
       final response = await DioClient.instance.get('/articles/random', queryParameters: queryParams);
       return DioClient.handleApiResponse(response);
@@ -18,12 +18,12 @@ class VideoService {
 
   static Future<Map<String, dynamic>> getRecommendedVideos({
     int page = 1,
-    int limit = 20,
+    int pageSize = 20,
   }) async {
     try {
       final response = await DioClient.instance.get('/articles/recommended2', queryParameters: {
         'page': page,
-        'page_size': limit,
+        'page_size': pageSize,
       });
       return DioClient.handleApiResponse(response);
     } catch (e) {
@@ -33,12 +33,12 @@ class VideoService {
 
   static Future<Map<String, dynamic>> getHotVideos({
     int page = 1,
-    int limit = 20,
+    int pageSize = 20,
   }) async {
     try {
       final response = await DioClient.instance.get('/articles/hot', queryParameters: {
         'page': page,
-        'page_size': limit,
+        'page_size': pageSize,
       });
       return DioClient.handleApiResponse(response);
     } catch (e) {
@@ -48,12 +48,12 @@ class VideoService {
 
   static Future<Map<String, dynamic>> getShortVideos({
     int page = 1,
-    int limit = 20,
+    int pageSize = 20,
   }) async {
     try {
       final response = await DioClient.instance.get('/articles/short', queryParameters: {
         'page': page,
-        'page_size': limit,
+        'page_size': pageSize,
       });
       return DioClient.handleApiResponse(response);
     } catch (e) {

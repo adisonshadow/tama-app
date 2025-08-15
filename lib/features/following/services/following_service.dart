@@ -3,11 +3,11 @@ import '../../../core/network/dio_client.dart';
 class FollowingService {
   static Future<Map<String, dynamic>> getMyFollows({
     int page = 1,
-    int limit = 20,
+    int pageSize = 20,
   }) async {
     try {
       const url = '/my/followings';
-      final params = {'page': page, 'size': limit};
+      final params = {'page': page, 'page_size': pageSize};
       
       print('🔍 FollowingService - 调用 getMyFollows API');
       print('🔍 FollowingService - URL: $url');
@@ -27,13 +27,13 @@ class FollowingService {
 
   static Future<Map<String, dynamic>> getFollowingArticles({
     int page = 1,
-    int limit = 20,
+    int pageSize = 20,
   }) async {
     try {
       // print('🔍 FollowingService - 调用 getFollowingArticles API: /articles/following');
       final response = await DioClient.instance.get('/articles/following', queryParameters: {
         'page': page,
-        'page_size': limit, // 修复：使用page_size而不是limit
+        'page_size': pageSize, // 修复：使用page_size而不是limit
       });
       // print('🔍 FollowingService - getFollowingArticles 响应: ${response.data}');
       return response.data;
