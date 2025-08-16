@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
+import 'package:flutter_i18n/loaders/decoders/json_decode_strategy.dart';
 
 import 'core/error_handling/global_error_handler.dart';
 import 'core/network/dio_client.dart';
@@ -79,8 +80,11 @@ class Tama2App extends StatelessWidget {
               FlutterI18nDelegate(
                 translationLoader: FileTranslationLoader(
                   basePath: 'flutter_i18n',
-                  useCountryCode: true,
-                  fallbackFile: 'en_US.json', // .json 
+                  useCountryCode: true, // 使用国家代码后缀
+                  fallbackFile: 'en_US', // fallback语言文件（必须无扩展名）
+                  decodeStrategies: [
+                    JsonDecodeStrategy(),
+                  ],
                 ),
                 missingTranslationHandler: (key, locale) {
                   debugPrint('--- Missing Key: $key, languageCode: ${locale?.languageCode}');
