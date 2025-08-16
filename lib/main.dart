@@ -80,7 +80,7 @@ class Tama2App extends StatelessWidget {
                 translationLoader: FileTranslationLoader(
                   basePath: 'flutter_i18n',
                   useCountryCode: true,
-                  fallbackFile: 'en', // .json 
+                  fallbackFile: 'en_US.json', // .json 
                 ),
                 missingTranslationHandler: (key, locale) {
                   debugPrint('--- Missing Key: $key, languageCode: ${locale?.languageCode}');
@@ -91,7 +91,7 @@ class Tama2App extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: const [
-              Locale('en'), // English
+              Locale('en', 'US'), // English
               Locale('zh', 'TW'), // Traditional Chinese (Taiwan)
             ],
             locale: languageProvider.getLocaleFromLanguageCode(languageProvider.currentLanguage),
