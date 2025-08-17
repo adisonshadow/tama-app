@@ -14,7 +14,7 @@
 
 ### ✅ 推荐页面
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/home.png" alt="推荐截图" width="120">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/home.png" alt="推荐截图" width="188">
 
 - 垂直滑动切换视频
 - 自动播放/暂停/全屏播放
@@ -22,16 +22,18 @@
 - 作者信息展示
 - 视频详情展示
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/video%20detail.png" alt="视频详情截图" width="120">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/video%20detail.png" alt="视频详情截图" width="188">
 
 - 搜索
 - 根据tag浏览更多视频
 - 用户Space
-![用户Space截图](https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/user%20space.png=120x)
+
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/user%20space.png" alt="用户Space截图" width="188">
+
 
 ### ✅ 关注功能
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/followin%20videos.png" alt="关注截图" width="120">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/following%20videos.png" alt="关注截图" width="188">
 
 - 查看关注的用户列表
 - 浏览关注用户的作品
@@ -40,7 +42,7 @@
 ### ✅ 用户认证
 - 邮箱注册/登录
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/auth.png" alt="登录截图" width="120">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/auth.png" alt="登录截图" width="188">
 
 - JWT Token管理
 - 自动登录
@@ -58,7 +60,7 @@
 
 - ✅ 多语言
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/i18n.png" alt="切换语言截图" width="120">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/i18n.png" alt="切换语言截图" width="188">
 
 - ⏳ OTA更新
 
