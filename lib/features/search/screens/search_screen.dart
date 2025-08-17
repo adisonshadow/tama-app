@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 import '../../../shared/services/search_service.dart';
 import '../../home/models/video_model.dart';
@@ -128,7 +129,7 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('搜索'),
+        title: Text(FlutterI18n.translate(context, 'common.search.title')),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -146,7 +147,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     focusNode: _searchFocusNode,
                     style: const TextStyle(color: Colors.white, fontSize: 18),
                     decoration: InputDecoration(
-                      hintText: '输入关键词搜索视频...',
+                      hintText: FlutterI18n.translate(context, 'common.search.placeholder'),
                       hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
                       filled: true,
                       fillColor: Colors.white.withValues(alpha: 0.1),
@@ -188,24 +189,24 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildSearchResults() {
     if (!_hasSearched) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.search,
               color: Colors.white54,
               size: 64,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              '输入关键词开始搜索',
-              style: TextStyle(color: Colors.white54, fontSize: 18),
+              FlutterI18n.translate(context, 'search.start_search'),
+              style: const TextStyle(color: Colors.white54, fontSize: 18),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              '搜索框已填入"景色"，点击搜索按钮或按回车键开始搜索',
-              style: TextStyle(color: Colors.white38, fontSize: 14),
+              FlutterI18n.translate(context, 'search.start_search_subtitle'),
+              style: const TextStyle(color: Colors.white38, fontSize: 14),
               textAlign: TextAlign.center,
             ),
           ],
@@ -242,7 +243,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('重试'),
+                                child: Text(FlutterI18n.translate(context, 'common.retry')),
             ),
           ],
         ),
@@ -250,10 +251,10 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     if (_searchResults.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
-          '没有找到相关视频',
-          style: TextStyle(color: Colors.white54, fontSize: 18),
+          FlutterI18n.translate(context, 'common.search.no_results'),
+          style: const TextStyle(color: Colors.white54, fontSize: 18),
         ),
       );
     }
@@ -286,10 +287,10 @@ class _SearchScreenState extends State<SearchScreen> {
               _refreshController.loadNoData();
             }
           },
-          header: const WaterDropHeader(
+          header: WaterDropHeader(
             waterDropColor: Colors.blue,
-            complete: Text('刷新完成', style: TextStyle(color: Colors.white)),
-            failed: Text('刷新失败', style: TextStyle(color: Colors.white)),
+            complete: Text(FlutterI18n.translate(context, 'common.refresh.complete'), style: const TextStyle(color: Colors.white)),
+            failed: Text(FlutterI18n.translate(context, 'common.refresh.failed'), style: const TextStyle(color: Colors.white)),
           ),
           footer: CustomFooter(
             builder: (context, mode) {
@@ -300,20 +301,20 @@ class _SearchScreenState extends State<SearchScreen> {
               Widget body;
               if (mode == LoadStatus.idle) {
                 if (hasMore) {
-                  body = const Text('继续上拉加载更多', style: TextStyle(color: Colors.grey));
+                  body = Text(FlutterI18n.translate(context, 'common.refresh.pull_to_load_more'), style: const TextStyle(color: Colors.grey));
                 } else {
-                  body = const Text('没有更多内容了', style: TextStyle(color: Colors.grey));
+                  body = Text(FlutterI18n.translate(context, 'common.refresh.no_more_content'), style: const TextStyle(color: Colors.grey));
                 }
               } else if (mode == LoadStatus.loading) {
                 body = const CircularProgressIndicator(color: Colors.blue);
               } else if (mode == LoadStatus.failed) {
-                body = const Text('加载失败，点击重试', style: TextStyle(color: Colors.red));
+                body = Text(FlutterI18n.translate(context, 'common.refresh.load_failed_retry'), style: const TextStyle(color: Colors.red));
               } else if (mode == LoadStatus.canLoading) {
-                body = const Text('松开加载更多', style: TextStyle(color: Colors.grey));
+                body = Text(FlutterI18n.translate(context, 'common.refresh.release_to_load_more'), style: const TextStyle(color: Colors.grey));
               } else if (mode == LoadStatus.noMore) {
-                body = const Text('没有更多内容了', style: TextStyle(color: Colors.grey));
+                body = Text(FlutterI18n.translate(context, 'common.refresh.no_more_content'), style: const TextStyle(color: Colors.grey));
               } else {
-                body = const Text('没有更多内容了', style: TextStyle(color: Colors.grey));
+                body = Text(FlutterI18n.translate(context, 'common.refresh.no_more_content'), style: const TextStyle(color: Colors.grey));
               }
               final textData = body is Text ? body.data : '其他组件';
               print('🔍 CustomFooter 构建: mode=$mode, hasMore=$hasMore, 显示文本: $textData');
@@ -334,12 +335,12 @@ class _SearchScreenState extends State<SearchScreen> {
               itemBuilder: (context, index) {
                                  // 如果是最后一个 item 且没有更多数据，显示"没有更多内容了"
                  if (!_hasMore && index == _searchResults.length) {
-                   return const SizedBox(
+                   return SizedBox(
                      height: 55.0,
                      child: Center(
                        child: Text(
-                         '没有更多内容了',
-                         style: TextStyle(color: Colors.grey),
+                         FlutterI18n.translate(context, 'common.refresh.no_more_content'),
+                         style: const TextStyle(color: Colors.grey),
                        ),
                      ),
                    );

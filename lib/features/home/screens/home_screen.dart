@@ -104,12 +104,12 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
             // Logo
             Row(
               children: [
-                Image(
+                const Image(
                   image: AssetImage('assets/images/logo.png'),
                   width: 28,
                   height: 28,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Consumer<LanguageProvider>(
                   builder: (context, languageProvider, _) {
                     return Text(
@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   onPressed: () {
                     SearchManager.showSearch(context);
                   },
-                  tooltip: FlutterI18n.translate(context, 'home.actions.search'),
+                  tooltip: FlutterI18n.translate(context, 'common.search.title'),
                 ),
                 // Consumer<AuthProvider>(
                 //   builder: (context, authProvider, child) {
@@ -284,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                         ),
                         child: Consumer<LanguageProvider>(
                           builder: (context, languageProvider, _) {
-                            return Text(FlutterI18n.translate(context, 'home.retry'));
+                            return Text(FlutterI18n.translate(context, 'common.retry'));
                           },
                         ),
                       ),
@@ -304,11 +304,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     return WaterDropHeader(
                       waterDropColor: Colors.blue,
                       complete: Text(
-                        FlutterI18n.translate(context, 'home.refresh_complete'),
+                        FlutterI18n.translate(context, 'common.refresh.complete'),
                         style: const TextStyle(color: Colors.white)
                       ),
                       failed: Text(
-                        FlutterI18n.translate(context, 'home.refresh_failed'),
+                        FlutterI18n.translate(context, 'common.refresh.failed'),
                         style: const TextStyle(color: Colors.white)
                       ),
                     );
@@ -321,24 +321,24 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                         Widget body;
                         if (mode == LoadStatus.idle) {
                           body = Text(
-                            FlutterI18n.translate(context, 'home.pull_to_load'),
+                            FlutterI18n.translate(context, 'common.refresh.pull_to_load_more'),
                             style: const TextStyle(color: Colors.grey)
                           );
                         } else if (mode == LoadStatus.loading) {
                           body = const CircularProgressIndicator(color: Colors.blue);
                         } else if (mode == LoadStatus.failed) {
                           body = Text(
-                            FlutterI18n.translate(context, 'home.load_failed_retry'),
+                            FlutterI18n.translate(context, 'common.refresh.load_failed_retry'),
                             style: const TextStyle(color: Colors.red)
                           );
                         } else if (mode == LoadStatus.canLoading) {
                           body = Text(
-                            FlutterI18n.translate(context, 'home.release_to_load'),
+                            FlutterI18n.translate(context, 'common.refresh.release_to_load_more'),
                             style: const TextStyle(color: Colors.grey)
                           );
                         } else {
                           body = Text(
-                            FlutterI18n.translate(context, 'home.no_more'),
+                            FlutterI18n.translate(context, 'common.refresh.no_more_content'),
                             style: const TextStyle(color: Colors.grey)
                           );
                         }

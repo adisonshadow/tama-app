@@ -4,7 +4,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 
 class LanguageProvider extends ChangeNotifier {
   static const String _languageKey = 'selected_language';
-  static const String _defaultLanguage = 'en';
+  static const String _defaultLanguage = 'en_US';
   
   String _currentLanguage = _defaultLanguage;
   
@@ -12,12 +12,15 @@ class LanguageProvider extends ChangeNotifier {
   
   // 支持的语言列表
   static const List<Map<String, String>> supportedLanguages = [
-    {'code': 'en', 'name': 'English', 'nativeName': 'English'},
+    {'code': 'en_US', 'name': 'English', 'nativeName': 'English'},
     {'code': 'zh_TW', 'name': 'Traditional Chinese', 'nativeName': '繁體中文'},
+    {'code': 'ja_JP', 'name': 'Japanese', 'nativeName': '日本語'},
+    {'code': 'ko_KR', 'name': 'Korean', 'nativeName': '한국어'},
   ];
 
   LanguageProvider() {
     _loadLanguage();
+    _cleanupOldLanguageSettings();
   }
 
   // 加载保存的语言设置
@@ -25,8 +28,10 @@ class LanguageProvider extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       final savedLanguage = prefs.getString(_languageKey) ?? _defaultLanguage;
+      debugPrint('LanguageProvider: Loaded language from storage: $savedLanguage');
       if (savedLanguage != _currentLanguage) {
         _currentLanguage = savedLanguage;
+        debugPrint('LanguageProvider: Language changed to: $_currentLanguage');
         notifyListeners();
       }
     } catch (e) {
@@ -96,6 +101,28 @@ class LanguageProvider extends ChangeNotifier {
       final parts = languageCode.split('_');
       return Locale(parts[0], parts[1]);
     }
+    // 如果没有国家代码，默认使用 US
+    if (languageCode == 'en') {
+      return const Locale('en', 'US');
+    }
     return Locale(languageCode);
+  }
+
+  // 清理旧的语言设置
+  Future<void> _cleanupOldLanguageSettings() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedLanguage = prefs.getString(_languageKey);
+      
+      // 如果存储的是旧的 'en' 格式，更新为 'en_US'
+      if (savedLanguage == 'en') {
+        await prefs.setString(_languageKey, 'en_US');
+        _currentLanguage = 'en_US';
+        debugPrint('LanguageProvider: Cleaned up old language setting from "en" to "en_US"');
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('LanguageProvider: Failed to cleanup old language settings: $e');
+    }
   }
 }

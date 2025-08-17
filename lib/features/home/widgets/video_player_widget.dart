@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:video_view/video_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
@@ -311,7 +312,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     final videoTop = (screenHeight - videoHeight) / 2;
 
     // 全屏按钮位置：在横屏视频下方，居中
-    final buttonLeft = videoLeft + (videoWidth - 60) / 2; // 按钮宽度60
+    final buttonLeft = videoLeft + (videoWidth - 120) / 2; // 按按钮宽度 计算
     final buttonTop = videoTop + videoHeight + 20; // 视频底部下方20px
 
     // print('🔍 全屏按钮位置计算:');
@@ -330,27 +331,27 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         },
         behavior: HitTestBehavior.opaque, // 确保点击事件能够正确响应
         child: Container(
-          width: 88,
+          width: 120,
           height: 36,
           decoration: BoxDecoration(
             color: Colors.black.withValues(alpha: 0.3), // 改为30%半透明黑色背景
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.white, width: 1), // 保持白色边框
           ),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6), // 减少上下空白，增加左右空白
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6), // 减少上下空白，增加左右空白
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
+                const Icon(
                   Icons.fullscreen,
                   color: Colors.white,
                   size: 20,
                 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(
-                  '全屏',
-                  style: TextStyle(
+                  FlutterI18n.translate(context, 'home.player.fullscreen'),
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -501,7 +502,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           ),
           const SizedBox(height: 8),
           Text(
-            '视频暂时无法播放',
+            FlutterI18n.translate(context, 'home.player.video_unavailable'),
             style: TextStyle(
               color: Colors.grey[600],
               fontSize: 12,

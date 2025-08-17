@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -16,6 +17,7 @@ import 'features/video_player/providers/video_player_provider.dart';
 import 'shared/services/storage_service.dart';
 import 'shared/services/video_token_manager.dart';
 import 'shared/services/screen_orientation_service.dart';
+// import 'shared/utils/overflow_debug_utils.dart';
 import 'app_router.dart';
 
 void main() async {
@@ -35,6 +37,9 @@ void main() async {
   
   // 尝试获取视频播放token（如果用户已登录）
   _tryFetchVideoToken();
+  
+  // 关闭 overflow 警告（仅在开发时使用）
+  // OverflowDebugUtils.disableOverflowWarning();
   
   runApp(const Tama2App());
 }
@@ -83,11 +88,13 @@ class Tama2App extends StatelessWidget {
                   useCountryCode: true, // 使用国家代码后缀
                   fallbackFile: 'en_US', // fallback语言文件（必须无扩展名）
                   decodeStrategies: [
-                    JsonDecodeStrategy(),
+                    JsonDecodeStrategy(), // 只处理JSON格式的语言文件，避免读取到其他格式文件
                   ],
                 ),
                 missingTranslationHandler: (key, locale) {
-                  debugPrint('--- Missing Key: $key, languageCode: ${locale?.languageCode}');
+                  debugPrint('--- Missing Key: $key, locale: $locale');
+                  // 尝试手动加载翻译
+                  debugPrint('--- Attempting to load translation for key: $key');
                 },
               ),
               GlobalMaterialLocalizations.delegate,
@@ -97,8 +104,14 @@ class Tama2App extends StatelessWidget {
             supportedLocales: const [
               Locale('en', 'US'), // English
               Locale('zh', 'TW'), // Traditional Chinese (Taiwan)
+              Locale('ja', 'JP'), // Japanese
+              Locale('ko', 'KR'), // Korean
             ],
-            locale: languageProvider.getLocaleFromLanguageCode(languageProvider.currentLanguage),
+            locale: () {
+              final locale = languageProvider.getLocaleFromLanguageCode(languageProvider.currentLanguage);
+              debugPrint('MainApp: Setting locale to: $locale (from language: ${languageProvider.currentLanguage})');
+              return locale;
+            }(),
             
             // 添加错误处理和屏幕方向控制
             builder: (context, child) {

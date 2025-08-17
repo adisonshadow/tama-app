@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
+import 'package:flutter_i18n/flutter_i18n.dart';
 // 移除 dart:html 导入，改用条件编译
 
 import '../providers/profile_provider.dart';
@@ -62,7 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             appBar: AppBar(
               backgroundColor: Colors.black,
               foregroundColor: Colors.white,
-              title: const Text('编辑资料'),
+              title: Text(FlutterI18n.translate(context, 'profile.edit_profile.title')),
               actions: [
                 TextButton(
                   onPressed: _isLoading ? null : () => _saveProfile(profileProvider),
@@ -75,9 +76,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
-                      : const Text(
-                          '保存',
-                          style: TextStyle(
+                      : Text(
+                          FlutterI18n.translate(context, 'profile.edit_profile.save'),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                           ),
@@ -131,9 +132,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             children: [
               TextButton(
                 onPressed: _isLoading ? null : () => _pickImage('avatar', profileProvider),
-                child: const Text(
-                  '选择头像',
-                  style: TextStyle(
+                child: Text(
+                  FlutterI18n.translate(context, 'profile.edit_profile.select_avatar'),
+                  style: const TextStyle(
                     color: Colors.blue,
                     fontSize: 16,
                   ),
@@ -142,9 +143,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               if (_selectedAvatarFile != null)
                 TextButton(
                   onPressed: _isLoading ? null : () => _cropImage('avatar'),
-                  child: const Text(
-                    '裁剪头像',
-                    style: TextStyle(
+                  child: Text(
+                    FlutterI18n.translate(context, 'profile.edit_profile.crop_avatar'),
+                    style: const TextStyle(
                       color: Colors.orange,
                       fontSize: 16,
                     ),
@@ -161,9 +162,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '个人中心封面',
-          style: TextStyle(
+        Text(
+          FlutterI18n.translate(context, 'profile.edit_profile.cover_title'),
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -194,9 +195,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 children: [
                   TextButton(
                     onPressed: _isLoading ? null : () => _pickImage('cover', profileProvider),
-                    child: const Text(
-                      '选择封面',
-                      style: TextStyle(
+                    child: Text(
+                      FlutterI18n.translate(context, 'profile.edit_profile.select_cover'),
+                      style: const TextStyle(
                         color: Colors.blue,
                         fontSize: 16,
                       ),
@@ -205,9 +206,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   if (_selectedCoverFile != null)
                     TextButton(
                       onPressed: _isLoading ? null : () => _cropImage('cover'),
-                      child: const Text(
-                        '裁剪封面',
-                        style: TextStyle(
+                      child: Text(
+                        FlutterI18n.translate(context, 'profile.edit_profile.crop_cover'),
+                        style: const TextStyle(
                           color: Colors.orange,
                           fontSize: 16,
                         ),
@@ -318,9 +319,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '昵称',
-          style: TextStyle(
+        Text(
+          FlutterI18n.translate(context, 'profile.edit_profile.nickname'),
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -334,7 +335,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             fontSize: 16,
           ),
           decoration: InputDecoration(
-            hintText: '请输入昵称',
+            hintText: FlutterI18n.translate(context, 'profile.edit_profile.nickname_hint'),
             hintStyle: TextStyle(
               color: Colors.grey[600],
               fontSize: 16,
@@ -359,9 +360,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '个人简介',
-          style: TextStyle(
+        Text(
+          FlutterI18n.translate(context, 'profile.edit_profile.bio'),
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -376,7 +377,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           maxLines: 4,
           decoration: InputDecoration(
-            hintText: '请输入个人简介',
+            hintText: FlutterI18n.translate(context, 'profile.edit_profile.bio_hint'),
             hintStyle: TextStyle(
               color: Colors.grey[600],
               fontSize: 16,
@@ -406,10 +407,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Web平台图片选择功能开发中，请使用移动端应用'),
+            SnackBar(
+              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.web_image_picker_developing')),
               backgroundColor: Colors.orange,
-              duration: Duration(seconds: 3),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
@@ -437,7 +438,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('已选择${type == 'avatar' ? '头像' : '封面'}图片，点击"裁剪${type == 'avatar' ? '头像' : '封面'}"进行裁剪'),
+              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.image_selected', translationParams: {
+                'type': type == 'avatar' ? FlutterI18n.translate(context, 'profile.edit_profile.avatar') : FlutterI18n.translate(context, 'profile.edit_profile.cover')
+              })),
               backgroundColor: Colors.blue,
               duration: const Duration(seconds: 3),
             ),
@@ -447,10 +450,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         // 用户取消选择
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('未选择图片'),
+            SnackBar(
+              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.no_image_selected')),
               backgroundColor: Colors.grey,
-              duration: Duration(seconds: 2),
+              duration: const Duration(seconds: 2),
             ),
           );
         }
@@ -462,10 +465,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('选择图片失败: $e'),
-            backgroundColor: Colors.red,
-          ),
+                      SnackBar(
+              content: Text('${FlutterI18n.translate(context, 'profile.edit_profile.image_pick_failed')}: $e'),
+              backgroundColor: Colors.red,
+            ),
         );
       }
     }
@@ -510,7 +513,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Web平台${type == 'avatar' ? '头像' : '封面'}裁剪功能开发中，请使用移动端应用'),
+              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.web_crop_developing', translationParams: {
+                'type': type == 'avatar' ? FlutterI18n.translate(context, 'profile.edit_profile.avatar') : FlutterI18n.translate(context, 'profile.edit_profile.cover')
+              })),
               backgroundColor: Colors.orange,
               duration: const Duration(seconds: 3),
             ),
@@ -525,10 +530,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('请先选择${type == 'avatar' ? '头像' : '封面'}图片'),
+              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.please_select_image_first', translationParams: {
+                'type': type == 'avatar' ? FlutterI18n.translate(context, 'profile.edit_profile.avatar') : FlutterI18n.translate(context, 'profile.edit_profile.cover')
+              })),
               backgroundColor: Colors.orange,
               action: SnackBarAction(
-                label: '选择图片',
+                label: FlutterI18n.translate(context, 'profile.edit_profile.select_image'),
                 textColor: Colors.white,
                 onPressed: () {
                   final profileProvider = context.read<ProfileProvider>();
@@ -547,10 +554,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       // 显示裁剪中提示
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('正在打开裁剪界面...'),
+          SnackBar(
+            content: Text(FlutterI18n.translate(context, 'profile.edit_profile.opening_crop_interface')),
             backgroundColor: Colors.blue,
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
           ),
         );
       }
@@ -579,7 +586,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${type == 'avatar' ? '头像' : '封面'}裁剪成功！点击"保存"按钮上传'),
+              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.crop_success', translationParams: {
+                'type': type == 'avatar' ? FlutterI18n.translate(context, 'profile.edit_profile.avatar') : FlutterI18n.translate(context, 'profile.edit_profile.cover')
+              })),
               backgroundColor: Colors.green,
               duration: const Duration(seconds: 3),
             ),
@@ -589,10 +598,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${type == 'avatar' ? '头像' : '封面'}裁剪失败，请重试'),
+              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.crop_failed', translationParams: {
+                'type': type == 'avatar' ? FlutterI18n.translate(context, 'profile.edit_profile.avatar') : FlutterI18n.translate(context, 'profile.edit_profile.cover')
+              })),
               backgroundColor: Colors.red,
               action: SnackBarAction(
-                label: '重试',
+                label: FlutterI18n.translate(context, 'common.retry'),
                 textColor: Colors.white,
                 onPressed: () => _cropImage(type),
               ),
@@ -608,10 +619,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('裁剪图片失败: $e'),
+            content: Text('${FlutterI18n.translate(context, 'profile.edit_profile.crop_image_failed')}: $e'),
             backgroundColor: Colors.red,
             action: SnackBarAction(
-              label: '重试',
+              label: FlutterI18n.translate(context, 'common.retry'),
               textColor: Colors.white,
               onPressed: () => _cropImage(type),
             ),
@@ -624,8 +635,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _saveProfile(ProfileProvider profileProvider) async {
     if (_nicknameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('昵称不能为空'),
+        SnackBar(
+          content: Text(FlutterI18n.translate(context, 'profile.edit_profile.nickname_required')),
           backgroundColor: Colors.red,
         ),
       );
@@ -684,10 +695,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (success) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('保存成功'),
-                backgroundColor: Colors.green,
-              ),
+                          SnackBar(
+              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.save_success')),
+              backgroundColor: Colors.green,
+            ),
             );
             
             // 返回上一页
@@ -705,7 +716,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('保存失败: $e'),
+            content: Text('${FlutterI18n.translate(context, 'profile.edit_profile.save_failed')}: $e'),
             backgroundColor: Colors.red,
           ),
         );

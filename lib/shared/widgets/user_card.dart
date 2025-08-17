@@ -1,6 +1,7 @@
 // 用户卡片组件
 
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../core/constants/app_constants.dart';
@@ -92,7 +93,7 @@ class UserCard extends StatelessWidget {
                 children: [
                   // 昵称
                   Text(
-                    nickname ?? '未知用户',
+                    nickname ?? FlutterI18n.translate(context, 'common.unknown_user'),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -117,7 +118,7 @@ class UserCard extends StatelessWidget {
                     )
                   else
                     Text(
-                      '这个人很懒，还没有写简介',
+                      FlutterI18n.translate(context, 'common.user_card.lazy_user_bio'),
                       style: TextStyle(
                         color: Colors.grey[500],
                         fontSize: 14,
@@ -134,7 +135,7 @@ class UserCard extends StatelessWidget {
             FollowButton(
               userId: userId,
               mode: FollowButtonMode.button,
-              width: 100,
+              width: 130,
               height: 32,
               fontSize: 14,
               borderRadius: 16,

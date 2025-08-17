@@ -24,6 +24,7 @@
 // - 1/1: 300x300
 
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../features/home/models/video_model.dart';
@@ -221,7 +222,7 @@ class VideoCard extends StatelessWidget {
                           // 作者昵称
                           Expanded(
                             child: Text(
-                              video.nickname ?? '未知用户',
+                              video.nickname ?? FlutterI18n.translate(context, 'common.unknown_user'),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,

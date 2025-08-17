@@ -1,0 +1,228 @@
+{
+  "auth": {
+    "login": {
+      "title": "おかえりなさい",
+      "subtitle": "続行するにはサインインしてください",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "login_button": "サインイン",
+      "forgot_password": "パスワードを忘れましたか？",
+      "no_account": "アカウントをお持ちでない方",
+      "sign_up": "新規登録",
+      "email_required": "メールアドレスを入力してください",
+      "email_invalid": "有効なメールアドレスを入力してください",
+      "password_required": "パスワードを入力してください",
+      "password_min_length": "パスワードは6文字以上で入力してください",
+      "login_failed": "ログインに失敗しました",
+      "login_success": "ログインしました"
+    },
+    "register": {
+      "title": "アカウント作成",
+      "subtitle": "今すぐコミュニティに参加しましょう",
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "confirm_password": "パスワード確認",
+      "nickname": "ニックネーム",
+      "register_button": "アカウント作成",
+      "already_account": "すでにアカウントをお持ちの方",
+      "sign_in": "サインイン",
+      "email_required": "メールアドレスを入力してください",
+      "email_invalid": "有効なメールアドレスを入力してください",
+      "password_required": "パスワードを入力してください",
+      "password_min_length": "パスワードは6文字以上で入力してください",
+      "confirm_password_required": "パスワードを確認してください",
+      "passwords_not_match": "パスワードが一致しません",
+      "nickname_required": "ニックネームを入力してください",
+      "nickname_min_length": "ニックネームは2文字以上で入力してください",
+      "register_failed": "登録に失敗しました",
+      "register_success": "登録しました"
+    }
+  },
+  "home": {
+    "tabbar": {
+      "home": "ホーム",
+      "following": "フォロー中",
+      "create": "作成",
+      "message": "メッセージ",
+      "profile": "プロフィール"
+    },
+    "video": {
+      "recommend": "おすすめ",
+      "trending": "トレンド",
+      "latest": "最新",
+      "popular": "人気",
+      "following": "フォロー中",
+      "loading": "動画を読み込み中...",
+      "no_more": "これ以上動画はありません",
+      "load_failed": "動画の読み込みに失敗しました",
+      "video_info": {
+        "likes": "いいね",
+        "comments": "コメント",
+        "shares": "シェア",
+        "views": "再生回数",
+        "time_ago": "前",
+        "follow": "フォロー",
+        "following": "フォロー中",
+        "unfollow": "フォロー解除"
+      },
+      "actions": {
+        "like": "いいね",
+        "comment": "コメント",
+        "share": "シェア",
+        "bookmark": "ブックマーク",
+        "report": "報告",
+        "search": "動画を検索"
+      }
+    },
+    "player": {
+      "fullscreen": "全画面表示",
+      "video_unavailable": "動画が一時的に利用できません",
+      "description": "説明",
+      "time": {
+        "just_now": "今",
+        "minutes_ago": "{minutes}分前",
+        "hours_ago": "{hours}時間前",
+        "days_ago": "{days}日前"
+      }
+    }
+  },
+  "following": {
+    "title": "フォロー中",
+    "tabs": {
+      "videos": "動画",
+      "users": "ユーザー"
+    },
+    "no_videos": "フォロー中のユーザーの動画はまだありません",
+    "no_videos_subtitle": "興味深いユーザーをフォローしてコンテンツを見てみましょう",
+    "no_users": "フォロー中のユーザーはまだいません",
+    "no_users_subtitle": "興味深いユーザーをフォローしてコンテンツを見てみましょう",
+    "retry": "再試行"
+  },
+  "profile": {
+    "edit_profile": {
+      "title": "プロフィール編集",
+      "nickname": "ニックネーム",
+      "bio": "自己紹介",
+      "save": "保存",
+      "cancel": "キャンセル",
+      "nickname_required": "ニックネームを入力してください",
+      "nickname_min_length": "ニックネームは2文字以上で入力してください",
+      "save_success": "プロフィールを更新しました",
+      "save_failed": "プロフィールの更新に失敗しました",
+      "user_not_loaded": "ユーザー情報が読み込まれていません。後でもう一度お試しください",
+      "select_avatar": "アバターを選択",
+      "crop_avatar": "アバターをトリミング",
+      "cover_title": "プロフィールカバー",
+      "select_cover": "カバーを選択",
+      "crop_cover": "カバーをトリミング",
+      "nickname_hint": "ニックネームを入力してください",
+      "bio_hint": "自己紹介を入力してください",
+      "avatar": "アバター",
+      "cover": "カバー",
+      "web_image_picker_developing": "Webプラットフォームの画像選択機能は開発中です。モバイルアプリをご利用ください",
+      "image_selected": "画像が選択されました。「{type}をトリミング」をクリックしてトリミングしてください",
+      "no_image_selected": "画像が選択されていません",
+      "image_pick_failed": "画像の選択に失敗しました",
+      "please_select_image_first": "先に{type}画像を選択してください",
+      "select_image": "画像を選択",
+      "web_crop_developing": "Webプラットフォームの{type}トリミング機能は開発中です。モバイルアプリをご利用ください",
+      "opening_crop_interface": "トリミング画面を開いています...",
+      "crop_success": "{type}のトリミングが完了しました！「保存」ボタンをクリックしてアップロードしてください",
+      "crop_failed": "{type}のトリミングに失敗しました。再試行してください",
+      "crop_image_failed": "画像のトリミングに失敗しました"
+    },
+    "fans": {
+      "title": "ファン",
+      "no_fans": "まだファンがいません",
+      "no_fans_subtitle": "コンテンツを作成してファンを増やしましょう"
+    },
+    "liked": {
+      "title": "いいねした動画",
+      "no_liked": "まだいいねした動画がありません",
+      "no_liked_subtitle": "動画にいいねしてここで確認しましょう"
+    },
+    "starred": {
+      "title": "ブックマークした動画",
+      "no_starred": "まだブックマークした動画がありません",
+      "no_starred_subtitle": "動画をブックマークしてここで確認しましょう"
+    },
+    "logout": {
+      "confirm_title": "ログアウトの確認",
+      "confirm_message": "ログアウトしますか？",
+      "success": "ログアウトしました",
+      "failed": "ログアウトに失敗しました"
+    }
+  },
+  "message": {
+    "title": "メッセージ",
+    "no_messages": "まだメッセージがありません",
+    "no_messages_subtitle": "興味深いユーザーをフォローしてメッセージを受け取りましょう",
+    "load_failed": "読み込みに失敗しました",
+    "network_error": "ネットワークエラーが発生しました。後でもう一度お試しください"
+  },
+  "user_space": {
+    "no_videos": "まだ動画がありません",
+    "no_videos_subtitle": "このユーザーはまだ動画をアップロードしていません",
+    "lazy_user_bio": "このユーザーはまだ自己紹介を書いていません"
+  },
+  "video_player": {
+    "no_videos": "利用可能な動画がありません",
+    "back": "戻る",
+    "search": "検索"
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "back": "戻る",
+    "next": "次へ",
+    "submit": "送信",
+    "retry": "再試行",
+    "ok": "OK",
+    "unknown_user": "不明なユーザー",
+    "search": {
+      "title": "検索",
+      "placeholder": "キーワードを入力して動画を検索...",
+      "search_videos": "動画を検索",
+      "search_users": "ユーザーを検索",
+      "no_results": "関連する動画が見つかりませんでした",
+      "try_other_keywords": "他のキーワードをお試しください",
+      "search_failed": "検索に失敗しました",
+      "network_error": "ネットワークエラー：{error}",
+      "search_history": "検索履歴",
+      "clear_history": "履歴をクリア",
+      "recent_searches": "最近の検索"
+    },
+    "refresh": {
+      "complete": "更新が完了しました",
+      "failed": "更新に失敗しました",
+      "pull_to_load_more": "上にスワイプしてさらに読み込み",
+      "release_to_load_more": "離してさらに読み込み",
+      "load_failed_retry": "読み込みに失敗しました。タップして再試行",
+      "no_more_content": "これ以上コンテンツはありません"
+    },
+    "follow_button": {
+      "follow": "フォロー",
+      "following": "フォロー中",
+      "follow_success": "フォローしました",
+      "unfollow_success": "フォローを解除しました",
+      "network_error": "ネットワークエラーが発生しました。後でもう一度お試しください"
+    },
+    "user_card": {
+      "lazy_user_bio": "このユーザーはまだ自己紹介を書いていません"
+    }
+  },
+  "search": {
+    "start_search": "キーワードを入力して検索を開始",
+    "start_search_subtitle": "検索ボタンをクリックするか、Enterキーを押して検索を開始してください"
+  },
+  "video_grid": {
+    "no_content": "コンテンツがありません"
+  },
+  "app": {
+    "name": "TAMA",
+    "welcome": "TAMAへようこそ"
+  }
+}

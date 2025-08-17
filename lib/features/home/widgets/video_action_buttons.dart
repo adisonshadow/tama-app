@@ -112,7 +112,7 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
             color: Colors.white,
             size: 38,
           ),
-          count: FlutterI18n.translate(context, 'home.video_info.comments'),
+          count: FlutterI18n.translate(context, 'home.video.video_info.comments'),
           onTap: widget.onComment,
         ),
         
@@ -147,7 +147,7 @@ class _VideoActionButtonsState extends State<VideoActionButtons>
             color: Colors.white,
             size: 38,
           ),
-          count: FlutterI18n.translate(context, 'home.video_info.shares'),
+          count: FlutterI18n.translate(context, 'home.video.video_info.shares'),
           onTap: widget.onShare,
         ),
 

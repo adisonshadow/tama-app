@@ -36,66 +36,188 @@
       "nickname_min_length": "暱稱至少需要2個字元",
       "register_failed": "註冊失敗",
       "register_success": "註冊成功"
-    },
-    "common": {
-      "loading": "載入中...",
-      "error": "錯誤",
-      "success": "成功",
-      "cancel": "取消",
-      "confirm": "確認",
-      "back": "返回",
-      "next": "下一步",
-      "submit": "提交"
     }
-  },
-  "tabbar": {
-    "home": "首頁",
-    "following": "關注",
-    "create": "創作",
-    "message": "訊息",
-    "profile": "個人"
   },
   "home": {
-    "recommend": "推薦",
-    "trending": "熱門",
-    "latest": "最新",
-    "popular": "流行",
-    "following": "關注",
-    "refresh": "下拉重新整理",
-    "refresh_complete": "重新整理完成",
-    "refresh_failed": "重新整理失敗",
-    "loading": "載入影片中...",
-    "no_more": "沒有更多影片",
-    "load_failed": "載入影片失敗",
-    "load_failed_retry": "載入失敗，點擊重試",
+    "tabbar": {
+      "home": "首頁",
+      "following": "關注",
+      "create": "創作",
+      "message": "訊息",
+      "profile": "個人"
+    },
+    "video": {
+      "recommend": "推薦",
+      "trending": "熱門",
+      "latest": "最新",
+      "popular": "流行",
+      "following": "關注",
+      "loading": "載入影片中...",
+      "no_more": "沒有更多影片",
+      "load_failed": "載入影片失敗",
+      "video_info": {
+        "likes": "讚",
+        "comments": "評論",
+        "shares": "分享",
+        "views": "觀看",
+        "time_ago": "前",
+        "follow": "關注",
+        "following": "已關注",
+        "unfollow": "取消關注"
+      },
+      "actions": {
+        "like": "讚",
+        "comment": "評論",
+        "share": "分享",
+        "bookmark": "收藏",
+        "report": "檢舉",
+        "search": "搜尋影片"
+      }
+    },
+    "player": {
+      "fullscreen": "全螢幕",
+      "video_unavailable": "影片暫時無法播放",
+      "description": "描述",
+      "time": {
+        "just_now": "剛剛",
+        "minutes_ago": "{minutes}分鐘前",
+        "hours_ago": "{hours}小時前",
+        "days_ago": "{days}天前"
+      }
+    }
+  },
+  "following": {
+    "title": "關注",
+    "tabs": {
+      "videos": "作品",
+      "users": "用戶"
+    },
+    "no_videos": "暫無關注用戶的作品",
+    "no_videos_subtitle": "去關注一些有趣的用戶吧",
+    "no_users": "暫無關注的用戶",
+    "no_users_subtitle": "去關注一些有趣的用戶吧",
+    "retry": "重試"
+  },
+  "profile": {
+    "edit_profile": {
+      "title": "編輯個人資料",
+      "nickname": "暱稱",
+      "bio": "簡介",
+      "save": "儲存",
+      "cancel": "取消",
+      "nickname_required": "請輸入暱稱",
+      "nickname_min_length": "暱稱至少需要2個字元",
+      "save_success": "個人資料更新成功",
+      "save_failed": "更新個人資料失敗",
+      "user_not_loaded": "用戶資訊未載入，請稍後再試",
+      "select_avatar": "選擇頭像",
+      "crop_avatar": "裁剪頭像",
+      "cover_title": "個人中心封面",
+      "select_cover": "選擇封面",
+      "crop_cover": "裁剪封面",
+      "nickname_hint": "請輸入暱稱",
+      "bio_hint": "請輸入個人簡介",
+      "avatar": "頭像",
+      "cover": "封面",
+      "web_image_picker_developing": "Web平台圖片選擇功能開發中，請使用移動端應用",
+      "image_selected": "已選擇{type}圖片，點擊「裁剪{type}」進行裁剪",
+      "no_image_selected": "未選擇圖片",
+      "image_pick_failed": "選擇圖片失敗",
+      "please_select_image_first": "請先選擇{type}圖片",
+      "select_image": "選擇圖片",
+      "web_crop_developing": "Web平台{type}裁剪功能開發中，請使用移動端應用",
+      "opening_crop_interface": "正在打開裁剪界面...",
+      "crop_success": "{type}裁剪成功！點擊「儲存」按鈕上傳",
+      "crop_failed": "{type}裁剪失敗，請重試",
+      "crop_image_failed": "裁剪圖片失敗"
+    },
+    "fans": {
+      "title": "粉絲",
+      "no_fans": "還沒有粉絲",
+      "no_fans_subtitle": "開始創作內容來吸引粉絲"
+    },
+    "liked": {
+      "title": "喜歡的影片",
+      "no_liked": "還沒有喜歡的影片",
+      "no_liked_subtitle": "喜歡一些影片來這裡查看"
+    },
+    "starred": {
+      "title": "收藏的影片",
+      "no_starred": "還沒有收藏的影片",
+      "no_starred_subtitle": "收藏一些影片來這裡查看"
+    },
+    "logout": {
+      "confirm_title": "確認登出",
+      "confirm_message": "確定要登出嗎？",
+      "success": "登出成功",
+      "failed": "登出失敗"
+    }
+  },
+  "message": {
+    "title": "訊息",
+    "no_messages": "暫無訊息",
+    "no_messages_subtitle": "去關注一些有趣的用戶吧",
+    "load_failed": "載入失敗",
+    "network_error": "網路錯誤，請稍後重試"
+  },
+  "user_space": {
+    "no_videos": "暫無作品",
+    "no_videos_subtitle": "這個人很懶，還沒有上傳任何影片",
+    "lazy_user_bio": "這個人很懶，還沒有寫簡介"
+  },
+  "common": {
+    "loading": "載入中...",
+    "error": "錯誤",
+    "success": "成功",
+    "cancel": "取消",
+    "confirm": "確認",
+    "back": "返回",
+    "next": "下一步",
+    "submit": "提交",
     "retry": "重試",
-    "pull_to_load": "上拉載入更多",
-    "release_to_load": "鬆開載入更多",
-    "video_info": {
-      "likes": "讚",
-      "comments": "評論",
-      "shares": "分享",
-      "views": "觀看",
-      "time_ago": "前",
+    "ok": "確定",
+    "unknown_user": "未知用戶",
+    "search": {
+      "title": "搜尋",
+      "placeholder": "輸入關鍵詞搜尋影片...",
+      "search_videos": "搜尋影片",
+      "search_users": "搜尋用戶",
+      "no_results": "沒有找到相關影片",
+      "try_other_keywords": "請嘗試其他關鍵詞",
+      "search_failed": "搜尋失敗",
+      "network_error": "網路錯誤：{error}",
+      "search_history": "搜尋歷史",
+      "clear_history": "清除歷史",
+      "recent_searches": "最近搜尋"
+    },
+    "refresh": {
+      "complete": "重新整理完成",
+      "failed": "重新整理失敗",
+      "pull_to_load_more": "上拉載入更多",
+      "release_to_load_more": "鬆開載入更多",
+      "load_failed_retry": "載入失敗，點擊重試",
+      "no_more_content": "沒有更多內容了"
+    },
+    "follow_button": {
       "follow": "關注",
       "following": "已關注",
-      "unfollow": "取消關注"
+      "follow_success": "關注成功",
+      "unfollow_success": "取消關注成功",
+      "network_error": "網路錯誤，請稍後重試"
     },
-    "actions": {
-      "like": "讚",
-      "comment": "評論",
-      "share": "分享",
-      "bookmark": "收藏",
-      "report": "檢舉",
-      "search": "搜尋影片"
+    "user_card": {
+      "lazy_user_bio": "這個人很懶，還沒有寫簡介"
     }
+  },
+  "search": {
+    "start_search": "輸入關鍵詞開始搜尋",
+    "start_search_subtitle": "點擊搜尋按鈕或按回車鍵開始搜尋"
+  },
+  "video_grid": {
+    "no_content": "暫無內容"
   },
   "app": {
     "name": "TAMA",
-    "welcome": "歡迎使用 TAMA",
-    "loading": "載入中...",
-    "error": "發生錯誤",
-    "retry": "重試",
-    "ok": "確定"
+    "welcome": "歡迎使用 TAMA"
   }
 }

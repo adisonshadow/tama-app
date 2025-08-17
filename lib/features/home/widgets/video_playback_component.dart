@@ -1,6 +1,7 @@
 // 视频播放组件
 
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:ui';
@@ -166,7 +167,7 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
                       // 描述
                       if (widget.video.content.isNotEmpty) ...[
                         Text(
-                          '描述',
+                          FlutterI18n.translate(context, 'home.player.description'),
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -202,13 +203,13 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
       final difference = now.difference(dateTime);
       
       if (difference.inDays > 0) {
-        return '${difference.inDays}天前';
+        return FlutterI18n.translate(context, 'home.player.time.days_ago', translationParams: {'days': difference.inDays.toString()});
       } else if (difference.inHours > 0) {
-        return '${difference.inHours}小时前';
+        return FlutterI18n.translate(context, 'home.player.time.hours_ago', translationParams: {'hours': difference.inHours.toString()});
       } else if (difference.inMinutes > 0) {
-        return '${difference.inMinutes}分钟前';
+        return FlutterI18n.translate(context, 'home.player.time.minutes_ago', translationParams: {'minutes': difference.inMinutes.toString()});
       } else {
-        return '刚刚';
+        return FlutterI18n.translate(context, 'home.player.time.just_now');
       }
     } catch (e) {
       return '';
@@ -251,7 +252,7 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
                         Row(
                           children: [
                             Text(
-                              '@${widget.video.nickname ?? '未知用户'}',
+                              '@${widget.video.nickname ?? FlutterI18n.translate(context, 'common.unknown_user')}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,

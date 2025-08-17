@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 import '../providers/following_provider.dart';
 import '../../../shared/widgets/video_grid_widget.dart';
@@ -69,9 +70,9 @@ class _FollowingScreenState extends State<FollowingScreen>
               indicatorWeight: 3,
               labelStyle: const TextStyle(fontSize: 14),
               unselectedLabelStyle: const TextStyle(fontSize: 14),
-              tabs: const [
-                Tab(text: '作品'),
-                Tab(text: '用户'),
+              tabs: [
+                Tab(text: FlutterI18n.translate(context, 'following.tabs.videos')),
+                Tab(text: FlutterI18n.translate(context, 'following.tabs.users')),
               ],
               onTap: (index) {
                 // print('🔍 FollowingScreen - Tab切换到索引: $index');
@@ -143,7 +144,7 @@ class _FollowingScreenState extends State<FollowingScreen>
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('重试'),
+                  child: Text(FlutterI18n.translate(context, 'following.retry')),
                 ),
               ],
             ),
@@ -162,7 +163,7 @@ class _FollowingScreenState extends State<FollowingScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '暂无关注用户的作品',
+                  FlutterI18n.translate(context, 'following.no_videos'),
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 18,
@@ -170,7 +171,7 @@ class _FollowingScreenState extends State<FollowingScreen>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '去关注一些有趣的用户吧',
+                  FlutterI18n.translate(context, 'following.no_videos_subtitle'),
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 14,
@@ -248,7 +249,7 @@ class _FollowingScreenState extends State<FollowingScreen>
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('重试'),
+                  child: Text(FlutterI18n.translate(context, 'following.retry')),
                 ),
               ],
             ),
@@ -267,7 +268,7 @@ class _FollowingScreenState extends State<FollowingScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '暂无关注的用户',
+                  FlutterI18n.translate(context, 'following.no_users'),
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 18,
@@ -275,7 +276,7 @@ class _FollowingScreenState extends State<FollowingScreen>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '去关注一些有趣的用户吧',
+                  FlutterI18n.translate(context, 'following.no_users_subtitle'),
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 14,
@@ -302,25 +303,25 @@ class _FollowingScreenState extends State<FollowingScreen>
               _usersRefreshController.loadNoData();
             }
           },
-          header: const WaterDropHeader(
+          header: WaterDropHeader(
             waterDropColor: Colors.blue,
-            complete: Text('刷新完成', style: TextStyle(color: Colors.white)),
-            failed: Text('刷新失败', style: TextStyle(color: Colors.white)),
+            complete: Text(FlutterI18n.translate(context, 'common.refresh.complete'), style: const TextStyle(color: Colors.white)),
+            failed: Text(FlutterI18n.translate(context, 'common.refresh.failed'), style: const TextStyle(color: Colors.white)),
           ),
           footer: CustomFooter(
             builder: (context, mode) {
               Widget body;
-              if (mode == LoadStatus.idle) {
-                body = const Text('继续上拉加载更多', style: TextStyle(color: Colors.grey));
-              } else if (mode == LoadStatus.loading) {
-                body = const CircularProgressIndicator(color: Colors.blue);
-              } else if (mode == LoadStatus.failed) {
-                body = const Text('加载失败，点击重试', style: TextStyle(color: Colors.red));
-              } else if (mode == LoadStatus.canLoading) {
-                body = const Text('松开加载更多', style: TextStyle(color: Colors.grey));
-              } else {
-                body = const Text('没有更多内容了', style: TextStyle(color: Colors.grey));
-              }
+                          if (mode == LoadStatus.idle) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.pull_to_load_more'), style: const TextStyle(color: Colors.grey));
+            } else if (mode == LoadStatus.loading) {
+              body = const CircularProgressIndicator(color: Colors.blue);
+            } else if (mode == LoadStatus.failed) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.load_failed_retry'), style: const TextStyle(color: Colors.red));
+            } else if (mode == LoadStatus.canLoading) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.release_to_load_more'), style: const TextStyle(color: Colors.grey));
+            } else {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.no_more_content'), style: const TextStyle(color: Colors.grey));
+            }
               return SizedBox(
                 height: 55.0,
                 child: Center(child: body),
@@ -343,12 +344,12 @@ class _FollowingScreenState extends State<FollowingScreen>
                 },
                 onCardTap: () {
                   // 打印调试信息
-                  print('跳转到用户空间页面:');
-                  print('  userId: ${follow.id}');
-                  print('  nickname: ${follow.nickname}');
-                  print('  avatar: ${follow.avatar}');
-                  print('  bio: ${follow.bio}');
-                  print('  spaceBg: ${follow.spaceBg}');
+                  // print('跳转到用户空间页面:');
+                  // print('  userId: ${follow.id}');
+                  // print('  nickname: ${follow.nickname}');
+                  // print('  avatar: ${follow.avatar}');
+                  // print('  bio: ${follow.bio}');
+                  // print('  spaceBg: ${follow.spaceBg}');
                   
                   // 跳转到用户空间页面
                   Navigator.of(context).push(

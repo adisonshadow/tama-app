@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../models/comment_model.dart';
 import '../services/comment_service.dart';
 import '../services/comment_rate_limiter.dart';
+import '../../../core/constants/app_constants.dart';
 
 class CommentSheet extends StatefulWidget {
   final String videoId;
@@ -528,7 +529,7 @@ class _CommentSheetState extends State<CommentSheet> {
           CircleAvatar(
             radius: 20,
             backgroundImage: comment.avatar != null
-                ? NetworkImage('http://localhost:5200/api/media/img/${comment.avatar}')
+                ? NetworkImage('${AppConstants.baseUrl}/api/media/img/${comment.avatar}')
                 : null,
             child: comment.avatar == null
                 ? const Icon(Icons.person, color: Colors.grey)

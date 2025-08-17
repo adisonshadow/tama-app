@@ -31,15 +31,15 @@ class MainNavigation extends StatelessWidget {
             items: [
               BottomNavigationBarItem(
                 icon: const Icon(Icons.explore),
-                label: FlutterI18n.translate(context, 'tabbar.home'),
+                label: FlutterI18n.translate(context, 'home.tabbar.home'),
               ),
               BottomNavigationBarItem(
                 icon: const Icon(Icons.face_retouching_natural),
-                label: FlutterI18n.translate(context, 'tabbar.following'),
+                label: FlutterI18n.translate(context, 'home.tabbar.following'),
               ),
               // BottomNavigationBarItem(
               //   icon: Icon(Icons.add_box),
-              //   label: FlutterI18n.translate(context, 'tabbar.create'),
+              //   label: FlutterI18n.translate(context, 'home.tabbar.create'),
               // ),
               // BottomNavigationBarItem(
               //   icon: Icon(Icons.people),
@@ -47,11 +47,11 @@ class MainNavigation extends StatelessWidget {
               // ),
               BottomNavigationBarItem(
                 icon: const Icon(Icons.chat_bubble),
-                label: FlutterI18n.translate(context, 'tabbar.message'),
+                label: FlutterI18n.translate(context, 'home.tabbar.message'),
               ),
               BottomNavigationBarItem(
                 icon: const Icon(Icons.person),
-                label: FlutterI18n.translate(context, 'tabbar.profile'),
+                label: FlutterI18n.translate(context, 'home.tabbar.profile'),
               ),
             ],
           );

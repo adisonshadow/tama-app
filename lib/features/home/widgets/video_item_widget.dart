@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 // import '../../../core/constants/app_constants.dart';
@@ -61,7 +62,7 @@ class _VideoItemWidgetState extends State<VideoItemWidget> {
       MaterialPageRoute(
         builder: (context) => UserSpaceScreen(
           userId: video.userId,
-          nickname: video.nickname ?? '未知用户',
+          nickname: video.nickname ?? FlutterI18n.translate(context, 'common.unknown_user'),
           avatar: video.avatar ?? '',
           bio: null, // 暂时不传递bio
           spaceBg: null, // 暂时不传递spaceBg

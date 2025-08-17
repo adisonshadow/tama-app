@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 
 import '../../features/home/models/video_model.dart';
 import '../../features/video_player/screens/video_player_screen.dart';
@@ -31,19 +32,19 @@ class VideoGridWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (videos.isEmpty && !isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.video_library_outlined,
               size: 64,
               color: Colors.grey,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              '暂无内容',
-              style: TextStyle(
+              FlutterI18n.translate(context, 'video_grid.no_content'),
+              style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 18,
               ),
@@ -59,24 +60,24 @@ class VideoGridWidget extends StatelessWidget {
       enablePullUp: true,
       onRefresh: onRefresh,
       onLoading: onLoading,
-      header: const WaterDropHeader(
+      header: WaterDropHeader(
         waterDropColor: Colors.blue,
-        complete: Text('刷新完成', style: TextStyle(color: Colors.white)),
-        failed: Text('刷新失败', style: TextStyle(color: Colors.white)),
+        complete: Text(FlutterI18n.translate(context, 'common.refresh.complete'), style: const TextStyle(color: Colors.white)),
+        failed: Text(FlutterI18n.translate(context, 'common.refresh.failed'), style: const TextStyle(color: Colors.white)),
       ),
       footer: CustomFooter(
         builder: (context, mode) {
           Widget body;
           if (mode == LoadStatus.idle) {
-            body = const Text('继续上拉加载更多', style: TextStyle(color: Colors.grey));
+            body = Text(FlutterI18n.translate(context, 'common.refresh.pull_to_load_more'), style: const TextStyle(color: Colors.grey));
           } else if (mode == LoadStatus.loading) {
             body = const CircularProgressIndicator(color: Colors.blue);
           } else if (mode == LoadStatus.failed) {
-            body = const Text('加载失败，点击重试', style: TextStyle(color: Colors.red));
+            body = Text(FlutterI18n.translate(context, 'common.refresh.load_failed_retry'), style: const TextStyle(color: Colors.red));
           } else if (mode == LoadStatus.canLoading) {
-            body = const Text('松开加载更多', style: TextStyle(color: Colors.grey));
+            body = Text(FlutterI18n.translate(context, 'common.refresh.release_to_load_more'), style: const TextStyle(color: Colors.grey));
           } else {
-            body = const Text('没有更多内容了', style: TextStyle(color: Colors.grey));
+            body = Text(FlutterI18n.translate(context, 'common.refresh.no_more_content'), style: const TextStyle(color: Colors.grey));
           }
           return SizedBox(
             height: 55.0,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'dart:ui';
@@ -36,7 +37,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
   void initState() {
     super.initState();
     // 设置默认搜索关键词
-    _searchController.text = '温泉';
+    _searchController.text = '';
     
     // 自动聚焦到搜索框
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -94,7 +95,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
         });
       } else {
         setState(() {
-          _errorMessage = response['message'] ?? '搜索失败';
+          _errorMessage = response['message'] ?? FlutterI18n.translate(context, 'common.search.search_failed');
           if (refresh) {
             _searchResults = [];
           }
@@ -103,7 +104,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = '网络错误：$e';
+        _errorMessage = FlutterI18n.translate(context, 'common.search.network_error', translationParams: {'error': e.toString()});
         if (refresh) {
           _searchResults = [];
         }
@@ -139,9 +140,9 @@ class _SearchOverlayState extends State<SearchOverlay> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        '搜索',
-                        style: TextStyle(
+                      Text(
+                        FlutterI18n.translate(context, 'common.search.title'),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.w600,
@@ -166,7 +167,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
                           focusNode: _searchFocusNode,
                           style: const TextStyle(color: Colors.white, fontSize: 20),
                           decoration: InputDecoration(
-                            hintText: '输入关键词搜索视频...',
+                            hintText: FlutterI18n.translate(context, 'common.search.placeholder'),
                             hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 18),
                             filled: true,
                             fillColor: Colors.white.withValues(alpha: 0.1),
@@ -279,24 +280,24 @@ class _SearchOverlayState extends State<SearchOverlay> {
     }
 
     if (_searchResults.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.search_off,
               color: Colors.white54,
               size: 48,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              '没有找到相关视频',
-              style: TextStyle(color: Colors.white54, fontSize: 18),
+              FlutterI18n.translate(context, 'common.search.no_results'),
+              style: const TextStyle(color: Colors.white54, fontSize: 18),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              '请尝试其他关键词',
-              style: TextStyle(color: Colors.white38, fontSize: 16),
+              FlutterI18n.translate(context, 'common.search.try_other_keywords'),
+              style: const TextStyle(color: Colors.white38, fontSize: 16),
             ),
           ],
         ),
@@ -321,24 +322,24 @@ class _SearchOverlayState extends State<SearchOverlay> {
             _refreshController.loadNoData();
           }
         },
-        header: const WaterDropHeader(
+        header: WaterDropHeader(
           waterDropColor: Colors.blue,
-          complete: Text('刷新完成', style: TextStyle(color: Colors.white)),
-          failed: Text('刷新失败', style: TextStyle(color: Colors.white)),
+                      complete: Text(FlutterI18n.translate(context, 'common.refresh.complete'), style: const TextStyle(color: Colors.white)),
+            failed: Text(FlutterI18n.translate(context, 'common.refresh.failed'), style: const TextStyle(color: Colors.white)),
         ),
         footer: CustomFooter(
           builder: (context, mode) {
             Widget body;
             if (mode == LoadStatus.idle) {
-              body = const Text('继续上拉加载更多', style: TextStyle(color: Colors.grey));
+              body = Text(FlutterI18n.translate(context, 'common.refresh.pull_to_load_more'), style: const TextStyle(color: Colors.grey));
             } else if (mode == LoadStatus.loading) {
               body = const CircularProgressIndicator(color: Colors.blue);
             } else if (mode == LoadStatus.failed) {
-              body = const Text('加载失败，点击重试', style: TextStyle(color: Colors.red));
+              body = Text(FlutterI18n.translate(context, 'common.refresh.load_failed_retry'), style: const TextStyle(color: Colors.red));
             } else if (mode == LoadStatus.canLoading) {
-              body = const Text('松开加载更多', style: TextStyle(color: Colors.grey));
+              body = Text(FlutterI18n.translate(context, 'common.refresh.release_to_load_more'), style: const TextStyle(color: Colors.grey));
             } else {
-              body = const Text('没有更多内容了', style: TextStyle(color: Colors.grey));
+              body = Text(FlutterI18n.translate(context, 'common.refresh.no_more_content'), style: const TextStyle(color: Colors.grey));
             }
             return SizedBox(
               height: 55.0,

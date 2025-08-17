@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
@@ -190,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        user?.nickname ?? '加载中...',
+                        user?.nickname ?? FlutterI18n.translate(context, 'common.loading'),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -199,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        user?.bio ?? '这个人很懒，还没有写简介',
+                        user?.bio ?? FlutterI18n.translate(context, 'common.user_card.lazy_user_bio'),
                         style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 14,
@@ -298,10 +299,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         indicatorWeight: 3,
         labelStyle: const TextStyle(fontSize: 14),
         unselectedLabelStyle: const TextStyle(fontSize: 14),
-        tabs: const [
-          Tab(text: '粉丝'),
-          Tab(text: '点赞'),
-          Tab(text: '收藏'),
+        tabs: [
+          Tab(text: FlutterI18n.translate(context, 'profile.fans.title')),
+          Tab(text: FlutterI18n.translate(context, 'profile.liked.title')),
+          Tab(text: FlutterI18n.translate(context, 'profile.starred.title')),
         ],
       ),
     );
@@ -333,8 +334,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   void _navigateToEditProfile(BuildContext context, user) {
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('用户信息未加载，请稍后再试'),
+        SnackBar(
+          content: Text(FlutterI18n.translate(context, 'profile.edit_profile.user_not_loaded')),
           backgroundColor: Colors.red,
         ),
       );
@@ -358,22 +359,22 @@ class _ProfileScreenState extends State<ProfileScreen>
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.grey[900],
-          title: const Text(
-            '确认退出',
-            style: TextStyle(color: Colors.white),
+          title: Text(
+            FlutterI18n.translate(context, 'profile.logout.confirm_title'),
+            style: const TextStyle(color: Colors.white),
           ),
-          content: const Text(
-            '确定要退出登录吗？',
-            style: TextStyle(color: Colors.white70),
+          content: Text(
+            FlutterI18n.translate(context, 'profile.logout.confirm_message'),
+            style: const TextStyle(color: Colors.white70),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                '取消',
-                style: TextStyle(color: Colors.grey),
+              child: Text(
+                FlutterI18n.translate(context, 'common.cancel'),
+                style: const TextStyle(color: Colors.grey),
               ),
             ),
             TextButton(
@@ -381,9 +382,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                 Navigator.of(context).pop();
                 _performLogout(context);
               },
-              child: const Text(
-                '确定',
-                style: TextStyle(color: Colors.red),
+              child: Text(
+                FlutterI18n.translate(context, 'common.confirm'),
+                style: const TextStyle(color: Colors.red),
               ),
             ),
           ],
@@ -431,10 +432,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         // 显示成功消息
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('登出成功'),
-              backgroundColor: Colors.green,
-            ),
+                      SnackBar(
+            content: Text(FlutterI18n.translate(context, 'profile.logout.success')),
+            backgroundColor: Colors.green,
+          ),
           );
         }
 
@@ -457,10 +458,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         // 显示错误消息
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('登出失败: ${response['message'] ?? '未知错误'}'),
-              backgroundColor: Colors.red,
-            ),
+                      SnackBar(
+            content: Text('${FlutterI18n.translate(context, 'profile.logout.failed')}: ${response['message'] ?? FlutterI18n.translate(context, 'common.error')}'),
+            backgroundColor: Colors.red,
+          ),
           );
         }
       }
@@ -479,7 +480,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('登出失败: $e'),
+            content: Text('${FlutterI18n.translate(context, 'profile.logout.failed')}: $e'),
             backgroundColor: Colors.red,
           ),
         );

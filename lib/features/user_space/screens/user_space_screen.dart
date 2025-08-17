@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -180,7 +181,7 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
             child: FollowButton(
               userId: widget.userId,
               mode: FollowButtonMode.button,
-              // width: 120,
+              width: 160,
               height: 40,
               // fontSize: 16,
               onFollowChanged: () {
@@ -214,7 +215,7 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
                             '${AppConstants.baseUrl}/api/image/${widget.avatar}',
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
-                              print('头像加载失败: $error');
+                              print('❌ 头像加载失败: $error');
                               return Container(
                                 color: Colors.grey[300],
                                 child: const Icon(
@@ -245,7 +246,7 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        widget.nickname.isNotEmpty ? widget.nickname : '未知用户',
+                        widget.nickname.isNotEmpty ? widget.nickname : FlutterI18n.translate(context, 'common.unknown_user'),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -265,9 +266,9 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
                         ),
                       ] else ...[
                         const SizedBox(height: 8),
-                        const Text(
-                          '这个人很懒，还没有写简介',
-                          style: TextStyle(
+                        Text(
+                          FlutterI18n.translate(context, 'user_space.lazy_user_bio'),
+                          style: const TextStyle(
                             color: Colors.white60,
                             fontSize: 16,
                             fontStyle: FontStyle.italic,
@@ -324,7 +325,7 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('重试'),
+                  child: Text(FlutterI18n.translate(context, 'common.retry')),
                 ),
               ],
             ),
@@ -343,7 +344,7 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '暂无作品',
+                  FlutterI18n.translate(context, 'user_space.no_videos'),
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 18,
@@ -370,25 +371,25 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
               _refreshController.loadNoData();
             }
           },
-          header: const WaterDropHeader(
+          header: WaterDropHeader(
             waterDropColor: Colors.blue,
-            complete: Text('刷新完成', style: TextStyle(color: Colors.white)),
-            failed: Text('刷新失败', style: TextStyle(color: Colors.white)),
+            complete: Text(FlutterI18n.translate(context, 'common.refresh.complete'), style: const TextStyle(color: Colors.white)),
+            failed: Text(FlutterI18n.translate(context, 'common.refresh.failed'), style: const TextStyle(color: Colors.white)),
           ),
           footer: CustomFooter(
             builder: (context, mode) {
               Widget body;
-              if (mode == LoadStatus.idle) {
-                body = const Text('继续上拉加载更多', style: TextStyle(color: Colors.grey));
-              } else if (mode == LoadStatus.loading) {
-                body = const CircularProgressIndicator(color: Colors.blue);
-              } else if (mode == LoadStatus.failed) {
-                body = const Text('加载失败，点击重试', style: TextStyle(color: Colors.red));
-              } else if (mode == LoadStatus.canLoading) {
-                body = const Text('松开加载更多', style: TextStyle(color: Colors.grey));
-              } else {
-                body = const Text('没有更多内容了', style: TextStyle(color: Colors.grey));
-              }
+                          if (mode == LoadStatus.idle) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.pull_to_load_more'), style: const TextStyle(color: Colors.grey));
+            } else if (mode == LoadStatus.loading) {
+              body = const CircularProgressIndicator(color: Colors.blue);
+            } else if (mode == LoadStatus.failed) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.load_failed_retry'), style: const TextStyle(color: Colors.red));
+            } else if (mode == LoadStatus.canLoading) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.release_to_load_more'), style: const TextStyle(color: Colors.grey));
+            } else {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.no_more_content'), style: const TextStyle(color: Colors.grey));
+            }
               return SizedBox(
                 height: 55.0,
                 child: Center(child: body),

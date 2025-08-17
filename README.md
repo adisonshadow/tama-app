@@ -1,14 +1,51 @@
-# Tama2 APP - 不完整
+# TAMA APP Client
 
 基于Flutter开发的移动端应用，仿抖音风格的美食视频分享平台。
 
 ## 项目特性
-
 - 🎬 **推荐页面** - 抖音风格的视频推荐流
 - 👥 **关注功能** - 关注用户和查看关注的内容  
 - 🔐 **用户认证** - 完整的登录注册系统
 - 📱 **响应式设计** - 适配不同屏幕尺寸
 - 🚀 **性能优化** - 视频预加载和图片缓存
+- 🍄 **支持多语言** - 使用i18n
+
+## 功能说明
+
+### ✅ 推荐页面
+![推荐截图](https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/home.png)
+- 垂直滑动切换视频
+- 自动播放/暂停/全屏播放
+- 点赞、收藏、分享、评论和评论浏览
+- 作者信息展示
+- 视频详情展示
+- 搜索
+- 根据tag浏览更多视频
+- 用户Space
+
+### ✅ 关注功能
+- 查看关注的用户列表
+- 浏览关注用户的作品
+- 取消关注操作
+
+### ✅ 用户认证
+- 邮箱注册/登录
+- JWT Token管理
+- 自动登录
+- 安全登出
+
+### ✅ 消息
+
+### ⏳ 发布视频 
+
+### ✅ 我
+- 个人资料展示、编辑
+- 粉丝、点赞、收藏
+
+## 技术性功能
+
+- ✅ 多语言
+- ⏳ OTA更新
 
 ## 技术栈
 
@@ -18,16 +55,17 @@
 - **Go Router** - 路由管理
 - **Video Player** - 视频播放
 - **Cached Network Image** - 图片缓存
+- **flutter i18n** - 多语言
 
 ## 项目结构
 
 ```
 lib/
-├── core/                    # 核心功能
-│   ├── constants/          # 常量定义
-│   ├── network/           # 网络配置
-│   └── utils/             # 工具函数
-├── features/              # 功能模块
+├── core/                 # 核心功能
+│   ├── constants/        # 常量定义
+│   ├── network/          # 网络配置
+│   └── utils/            # 工具函数
+├── features/             # 功能模块
 │   ├── auth/             # 认证模块
 │   ├── home/             # 首页模块
 │   └── following/        # 关注模块
@@ -66,7 +104,31 @@ flutter run
 
 # iOS (需要macOS环境)
 flutter run -d ios
+
+# Chrome
+flutter run -d chrome --hot
+
+# Validate 多语言
+flutter pub run flutter_i18n validate
+
+# 项目语法性检测
+flutter analyze
 ```
+
+### 4. 编译项目
+```bash
+
+# Android
+flutter build apk --release
+# gradle 配置在 android/gradle/wrapper/gradle-wrapper.properties
+# 注意 gradle 与 Java 版本的对应关系
+# 注意墙
+
+# ios
+flutter build ios --release
+
+```
+
 
 ## API接口
 
@@ -80,35 +142,6 @@ flutter run -d ios
   - `GET /articles/recommendeds` - 获取推荐视频
   - `GET /my/getMyFollows` - 获取关注列表
 
-## 功能说明
-
-### 推荐页面
-- 垂直滑动切换视频
-- 自动播放/暂停
-- 点赞、收藏、分享、评论
-- 用户信息展示
-
-### 关注功能
-- 查看关注的用户列表
-- 浏览关注用户的作品
-- 取消关注操作
-
-### 用户认证
-- 邮箱注册/登录
-- JWT Token管理
-- 自动登录
-- 安全登出
-
-## 开发状态
-
-- ✅ 项目初始化
-- ✅ 登录注册
-- ✅ 推荐页面
-- ✅ 关注功能
-- ✅ 个人中心
-- ✅ 消息功能
-- ⏳ 发布功能（暂未开发）
-
 ## 注意事项
 
 1. 确保后端API服务正在运行
@@ -117,5 +150,4 @@ flutter run -d ios
 4. Android需要允许网络明文传输（开发环境）
 
 ## 许可证
-
 MIT License

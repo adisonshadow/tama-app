@@ -87,11 +87,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 children: [
                   // 语言选择器 - 右上角
-                  Align(
+                  const Align(
                     alignment: Alignment.topRight,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 16, right: 16),
-                      child: const LanguageSelector(),
+                      padding: EdgeInsets.only(top: 16, right: 16),
+                      child: LanguageSelector(),
                     ),
                   ),
                   // 主要内容

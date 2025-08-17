@@ -17,7 +17,7 @@
       "login_success": "Login successful"
     },
     "register": {
-      "title": "Create Account",
+      "title": "Create New Account",
       "subtitle": "Join our community today",
       "email": "Email",
       "password": "Password",
@@ -36,66 +36,188 @@
       "nickname_min_length": "Nickname must be at least 2 characters",
       "register_failed": "Registration failed",
       "register_success": "Registration successful"
-    },
-    "common": {
-      "loading": "Loading...",
-      "error": "Error",
-      "success": "Success",
-      "cancel": "Cancel",
-      "confirm": "Confirm",
-      "back": "Back",
-      "next": "Next",
-      "submit": "Submit"
     }
-  },
-  "tabbar": {
-    "home": "Home",
-    "following": "Following",
-    "create": "Create",
-    "message": "Message",
-    "profile": "Profile"
   },
   "home": {
-    "recommend": "Recommend",
-    "trending": "Trending",
-    "latest": "Latest",
-    "popular": "Popular",
-    "following": "Following",
-    "refresh": "Pull to refresh",
-    "refresh_complete": "Refresh completed",
-    "refresh_failed": "Refresh failed",
-    "loading": "Loading videos...",
-    "no_more": "No more videos",
-    "load_failed": "Failed to load videos",
-    "load_failed_retry": "Load failed, tap to retry",
+    "tabbar": {
+      "home": "Home",
+      "following": "Following",
+      "create": "Create",
+      "message": "Message",
+      "profile": "Profile"
+    },
+    "video": {
+      "recommend": "Recommend",
+      "trending": "Trending",
+      "latest": "Latest",
+      "popular": "Popular",
+      "following": "Following",
+      "loading": "Loading videos...",
+      "no_more": "No more videos",
+      "load_failed": "Failed to load videos",
+      "video_info": {
+        "likes": "Likes",
+        "comments": "Comments",
+        "shares": "Shares",
+        "views": "Views",
+        "time_ago": "ago",
+        "follow": "Follow",
+        "following": "Following",
+        "unfollow": "Unfollow"
+      },
+      "actions": {
+        "like": "Like",
+        "comment": "Comment",
+        "share": "Share",
+        "bookmark": "Bookmark",
+        "report": "Report",
+        "search": "Search videos"
+      }
+    },
+    "player": {
+      "fullscreen": "Fullscreen",
+      "video_unavailable": "Video temporarily unavailable",
+      "description": "Description",
+      "time": {
+        "just_now": "Just now",
+        "minutes_ago": "{minutes} minutes ago",
+        "hours_ago": "{hours} hours ago",
+        "days_ago": "{days} days ago"
+      }
+    }
+  },
+  "following": {
+    "title": "Following",
+    "tabs": {
+      "videos": "Videos",
+      "users": "Users"
+    },
+    "no_videos": "No videos from following users yet",
+    "no_videos_subtitle": "Follow some interesting users to see their content",
+    "no_users": "No following users yet",
+    "no_users_subtitle": "Follow some interesting users to see their content",
+    "retry": "Retry"
+  },
+  "profile": {
+    "edit_profile": {
+      "title": "Edit Profile",
+      "nickname": "Nickname",
+      "bio": "Bio",
+      "save": "Save",
+      "cancel": "Cancel",
+      "nickname_required": "Nickname is required",
+      "nickname_min_length": "Nickname must be at least 2 characters",
+      "save_success": "Profile updated successfully",
+      "save_failed": "Failed to update profile",
+      "user_not_loaded": "User information not loaded, please try again later",
+      "select_avatar": "Select Avatar",
+      "crop_avatar": "Crop Avatar",
+      "cover_title": "Profile Cover",
+      "select_cover": "Select Cover",
+      "crop_cover": "Crop Cover",
+      "nickname_hint": "Enter your nickname",
+      "bio_hint": "Enter your bio",
+      "avatar": "avatar",
+      "cover": "cover",
+      "web_image_picker_developing": "Web platform image picker is under development, please use mobile app",
+      "image_selected": "Image selected, click 'Crop {type}' to crop",
+      "no_image_selected": "No image selected",
+      "image_pick_failed": "Failed to pick image",
+      "please_select_image_first": "Please select {type} image first",
+      "select_image": "Select Image",
+      "web_crop_developing": "Web platform {type} cropping is under development, please use mobile app",
+      "opening_crop_interface": "Opening crop interface...",
+      "crop_success": "{type} cropped successfully! Click 'Save' button to upload",
+      "crop_failed": "{type} cropping failed, please retry",
+      "crop_image_failed": "Failed to crop image"
+    },
+    "fans": {
+      "title": "Fans",
+      "no_fans": "No fans yet",
+      "no_fans_subtitle": "Start creating content to attract fans"
+    },
+    "liked": {
+      "title": "Liked Videos",
+      "no_liked": "No liked videos yet",
+      "no_liked_subtitle": "Like some videos to see them here"
+    },
+    "starred": {
+      "title": "Starred Videos",
+      "no_starred": "No starred videos yet",
+      "no_starred_subtitle": "Star some videos to see them here"
+    },
+    "logout": {
+      "confirm_title": "Confirm Logout",
+      "confirm_message": "Are you sure you want to logout?",
+      "success": "Logout successful",
+      "failed": "Logout failed"
+    }
+  },
+  "message": {
+    "title": "Messages",
+    "no_messages": "No messages yet",
+    "no_messages_subtitle": "Follow some interesting users to get messages",
+    "load_failed": "Failed to load",
+    "network_error": "Network error, please try again later"
+  },
+  "user_space": {
+    "no_videos": "No videos yet",
+    "no_videos_subtitle": "This person is lazy and hasn't uploaded any videos yet",
+    "lazy_user_bio": "This person is lazy and hasn't written a bio yet"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
     "retry": "Retry",
-    "pull_to_load": "Pull up to load more",
-    "release_to_load": "Release to load more",
-    "video_info": {
-      "likes": "likes",
-      "comments": "comments",
-      "shares": "shares",
-      "views": "views",
-      "time_ago": "ago",
+    "ok": "OK",
+    "unknown_user": "Unknown User",
+    "search": {
+      "title": "Search",
+      "placeholder": "Enter keywords to search videos...",
+      "search_videos": "Search videos",
+      "search_users": "Search users",
+      "no_results": "No related videos found",
+      "try_other_keywords": "Please try other keywords",
+      "search_failed": "Search failed",
+      "network_error": "Network error: {error}",
+      "search_history": "Search History",
+      "clear_history": "Clear History",
+      "recent_searches": "Recent Searches"
+    },
+    "refresh": {
+      "complete": "Refresh completed",
+      "failed": "Refresh failed",
+      "pull_to_load_more": "Pull up to load more",
+      "release_to_load_more": "Release to load more",
+      "load_failed_retry": "Load failed, tap to retry",
+      "no_more_content": "No more content"
+    },
+    "follow_button": {
       "follow": "Follow",
       "following": "Following",
-      "unfollow": "Unfollow"
+      "follow_success": "Follow successful",
+      "unfollow_success": "Unfollow successful",
+      "network_error": "Network error, please try again later"
     },
-    "actions": {
-      "like": "Like",
-      "comment": "Comment",
-      "share": "Share",
-      "bookmark": "Bookmark",
-      "report": "Report",
-      "search": "Search videos"
+    "user_card": {
+      "lazy_user_bio": "This person is lazy and hasn't written a bio yet"
     }
+  },
+  "search": {
+    "start_search": "Enter keywords to start searching",
+    "start_search_subtitle": "Click the search button or press Enter to start searching"
+  },
+  "video_grid": {
+    "no_content": "No content available"
   },
   "app": {
     "name": "TAMA",
-    "welcome": "Welcome to TAMA",
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "retry": "Retry",
-    "ok": "OK"
+    "welcome": "Welcome to TAMA"
   }
 }

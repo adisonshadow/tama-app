@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:intl/intl.dart';
+import '../../../core/constants/app_constants.dart';
 
 import '../models/message_model.dart';
 import '../services/message_service.dart';
+
+
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({super.key});
@@ -77,7 +81,7 @@ class _MessageScreenState extends State<MessageScreen> {
         setState(() {});
       } else {
         setState(() {
-          _errorMessage = response['message'] ?? '加载失败';
+          _errorMessage = response['message'] ?? FlutterI18n.translate(context, 'message.load_failed');
           if (refresh) {
             _messages = [];
           }
@@ -86,7 +90,7 @@ class _MessageScreenState extends State<MessageScreen> {
     } catch (e) {
       // print('🔍 加载消息失败: $e');
       setState(() {
-        _errorMessage = '网络错误，请稍后重试';
+        _errorMessage = FlutterI18n.translate(context, 'message.network_error');
         if (refresh) {
           _messages = [];
         }
@@ -119,19 +123,19 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   /// 格式化时间
-  String _formatTime(DateTime timestamp) {
+  String _formatTime(BuildContext context, DateTime timestamp) {
     final now = DateTime.now();
     final difference = now.difference(timestamp);
 
-    if (difference.inDays > 0) {
-      return DateFormat('MM-dd').format(timestamp);
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时前';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟前';
-    } else {
-      return '刚刚';
-    }
+          if (difference.inDays > 0) {
+        return DateFormat('MM-dd').format(timestamp);
+      } else if (difference.inHours > 0) {
+        return FlutterI18n.translate(context, 'home.player.time.hours_ago', translationParams: {'hours': difference.inHours.toString()});
+      } else if (difference.inMinutes > 0) {
+        return FlutterI18n.translate(context, 'home.player.time.minutes_ago', translationParams: {'minutes': difference.inMinutes.toString()});
+      } else {
+        return FlutterI18n.translate(context, 'home.player.time.just_now');
+      }
   }
 
   @override
@@ -139,9 +143,9 @@ class _MessageScreenState extends State<MessageScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text(
-          '消息',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          FlutterI18n.translate(context, 'message.title'),
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
@@ -184,7 +188,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('重试'),
+              child: Text(FlutterI18n.translate(context, 'common.retry')),
             ),
           ],
         ),
@@ -203,7 +207,7 @@ class _MessageScreenState extends State<MessageScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              '暂无消息',
+              FlutterI18n.translate(context, 'message.no_messages'),
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 18,
@@ -211,7 +215,7 @@ class _MessageScreenState extends State<MessageScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              '去关注一些有趣的用户吧',
+              FlutterI18n.translate(context, 'message.no_messages_subtitle'),
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 14,
@@ -228,25 +232,25 @@ class _MessageScreenState extends State<MessageScreen> {
       enablePullUp: _hasMore,
       onRefresh: _onRefresh,
       onLoading: _onLoading,
-      header: const WaterDropHeader(
-        waterDropColor: Colors.blue,
-        complete: Text('刷新完成', style: TextStyle(color: Colors.white)),
-        failed: Text('刷新失败', style: TextStyle(color: Colors.white)),
-      ),
+                header: WaterDropHeader(
+            waterDropColor: Colors.blue,
+            complete: Text(FlutterI18n.translate(context, 'common.refresh.complete'), style: const TextStyle(color: Colors.white)),
+            failed: Text(FlutterI18n.translate(context, 'common.refresh.failed'), style: const TextStyle(color: Colors.white)),
+          ),
       footer: CustomFooter(
         builder: (context, mode) {
           Widget body;
-          if (mode == LoadStatus.idle) {
-            body = const Text('继续上拉加载更多', style: TextStyle(color: Colors.grey));
-          } else if (mode == LoadStatus.loading) {
-            body = const CircularProgressIndicator(color: Colors.blue);
-          } else if (mode == LoadStatus.failed) {
-            body = const Text('加载失败，点击重试', style: TextStyle(color: Colors.red));
-          } else if (mode == LoadStatus.canLoading) {
-            body = const Text('松开加载更多', style: TextStyle(color: Colors.grey));
-          } else {
-            body = const Text('没有更多内容了', style: TextStyle(color: Colors.grey));
-          }
+                      if (mode == LoadStatus.idle) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.pull_to_load_more'), style: const TextStyle(color: Colors.grey));
+            } else if (mode == LoadStatus.loading) {
+              body = const CircularProgressIndicator(color: Colors.blue);
+            } else if (mode == LoadStatus.failed) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.load_failed_retry'), style: const TextStyle(color: Colors.red));
+            } else if (mode == LoadStatus.canLoading) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.release_to_load_more'), style: const TextStyle(color: Colors.grey));
+            } else {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.no_more_content'), style: const TextStyle(color: Colors.grey));
+            }
           return SizedBox(
             height: 55.0,
             child: Center(child: body),
@@ -289,7 +293,7 @@ class _MessageScreenState extends State<MessageScreen> {
             child: ClipOval(
               child: message.avatar != null && message.avatar!.isNotEmpty
                   ? Image.network(
-                      'http://localhost:5200/api/media/img/${message.avatar}',
+                      '${AppConstants.baseUrl}/api/media/img/${message.avatar}',
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
@@ -352,7 +356,7 @@ class _MessageScreenState extends State<MessageScreen> {
           
           // 右侧：时间
           Text(
-            _formatTime(message.timestamp),
+            _formatTime(context, message.timestamp),
             style: TextStyle(
               color: Colors.grey[500],
               fontSize: 12,

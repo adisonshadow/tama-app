@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import '../services/follow_service.dart';
 import '../../core/network/dio_client.dart';
 
@@ -109,7 +110,9 @@ class _FollowButtonState extends State<FollowButton> {
           
           // 显示成功消息
           _showToastMessage(
-            newStatus ? '关注成功' : '取消关注成功',
+            newStatus 
+              ? FlutterI18n.translate(context, 'common.follow_button.follow_success')
+              : FlutterI18n.translate(context, 'common.follow_button.unfollow_success'),
             isSuccess: true,
           );
         } else {
@@ -121,14 +124,14 @@ class _FollowButtonState extends State<FollowButton> {
           });
         }
       }
-    } catch (e) {
-      if (mounted) {
-        _showToastMessage('网络错误，请稍后重试');
-        setState(() {
-          _isLoading = false;
-        });
+          } catch (e) {
+        if (mounted) {
+          _showToastMessage(FlutterI18n.translate(context, 'common.follow_button.network_error'));
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
-    }
     
     // 调用回调
     widget.onFollowChanged?.call();
@@ -200,7 +203,9 @@ class _FollowButtonState extends State<FollowButton> {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      _isFollowing ? '已关注' : '关注',
+                      _isFollowing 
+                        ? FlutterI18n.translate(context, 'common.follow_button.following')
+                        : FlutterI18n.translate(context, 'common.follow_button.follow'),
                       style: TextStyle(
                         fontSize: widget.fontSize ?? 18,
                         fontWeight: FontWeight.bold,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -86,7 +87,7 @@ class _FansScreenState extends State<FansScreen>
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('重试'),
+                  child: Text(FlutterI18n.translate(context, 'common.retry')),
                 ),
               ],
             ),
@@ -105,7 +106,7 @@ class _FansScreenState extends State<FansScreen>
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '暂无粉丝',
+                  FlutterI18n.translate(context, 'profile.fans.no_fans'),
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 18,
@@ -113,7 +114,7 @@ class _FansScreenState extends State<FansScreen>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '发布更多有趣的内容来吸引粉丝吧',
+                  FlutterI18n.translate(context, 'profile.fans.no_fans_subtitle'),
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 14,
@@ -140,25 +141,25 @@ class _FansScreenState extends State<FansScreen>
               _refreshController.loadNoData();
             }
           },
-          header: const WaterDropHeader(
+          header: WaterDropHeader(
             waterDropColor: Colors.blue,
-            complete: Text('刷新完成', style: TextStyle(color: Colors.white)),
-            failed: Text('刷新失败', style: TextStyle(color: Colors.white)),
+            complete: Text(FlutterI18n.translate(context, 'common.refresh.complete'), style: const TextStyle(color: Colors.white)),
+            failed: Text(FlutterI18n.translate(context, 'common.refresh.failed'), style: const TextStyle(color: Colors.white)),
           ),
           footer: CustomFooter(
             builder: (context, mode) {
               Widget body;
-              if (mode == LoadStatus.idle) {
-                body = const Text('继续上拉加载更多', style: TextStyle(color: Colors.grey));
-              } else if (mode == LoadStatus.loading) {
-                body = const CircularProgressIndicator(color: Colors.blue);
-              } else if (mode == LoadStatus.failed) {
-                body = const Text('加载失败，点击重试', style: TextStyle(color: Colors.red));
-              } else if (mode == LoadStatus.canLoading) {
-                body = const Text('松开加载更多', style: TextStyle(color: Colors.grey));
-              } else {
-                body = const Text('没有更多内容了', style: TextStyle(color: Colors.grey));
-              }
+                          if (mode == LoadStatus.idle) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.pull_to_load_more'), style: const TextStyle(color: Colors.grey));
+            } else if (mode == LoadStatus.loading) {
+              body = const CircularProgressIndicator(color: Colors.blue);
+            } else if (mode == LoadStatus.failed) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.load_failed_retry'), style: const TextStyle(color: Colors.red));
+            } else if (mode == LoadStatus.canLoading) {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.release_to_load_more'), style: const TextStyle(color: Colors.grey));
+            } else {
+              body = Text(FlutterI18n.translate(context, 'common.refresh.no_more_content'), style: const TextStyle(color: Colors.grey));
+            }
               return SizedBox(
                 height: 55.0,
                 child: Center(child: body),
@@ -176,17 +177,17 @@ class _FansScreenState extends State<FansScreen>
                 bio: fan.bio,
                 onFollowTap: () async {
                   // 处理关注状态变化
-                  print('🔍 FansScreen - 关注状态变化，用户ID: ${fan.id}');
+                  // print('🔍 FansScreen - 关注状态变化，用户ID: ${fan.id}');
                   // 可以在这里添加额外的逻辑，比如刷新列表等
                 },
                 onCardTap: () {
                   // 打印调试信息
-                  print('跳转到用户空间页面:');
-                  print('  userId: ${fan.id}');
-                  print('  nickname: ${fan.nickname}');
-                  print('  avatar: ${fan.avatar}');
-                  print('  bio: ${fan.bio}');
-                  print('  spaceBg: ${fan.spaceBg}');
+                  // print('跳转到用户空间页面:');
+                  // print('  userId: ${fan.id}');
+                  // print('  nickname: ${fan.nickname}');
+                  // print('  avatar: ${fan.avatar}');
+                  // print('  bio: ${fan.bio}');
+                  // print('  spaceBg: ${fan.spaceBg}');
                   
                   // 跳转到用户空间页面
                   Navigator.of(context).push(

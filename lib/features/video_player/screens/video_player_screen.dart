@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
@@ -195,10 +196,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         final videos = widget.videos;
         
         if (videos.isEmpty) {
-          return const Center(
+          return Center(
             child: Text(
-              '暂无视频',
-              style: TextStyle(color: Colors.white),
+              FlutterI18n.translate(context, 'video_player.no_videos'),
+              style: const TextStyle(color: Colors.white),
             ),
           );
         }
@@ -240,7 +241,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       MaterialPageRoute(
         builder: (context) => UserSpaceScreen(
           userId: video.userId,
-          nickname: video.nickname ?? '未知用户',
+                      nickname: video.nickname ?? FlutterI18n.translate(context, 'common.unknown_user'),
           avatar: video.avatar ?? '',
           bio: null, // 暂时不传递bio
           spaceBg: null, // 暂时不传递spaceBg
