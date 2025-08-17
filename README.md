@@ -13,23 +13,27 @@
 ## 功能说明
 
 ### ✅ 推荐页面
-![推荐截图](https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/home.png)
+![推荐截图](https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/home.png=120x)
 - 垂直滑动切换视频
 - 自动播放/暂停/全屏播放
 - 点赞、收藏、分享、评论和评论浏览
 - 作者信息展示
 - 视频详情展示
+![视频详情截图](https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/video%20detail.png=120x)
 - 搜索
 - 根据tag浏览更多视频
 - 用户Space
+![用户Space截图](https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/user%20space.png=120x)
 
 ### ✅ 关注功能
+![关注截图](https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/followin%20videos.png.png=120x)
 - 查看关注的用户列表
 - 浏览关注用户的作品
 - 取消关注操作
 
 ### ✅ 用户认证
 - 邮箱注册/登录
+![登录截图](https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/auth.png=120x)
 - JWT Token管理
 - 自动登录
 - 安全登出
@@ -45,6 +49,7 @@
 ## 技术性功能
 
 - ✅ 多语言
+![切换语言截图](https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/i18n.png=120x)
 - ⏳ OTA更新
 
 ## 技术栈
