@@ -18,10 +18,17 @@ class VideoPlayerProvider extends ChangeNotifier {
     _videos = videos;
     _currentIndex = initialIndex;
     
-    // 跳转到初始视频位置
-    if (_videos.isNotEmpty && initialIndex < _videos.length) {
-      _pageController.jumpToPage(initialIndex);
-    }
+    // 使用 addPostFrameCallback 确保 PageView 完全构建后再跳转
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 检查 controller 是否仍然有效且已附加到 PageView
+      if (_pageController.hasClients && _videos.isNotEmpty && initialIndex < _videos.length) {
+        try {
+          _pageController.jumpToPage(initialIndex);
+        } catch (e) {
+          debugPrint('❌ VideoPlayerProvider: 跳转页面失败: $e');
+        }
+      }
+    });
     
     notifyListeners();
   }
@@ -41,26 +48,38 @@ class VideoPlayerProvider extends ChangeNotifier {
   }
 
   void nextVideo() {
-    if (_currentIndex < _videos.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+    if (_pageController.hasClients && _currentIndex < _videos.length - 1) {
+      try {
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      } catch (e) {
+        debugPrint('❌ VideoPlayerProvider: nextVideo 失败: $e');
+      }
     }
   }
 
   void previousVideo() {
-    if (_currentIndex > 0) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+    if (_pageController.hasClients && _currentIndex > 0) {
+      try {
+        _pageController.previousPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      } catch (e) {
+        debugPrint('❌ VideoPlayerProvider: previousVideo 失败: $e');
+      }
     }
   }
 
   void jumpToVideo(int index) {
-    if (index >= 0 && index < _videos.length) {
-      _pageController.jumpToPage(index);
+    if (_pageController.hasClients && index >= 0 && index < _videos.length) {
+      try {
+        _pageController.jumpToPage(index);
+      } catch (e) {
+        debugPrint('❌ VideoPlayerProvider: jumpToVideo 失败: $e');
+      }
     }
   }
 

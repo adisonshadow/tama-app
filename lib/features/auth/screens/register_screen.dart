@@ -66,7 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             width: double.infinity,
             height: double.infinity,
             child: Lottie.asset(
-              'images/lottie-bg.json',
+              'assets/images/lottie-bg.json',
               fit: BoxFit.cover,
               repeat: true,
             ),

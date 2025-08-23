@@ -70,7 +70,6 @@ class Tama2App extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FollowingProvider()),
         ChangeNotifierProvider(create: (_) => FollowProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
-        ChangeNotifierProvider(create: (_) => VideoPlayerProvider()),
       ],
               child: Consumer2<AuthProvider, LanguageProvider>(
         builder: (context, authProvider, languageProvider, _) {
@@ -84,7 +83,7 @@ class Tama2App extends StatelessWidget {
             localizationsDelegates: [
               FlutterI18nDelegate(
                 translationLoader: FileTranslationLoader(
-                  basePath: 'flutter_i18n',
+                  basePath: 'assets/flutter_i18n',
                   useCountryCode: true, // 使用国家代码后缀
                   fallbackFile: 'en_US', // fallback语言文件（必须无扩展名）
                   decodeStrategies: [

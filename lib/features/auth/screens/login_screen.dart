@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
             width: double.infinity,
             height: double.infinity,
             child: Lottie.asset(
-              'images/lottie-bg.json',
+              'assets/images/lottie-bg.json',
               fit: BoxFit.cover,
               repeat: true,
             ),

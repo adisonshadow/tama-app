@@ -1,6 +1,6 @@
 class AppConstants {
   // API配置
-  static const String baseUrl = 'http://localhost:5200'; // https://www.**.com
+  static const String baseUrl = 'https://www.tamalook.com'; // https://www.**.com  localhost:5200
   static const String apiPrefix = '/api';
   
   // 存储键名

@@ -64,10 +64,16 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/flutter_i18n/
+#
+#  # 如果需要自定义字体，添加如下配置（如果没有可以忽略）
+#  fonts:
+#    - family: MaterialIcons
+#      fonts:
+#        - asset: fonts/MaterialIcons-Regular.otf
   
-  # fonts:
-  #   - family: Roboto
-  #     fonts:
-  #       - asset: assets/fonts/Roboto-Regular.ttf
-  #       - asset: assets/fonts/Roboto-Bold.ttf
-  #         weight: 700
+#  fonts:
+#    - family: Roboto
+#      fonts:
+#        - asset: assets/fonts/Roboto-Regular.ttf
+#        - asset: assets/fonts/Roboto-Bold.ttf
+#          weight: 700

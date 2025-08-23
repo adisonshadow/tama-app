@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
 import '../../home/models/video_model.dart';
@@ -45,19 +44,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     //   debugPrint('🔍 videos count: ${widget.videos.length}');
     //   debugPrint('🔍 initialVideoIndex: ${widget.initialVideoIndex}');
     // }
-    
-    // 初始化视频播放Provider
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider = context.read<VideoPlayerProvider>();
-      if (kIsWeb) {
-        // debugPrint('🔍 初始化VideoPlayerProvider');
-        // debugPrint('🔍 Provider videos count before: ${provider.videos.length}');
-      }
-      provider.initializeVideos(widget.videos, widget.initialVideoIndex);
-      if (kIsWeb) {
-        // debugPrint('🔍 Provider videos count after: ${provider.videos.length}');
-      }
-    });
   }
 
   void _onVideoChanged(String? coverUrl) {
@@ -70,59 +56,73 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      extendBodyBehindAppBar: true, // 让body延伸到AppBar后面
-      body: Stack(
-        children: [
-          // 第1层: 模糊背景层 - 从屏幕顶部到底部
-          if (_currentVideoCoverUrl != null)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Stack(
-                children: [
-                  // 模糊图片背景
-                  ImageFiltered(
-                    imageFilter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0), // 大模糊效果
-                    child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(_currentVideoCoverUrl!),
-                          fit: BoxFit.cover,
-                          colorFilter: ColorFilter.mode(
-                            Colors.black.withValues(alpha: 0.3), // 添加半透明黑色遮罩
-                            BlendMode.dstATop,
+    return ChangeNotifierProvider(
+      create: (_) => VideoPlayerProvider(),
+      child: Consumer<VideoPlayerProvider>(
+        builder: (context, provider, child) {
+          // 在 Consumer 中初始化 Provider
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (provider.videos.isEmpty) {
+              provider.initializeVideos(widget.videos, widget.initialVideoIndex);
+            }
+          });
+          
+          return Scaffold(
+            backgroundColor: Colors.black,
+            extendBodyBehindAppBar: true, // 让body延伸到AppBar后面
+            body: Stack(
+              children: [
+                // 第1层: 模糊背景层 - 从屏幕顶部到底部
+                if (_currentVideoCoverUrl != null)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Stack(
+                      children: [
+                        // 模糊图片背景
+                        ImageFiltered(
+                          imageFilter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0), // 大模糊效果
+                          child: Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(_currentVideoCoverUrl!),
+                                fit: BoxFit.cover,
+                                colorFilter: ColorFilter.mode(
+                                  Colors.black.withValues(alpha: 0.3), // 添加半透明黑色遮罩
+                                  BlendMode.dstATop,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                
+                // 第2层: 视频播放区域（从top: 0开始）
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: _buildVideoPlayer(provider),
+                ),
+                
+                // 第3层: 悬浮的顶部导航栏（最上层）
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: _buildTopBar(),
+                ),
+              ],
             ),
-          
-          // 第2层: 视频播放区域（从top: 0开始）
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: _buildVideoPlayer(),
-          ),
-          
-          // 第3层: 悬浮的顶部导航栏（最上层）
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: _buildTopBar(),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -189,47 +189,43 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     );
   }
 
-  Widget _buildVideoPlayer() {
-    return Consumer<VideoPlayerProvider>(
-      builder: (context, provider, child) {
-        // 直接使用传入的videos数据，而不是Provider的状态
-        final videos = widget.videos;
-        
-        if (videos.isEmpty) {
-          return Center(
-            child: Text(
-              FlutterI18n.translate(context, 'video_player.no_videos'),
-              style: const TextStyle(color: Colors.white),
-            ),
-          );
-        }
+  Widget _buildVideoPlayer(VideoPlayerProvider provider) {
+    // 直接使用传入的videos数据，而不是Provider的状态
+    final videos = widget.videos;
+    
+    if (videos.isEmpty) {
+      return Center(
+        child: Text(
+          FlutterI18n.translate(context, 'video_player.no_videos'),
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
+    }
 
-        return PageView.builder(
-          controller: provider.pageController,
-          scrollDirection: Axis.vertical,
-          onPageChanged: (index) {
-            provider.onPageChanged(index);
-            // 更新封面URL
-            final currentVideo = videos[index];
-            final coverUrl = currentVideo.getCoverByRecord('w=360&h=202');
-            _onVideoChanged(coverUrl);
+    return PageView.builder(
+      controller: provider.pageController,
+      scrollDirection: Axis.vertical,
+      onPageChanged: (index) {
+        provider.onPageChanged(index);
+        // 更新封面URL
+        final currentVideo = videos[index];
+        final coverUrl = currentVideo.getCoverByRecord('w=360&h=202');
+        _onVideoChanged(coverUrl);
+      },
+      itemCount: videos.length,
+      itemBuilder: (context, index) {
+        final video = videos[index];
+        return VideoPlaybackComponent(
+          video: video,
+          isActive: index == provider.currentIndex,
+          onAvatarTap: () {
+            // 头像点击后跳转到用户Space
+            // if (kIsWeb) {
+            //   debugPrint('🔍 头像被点击，准备跳转到用户Space: ${video.userId}');
+            // }
+            _navigateToUserSpace(video);
           },
-          itemCount: videos.length,
-          itemBuilder: (context, index) {
-            final video = videos[index];
-            return VideoPlaybackComponent(
-              video: video,
-              isActive: index == provider.currentIndex,
-              onAvatarTap: () {
-                // 头像点击后跳转到用户Space
-                // if (kIsWeb) {
-                //   debugPrint('🔍 头像被点击，准备跳转到用户Space: ${video.userId}');
-                // }
-                _navigateToUserSpace(video);
-              },
-              key: ValueKey(video.id),
-            );
-          },
+          key: ValueKey(video.id),
         );
       },
     );
