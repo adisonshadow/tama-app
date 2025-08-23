@@ -1,4 +1,4 @@
-package com.tama2.tama2_app
+package com.tama.tama_app
 
 import io.flutter.embedding.android.FlutterActivity
 

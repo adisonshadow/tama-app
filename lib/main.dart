@@ -41,7 +41,7 @@ void main() async {
   // 关闭 overflow 警告（仅在开发时使用）
   // OverflowDebugUtils.disableOverflowWarning();
   
-  runApp(const Tama2App());
+  runApp(const TamaApp());
 }
 
 /// 尝试获取视频播放token
@@ -58,8 +58,8 @@ Future<void> _tryFetchVideoToken() async {
   }
 }
 
-class Tama2App extends StatelessWidget {
-  const Tama2App({super.key});
+class TamaApp extends StatelessWidget {
+  const TamaApp({super.key});
 
   @override
   Widget build(BuildContext context) {

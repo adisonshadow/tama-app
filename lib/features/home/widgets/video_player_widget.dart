@@ -3,10 +3,13 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:video_view/video_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'dart:io' show Platform;
 
 import '../models/video_model.dart';
 import '../providers/video_provider.dart';
 import '../../../shared/services/video_token_manager.dart';
+import '../../../shared/services/android_video_player_service.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   final VideoModel video;
@@ -26,10 +29,14 @@ class VideoPlayerWidget extends StatefulWidget {
 
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   VideoController? _controller;
+  VlcPlayerController? _vlcController;
   bool _isInitialized = false;
   bool _hasError = false;
   bool _hasMarkedAsPlayed = false;
   bool _isPlaying = false;
+  bool _useAndroidPlayer = false; // 是否使用Android原生播放器
+  bool _useVlcPlayer = false; // 是否使用VLC播放器
+  final AndroidVideoPlayerService _androidPlayerService = AndroidVideoPlayerService();
 
   OverlayEntry? _fullscreenOverlay; // 全屏覆盖层
 
@@ -119,7 +126,24 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     // print('🔍 VideoPlayerWidget - Original URL: ${widget.video.videoUrl}');
     // print('🔍 VideoPlayerWidget - URL with token: $videoUrlWithToken');
     
+    // 检查是否是m3u8视频（video hash没有.mp4/.ogg等后缀）
+    final isM3u8Video = !widget.video.videoHash!.contains('.') || 
+                        !['.mp4', '.ogg', '.avi', '.mov', '.mkv', '.wmv', '.flv'].any(
+                          (ext) => widget.video.videoHash!.toLowerCase().endsWith(ext)
+                        );
+    
+    if (isM3u8Video) {
+      // 对于m3u8视频，优先尝试VLC播放器
+      try {
+        await _initializeVlcPlayer(videoUrlWithToken);
+        return;
+      } catch (e) {
+        print('VLC player failed for m3u8 video, trying other options: $e');
+      }
+    }
+    
     try {
+      // 首先尝试使用Flutter视频播放器
       _controller = VideoController();
       
       // 监听播放状态变化
@@ -148,6 +172,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         setState(() {
           _isInitialized = true;
           _hasError = false;
+          _useAndroidPlayer = false;
+          _useVlcPlayer = false;
         });
         
         if (widget.isActive) {
@@ -155,10 +181,99 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         }
       }
     } catch (e) {
-      print('Video initialization error: $e');
-      setState(() {
-        _hasError = true;
+      print('Flutter video player failed, trying Android native player: $e');
+      
+      // 如果Flutter播放器失败，尝试使用Android原生播放器
+      if (Platform.isAndroid) {
+        try {
+          await _initializeAndroidPlayer(videoUrlWithToken);
+        } catch (androidError) {
+          print('Android native player also failed: $androidError');
+          
+          // 如果Android播放器也失败，最后尝试VLC播放器
+          try {
+            await _initializeVlcPlayer(videoUrlWithToken);
+          } catch (vlcError) {
+            print('All video players failed: $vlcError');
+            setState(() {
+              _hasError = true;
+            });
+          }
+        }
+      } else {
+        setState(() {
+          _hasError = true;
+        });
+      }
+    }
+  }
+  
+  /// 初始化Android原生视频播放器
+  Future<void> _initializeAndroidPlayer(String videoUrl) async {
+    try {
+      // 初始化Android播放器
+      final success = await _androidPlayerService.initializePlayer();
+      if (success) {
+        // 检查是否有软件解码器可用
+        final hasSoftwareDecoder = await _androidPlayerService.hasSoftwareDecoder();
+        print('Android player initialized, software decoder available: $hasSoftwareDecoder');
+        
+        setState(() {
+          _isInitialized = true;
+          _hasError = false;
+          _useAndroidPlayer = true;
+        });
+        
+        if (widget.isActive) {
+          await _androidPlayerService.playVideo(videoUrl);
+        }
+      } else {
+        throw Exception('Failed to initialize Android player');
+      }
+    } catch (e) {
+      print('Android player initialization error: $e');
+      throw e;
+    }
+  }
+
+  /// 初始化VLC播放器
+  Future<void> _initializeVlcPlayer(String videoUrl) async {
+    try {
+      _vlcController = VlcPlayerController.network(
+        videoUrl,
+        hwAcc: HwAcc.full, // 启用硬件加速
+        autoPlay: widget.isActive,
+      );
+      
+      // 监听播放状态
+      _vlcController!.addListener(() {
+        if (mounted) {
+          final isPlaying = _vlcController!.value.isPlaying;
+          if (_isPlaying != isPlaying) {
+            setState(() {
+              _isPlaying = isPlaying;
+            });
+            
+            // 检查是否开始播放
+            if (!_hasMarkedAsPlayed && isPlaying) {
+              _markVideoAsPlayed();
+            }
+          }
+        }
       });
+      
+      setState(() {
+        _isInitialized = true;
+        _hasError = false;
+        _useAndroidPlayer = false;
+        _useVlcPlayer = true;
+      });
+      
+      print('VLC player initialized successfully for HLS video');
+      
+    } catch (e) {
+      print('VLC player initialization error: $e');
+      throw e;
     }
   }
 
@@ -175,7 +290,22 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   }
 
   void _handleActiveStateChange() {
-    if (_controller != null && _isInitialized) {
+    if (_useVlcPlayer) {
+      // VLC播放器的状态管理
+      if (widget.isActive) {
+        _vlcController?.play();
+      } else {
+        _vlcController?.pause();
+      }
+    } else if (_useAndroidPlayer) {
+      // Android播放器的状态管理
+      if (widget.isActive) {
+        _androidPlayerService.playVideo(widget.video.videoUrl);
+      } else {
+        _androidPlayerService.pauseVideo();
+      }
+    } else if (_controller != null && _isInitialized) {
+      // Flutter播放器的状态管理
       if (widget.isActive) {
         _controller!.play();
       } else {
@@ -185,7 +315,22 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   }
 
   void _togglePlayPause() {
-    if (_controller != null && _isInitialized) {
+    if (_useVlcPlayer) {
+      // VLC播放器的播放/暂停切换
+      if (_isPlaying) {
+        _vlcController?.pause();
+      } else {
+        _vlcController?.play();
+      }
+    } else if (_useAndroidPlayer) {
+      // Android播放器的播放/暂停切换
+      if (_isPlaying) {
+        _androidPlayerService.pauseVideo();
+      } else {
+        _androidPlayerService.playVideo(widget.video.videoUrl);
+      }
+    } else if (_controller != null && _isInitialized) {
+      // Flutter播放器的播放/暂停切换
       if (_isPlaying) {
         _controller!.pause();
       } else {
@@ -201,24 +346,41 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   /// 外部调用的播放方法
   void play() {
-    if (_controller != null && _isInitialized) {
+    if (_useVlcPlayer) {
+      _vlcController?.play();
+    } else if (_useAndroidPlayer) {
+      _androidPlayerService.playVideo(widget.video.videoUrl);
+    } else if (_controller != null && _isInitialized) {
       _controller!.play();
     }
   }
 
   /// 外部调用的暂停方法
   void pause() {
-    if (_controller != null && _isInitialized) {
+    if (_useVlcPlayer) {
+      _vlcController?.pause();
+    } else if (_useAndroidPlayer) {
+      _androidPlayerService.pauseVideo();
+    } else if (_controller != null && _isInitialized) {
       _controller!.pause();
     }
   }
 
   void _disposeController() {
-    _controller?.dispose();
+    if (_useVlcPlayer) {
+      _vlcController?.dispose();
+    } else if (_useAndroidPlayer) {
+      _androidPlayerService.disposePlayer();
+    } else {
+      _controller?.dispose();
+    }
     _controller = null;
+    _vlcController = null;
     _isInitialized = false;
     _hasError = false;
     _isPlaying = false;
+    _useAndroidPlayer = false;
+    _useVlcPlayer = false;
   }
 
   /// 进入全屏模式
@@ -258,7 +420,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       color: Colors.black,
       child: Stack(
         children: [
-          // 全屏视频播放器 - 旋转90度并填充整个屏幕
+          // 全屏视频播放器
           Center(
             child: Transform.rotate(
               angle: 90 * 3.14159 / 180, // 90度转换为弧度
@@ -266,15 +428,54 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                 // 确保视频完全填充屏幕，不留黑边
                 width: MediaQuery.of(context).size.height * 1.2, // 增加宽度避免黑边
                 height: MediaQuery.of(context).size.width * 1.2,  // 增加高度避免黑边
-                child: VideoView(
-                  controller: _controller!,
-                ),
+                child: _useVlcPlayer
+                    ? _buildVlcFullscreenPlayer()
+                    : _useAndroidPlayer
+                        ? _buildAndroidFullscreenPlayer()
+                        : VideoView(
+                            controller: _controller!,
+                          ),
               ),
             ),
           ),
           // 全屏关闭按钮
           _buildFullscreenCloseButton(),
         ],
+      ),
+    );
+  }
+  
+  /// 构建VLC播放器的全屏界面
+  Widget _buildVlcFullscreenPlayer() {
+    return VlcPlayer(
+      controller: _vlcController!,
+      aspectRatio: 16 / 9, // 全屏时使用16:9比例
+    );
+  }
+  
+  /// 构建Android播放器的全屏界面
+  Widget _buildAndroidFullscreenPlayer() {
+    return Container(
+      color: Colors.black,
+      child: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.play_circle_outline,
+              color: Colors.white,
+              size: 80,
+            ),
+            SizedBox(height: 24),
+            Text(
+              'Android Native Player - Fullscreen',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -395,7 +596,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       return _buildThumbnailView();
     }
 
-    if (!_isInitialized || _controller == null) {
+    if (!_isInitialized) {
       return Stack(
         children: [
           _buildThumbnailView(),
@@ -406,10 +607,97 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       );
     }
 
-
-
-    // print('🔍 渲染普通模式');
-    // 普通模式
+    // 根据播放器类型选择不同的UI
+    if (_useVlcPlayer) {
+      return _buildVlcPlayerUI();
+    } else if (_useAndroidPlayer) {
+      return _buildAndroidPlayerUI();
+    } else {
+      return _buildFlutterPlayerUI();
+    }
+  }
+  
+  /// 构建VLC播放器的UI
+  Widget _buildVlcPlayerUI() {
+    return Stack(
+      children: [
+        // VLC播放器
+        GestureDetector(
+          onTap: () {
+            _togglePlayPause();
+            widget.onTap?.call();
+          },
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: widget.video.isShort == 1 ? 9 / 16 : 16 / 9,
+              child: VlcPlayer(
+                controller: _vlcController!,
+                aspectRatio: widget.video.isShort == 1 ? 9 / 16 : 16 / 9,
+              ),
+            ),
+          ),
+        ),
+        // 播放/暂停按钮
+        _buildPlayButton(),
+        // 全屏按钮（仅横屏视频显示，放在最上层）
+        _buildFullscreenButton(),
+      ],
+    );
+  }
+  
+  /// 构建Android播放器的UI
+  Widget _buildAndroidPlayerUI() {
+    return Stack(
+      children: [
+        // Android播放器容器
+        GestureDetector(
+          onTap: () {
+            _togglePlayPause();
+            widget.onTap?.call();
+          },
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: widget.video.isShort == 1 ? 9 / 16 : 16 / 9,
+              child: Container(
+                color: Colors.black,
+                child: const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.play_circle_outline,
+                        color: Colors.white,
+                        size: 60,
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'Android Native Player',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        // 播放/暂停按钮
+        _buildPlayButton(),
+        // 全屏按钮（仅横屏视频显示，放在最上层）
+        _buildFullscreenButton(),
+      ],
+    );
+  }
+  
+  /// 构建Flutter播放器的UI
+  Widget _buildFlutterPlayerUI() {
+    if (_controller == null) {
+      return _buildThumbnailView();
+    }
+    
     return Stack(
       children: [
         // 视频播放器
@@ -436,7 +724,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   }
 
   Widget _buildPlayButton() {
-    if (_controller == null || (_controller != null && _isPlaying)) {
+    // 检查是否应该显示播放按钮
+    bool shouldShowPlayButton = false;
+    
+    if (_useAndroidPlayer) {
+      // Android播放器：当没有播放时显示播放按钮
+      shouldShowPlayButton = !_isPlaying;
+    } else if (_controller != null) {
+      // Flutter播放器：当没有播放时显示播放按钮
+      shouldShowPlayButton = !_isPlaying;
+    }
+    
+    if (!shouldShowPlayButton) {
       return const SizedBox.shrink();
     }
 

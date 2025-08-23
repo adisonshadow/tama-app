@@ -8,7 +8,7 @@ HomeScreen (推荐页面)
 │   ├── AppBar (透明背景)
 │   │   ├── 左侧Logo区域
 │   │   │   ├── Icon (video_collection, 蓝色)
-│   │   │   └── Text ("TAMA2", 白色, 22px, 粗体)
+│   │   │   └── Text ("TAMA", 白色, 22px, 粗体)
 │   │   └── 右侧操作区域
 │   │       ├── IconButton (搜索图标, 白色)
 │   │       └── PopupMenuButton (用户头像)

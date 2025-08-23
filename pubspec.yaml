@@ -29,6 +29,7 @@ dependencies:
   video_player: ^2.8.1
   video_player_web: ^2.1.2
   video_view: ^1.1.4
+  flutter_vlc_player: ^7.3.2
   
   # 图片缓存
   cached_network_image: ^3.3.0
