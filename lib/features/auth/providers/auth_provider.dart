@@ -147,13 +147,24 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> logout() async {
     try {
-      await AuthService.logout();
-    } catch (e) {
-      print('Logout API call failed: $e');
+      // 尝试调用API登出（可选）
+      try {
+        await AuthService.logout();
+      } catch (e) {
+        print('Logout API call failed: $e');
+        // API调用失败不影响本地登出
+      }
     } finally {
       // 无论API调用是否成功都清除本地数据
-      _user = null;
-      await StorageService.clearAll();
+      try {
+        _user = null;
+        await StorageService.clearAll();
+        print('Local data cleared successfully');
+      } catch (e) {
+        print('Error clearing local data: $e');
+        // 即使清除本地数据失败，也要清除内存中的用户状态
+        _user = null;
+      }
       notifyListeners();
     }
   }

@@ -44,7 +44,7 @@
       "following": "フォロー中",
       "create": "作成",
       "message": "メッセージ",
-      "profile": "プロフィール"
+      "profile": "マイ"
     },
     "video": {
       "recommend": "おすすめ",
@@ -72,12 +72,40 @@
         "bookmark": "ブックマーク",
         "report": "報告",
         "search": "動画を検索"
+      },
+      "share": {
+        "success": "シェアリンクがクリップボードにコピーされました",
+        "failed": "シェアリンクのコピーに失敗しました",
+        "url_copied": "動画リンクがコピーされました"
       }
     },
     "player": {
       "fullscreen": "全画面表示",
       "video_unavailable": "動画が一時的に利用できません",
       "description": "説明",
+      "time": {
+        "just_now": "今",
+        "minutes_ago": "{minutes}分前",
+        "hours_ago": "{hours}時間前",
+        "days_ago": "{days}日前"
+      }
+    },
+    "comments": {
+      "title": "コメント",
+      "count": "{count}件のコメント",
+      "input_hint": "何か書いてみましょう...",
+      "send": "送信",
+      "sending": "送信中...",
+      "send_success": "コメントが投稿されました！",
+      "send_failed": "コメントの投稿に失敗しました",
+      "rate_limit": "コメントが頻繁すぎます。後でもう一度お試しください",
+      "rate_limit_minutes": "コメントが頻繁すぎます。{minutes}分{seconds}秒後にもう一度お試しください",
+      "rate_limit_seconds": "コメントが頻繁すぎます。{seconds}秒後にもう一度お試しください",
+      "no_comments": "まだコメントがありません。最初のコメントを投稿してみましょう！",
+      "load_failed": "コメントの読み込みに失敗しました",
+      "retry": "再試行",
+      "emoji": "絵文字",
+      "keyboard": "キーボード",
       "time": {
         "just_now": "今",
         "minutes_ago": "{minutes}分前",

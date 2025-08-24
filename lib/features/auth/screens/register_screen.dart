@@ -101,13 +101,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 20),
                           
                           // Logo
                           const Image(
                             image: AssetImage('assets/images/logo.png'),
-                            width: 80,
-                            height: 80,
+                            width: 68,
+                            height: 68,
                           ),
 
                           const SizedBox(height: 16),
@@ -115,20 +115,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Text(
                             FlutterI18n.translate(context, 'auth.register.title'),
                             style: const TextStyle(
-                              fontSize: 28,
+                              fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            FlutterI18n.translate(context, 'auth.register.subtitle'),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(height: 40),
+                          // const SizedBox(height: 8),
+                          // Text(
+                          //   FlutterI18n.translate(context, 'auth.register.subtitle'),
+                          //   style: const TextStyle(
+                          //     fontSize: 16,
+                          //     color: Colors.grey,
+                          //   ),
+                          // ),
+                          const SizedBox(height: 28),
 
                           // 注册表单
                           Consumer<LanguageProvider>(
@@ -167,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 20),
                                 
                                 TextFormField(
                                   controller: _emailController,
@@ -200,7 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 20),
                                 
                                 TextFormField(
                                   controller: _passwordController,
@@ -244,7 +244,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 20),
                                 
                                 TextFormField(
                                   controller: _confirmPasswordController,

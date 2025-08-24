@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
 import '../../home/models/video_model.dart';
 
+// 自定义滚动物理效果，减少滑动距离要求
+class SensitivePageScrollPhysics extends PageScrollPhysics {
+  const SensitivePageScrollPhysics({super.parent});
+
+  @override
+  SensitivePageScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return SensitivePageScrollPhysics(parent: buildParent(ancestor));
+  }
+
+  @override
+  double get minFlingVelocity => super.minFlingVelocity * 0.5; // 减少最小滑动速度
+
+  @override
+  double get maxFlingVelocity => super.maxFlingVelocity * 1.2; // 增加最大滑动速度
+}
+
 class VideoPlayerProvider extends ChangeNotifier {
   List<VideoModel> _videos = [];
   int _currentIndex = 0;
@@ -51,8 +67,8 @@ class VideoPlayerProvider extends ChangeNotifier {
     if (_pageController.hasClients && _currentIndex < _videos.length - 1) {
       try {
         _pageController.nextPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 150), // 进一步减少动画时间
+          curve: Curves.easeOut, // 使用更快的缓动曲线
         );
       } catch (e) {
         debugPrint('❌ VideoPlayerProvider: nextVideo 失败: $e');
@@ -64,8 +80,8 @@ class VideoPlayerProvider extends ChangeNotifier {
     if (_pageController.hasClients && _currentIndex > 0) {
       try {
         _pageController.previousPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 150), // 进一步减少动画时间
+          curve: Curves.easeOut, // 使用更快的缓动曲线
         );
       } catch (e) {
         debugPrint('❌ VideoPlayerProvider: previousVideo 失败: $e');

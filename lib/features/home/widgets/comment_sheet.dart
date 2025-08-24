@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:intl/intl.dart';
 import '../models/comment_model.dart';
 import '../services/comment_service.dart';
@@ -93,15 +94,22 @@ class _CommentSheetState extends State<CommentSheet> {
       final nextTime = _rateLimiter.getNextCommentTime(_currentUserId);
       final remainingTime = nextTime?.difference(DateTime.now());
       
-      String message = '评论过于频繁，请稍后再试';
+      String message;
       if (remainingTime != null) {
         final minutes = remainingTime.inMinutes;
         final seconds = remainingTime.inSeconds % 60;
         if (minutes > 0) {
-          message = '评论过于频繁，请$minutes分$seconds秒后再试';
+          message = FlutterI18n.translate(context, 'home.comments.rate_limit_minutes', translationParams: {
+            'minutes': minutes.toString(),
+            'seconds': seconds.toString(),
+          });
         } else {
-          message = '评论过于频繁，请$seconds秒后再试';
+          message = FlutterI18n.translate(context, 'home.comments.rate_limit_seconds', translationParams: {
+            'seconds': seconds.toString(),
+          });
         }
+      } else {
+        message = FlutterI18n.translate(context, 'home.comments.rate_limit');
       }
       
       ScaffoldMessenger.of(context).showSnackBar(
@@ -136,7 +144,7 @@ class _CommentSheetState extends State<CommentSheet> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('评论发布成功！'),
+              content: Text(FlutterI18n.translate(context, 'home.comments.send_success')),
               backgroundColor: Colors.green,
               duration: const Duration(seconds: 2),
               behavior: SnackBarBehavior.floating,
@@ -164,7 +172,7 @@ class _CommentSheetState extends State<CommentSheet> {
       }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('发布评论失败: $e')),
+          SnackBar(content: Text('${FlutterI18n.translate(context, 'home.comments.send_failed')}: $e')),
         );
       }
     } finally {
@@ -182,11 +190,15 @@ class _CommentSheetState extends State<CommentSheet> {
     if (difference.inDays > 0) {
       return DateFormat('MM-dd HH:mm').format(dateTime);
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时前';
+      return FlutterI18n.translate(context, 'home.comments.time.hours_ago', translationParams: {
+        'hours': difference.inHours.toString(),
+      });
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟前';
+      return FlutterI18n.translate(context, 'home.comments.time.minutes_ago', translationParams: {
+        'minutes': difference.inMinutes.toString(),
+      });
     } else {
-      return '刚刚';
+      return FlutterI18n.translate(context, 'home.comments.time.just_now');
     }
   }
 
@@ -278,7 +290,9 @@ class _CommentSheetState extends State<CommentSheet> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              '${_comments.length}条评论',
+              FlutterI18n.translate(context, 'home.comments.count', translationParams: {
+                'count': _comments.length.toString(),
+              }),
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -306,16 +320,16 @@ class _CommentSheetState extends State<CommentSheet> {
                             const SizedBox(height: 16),
                             ElevatedButton(
                               onPressed: _loadComments,
-                              child: const Text('重试'),
+                              child: Text(FlutterI18n.translate(context, 'home.comments.retry')),
                             ),
                           ],
                         ),
                       )
                     : _comments.isEmpty
-                        ? const Center(
+                        ? Center(
                             child: Text(
-                              '暂无评论，快来发表第一条评论吧！',
-                              style: TextStyle(
+                              FlutterI18n.translate(context, 'home.comments.no_comments'),
+                              style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 16,
                               ),
@@ -347,12 +361,11 @@ class _CommentSheetState extends State<CommentSheet> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        '选择表情',
-                        style: TextStyle(
+                      Text(
+                        FlutterI18n.translate(context, 'home.comments.emoji'),
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(221, 91, 91, 91),
                         ),
                       ),
                       IconButton(
@@ -453,9 +466,9 @@ class _CommentSheetState extends State<CommentSheet> {
                       maxHeight: 120,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.grey[100], // 使用更浅的灰色背景
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.grey[300]!),
+                      border: Border.all(color: Colors.grey[300]!), // 使用更浅的边框颜色
                     ),
                     child: TextField(
                       controller: _commentController,
@@ -464,17 +477,20 @@ class _CommentSheetState extends State<CommentSheet> {
                       textInputAction: TextInputAction.send,
                       onSubmitted: (_) => _submitComment(),
                       style: const TextStyle(
-                        color: Colors.black87,
+                        color: Colors.black87, // 使用黑色文字
                         fontSize: 16,
                       ),
-                      decoration: const InputDecoration(
-                        hintText: '说点什么...',
-                        hintStyle: TextStyle(color: Colors.grey),
+                      decoration: InputDecoration(
+                        hintText: FlutterI18n.translate(context, 'home.comments.input_hint'),
+                        hintStyle: TextStyle(color: Colors.grey[500]), // 使用固定的提示文字颜色
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 12,
                         ),
+                        // 确保输入框不受主题影响
+                        filled: true,
+                        fillColor: Colors.grey[100],
                       ),
                     ),
                   ),

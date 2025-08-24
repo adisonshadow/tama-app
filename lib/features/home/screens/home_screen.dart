@@ -102,26 +102,26 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Logo
-            Row(
+            const Row(
               children: [
-                const Image(
+                Image(
                   image: AssetImage('assets/images/logo.png'),
-                  width: 28,
-                  height: 28,
+                  width: 26,
+                  height: 26,
                 ),
-                const SizedBox(width: 8),
-                Consumer<LanguageProvider>(
-                  builder: (context, languageProvider, _) {
-                    return Text(
-                      FlutterI18n.translate(context, 'app.name'),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  },
-                ),
+                // SizedBox(width: 8),
+                // Consumer<LanguageProvider>(
+                //   builder: (context, languageProvider, _) {
+                //     return Text(
+                //       FlutterI18n.translate(context, 'app.name'),
+                //       style: const TextStyle(
+                //         color: Colors.white,
+                //         fontSize: 22,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     );
+                //   },
+                // ),
               ],
             ),
             
@@ -228,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                           image: NetworkImage(_currentVideoCoverUrl!),
                           fit: BoxFit.cover,
                           colorFilter: ColorFilter.mode(
-                            Colors.black.withValues(alpha: 0.3), // 添加半透明黑色遮罩
+                            Colors.black.withValues(alpha: 0.26), // 添加半透明黑色遮罩
                             BlendMode.dstATop,
                           ),
                         ),

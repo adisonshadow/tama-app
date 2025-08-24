@@ -71,16 +71,18 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
           
           return Scaffold(
             backgroundColor: Colors.black,
-            body: Column(
-              children: [
-                // 行1: 用户信息头部（带背景图片）
-                _buildUserHeader(),
-                
-                // 行2: 作品列表
-                Expanded(
-                  child: _buildVideosList(),
-                ),
-              ],
+            body: SafeArea(
+              child: Column(
+                children: [
+                  // 行1: 用户信息头部（带背景图片）
+                  _buildUserHeader(),
+                  
+                  // 行2: 作品列表
+                  Expanded(
+                    child: _buildVideosList(),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -141,9 +143,9 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
             ),
           ),
           
-          // 返回按钮 - 提高层级，确保可点击
+          // 返回按钮 - 提高层级，确保可点击，添加顶部间距
           Positioned(
-            top: 20,
+            top: MediaQuery.of(context).padding.top + 2, // 状态栏高度 + 额外间距
             left: 20,
             child: Material(
               color: Colors.transparent,
@@ -174,9 +176,9 @@ class _UserSpaceScreenState extends State<UserSpaceScreen> {
             ),
           ),
           
-          // 关注按钮 - 在返回按钮右侧
+          // 关注按钮 - 在返回按钮右侧，添加顶部间距
           Positioned(
-            top: 20,
+            top: MediaQuery.of(context).padding.top + 1, // 状态栏高度 + 额外间距
             right: 20,
             child: FollowButton(
               userId: widget.userId,

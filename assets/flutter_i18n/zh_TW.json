@@ -44,7 +44,7 @@
       "following": "關注",
       "create": "創作",
       "message": "訊息",
-      "profile": "個人"
+      "profile": "我的"
     },
     "video": {
       "recommend": "推薦",
@@ -72,12 +72,40 @@
         "bookmark": "收藏",
         "report": "檢舉",
         "search": "搜尋影片"
+      },
+      "share": {
+        "success": "分享連結已複製到剪貼簿",
+        "failed": "複製分享連結失敗",
+        "url_copied": "影片連結已複製"
       }
     },
     "player": {
       "fullscreen": "全螢幕",
       "video_unavailable": "影片暫時無法播放",
       "description": "描述",
+      "time": {
+        "just_now": "剛剛",
+        "minutes_ago": "{minutes}分鐘前",
+        "hours_ago": "{hours}小時前",
+        "days_ago": "{days}天前"
+      }
+    },
+    "comments": {
+      "title": "評論",
+      "count": "{count}條評論",
+      "input_hint": "說點什麼...",
+      "send": "發送",
+      "sending": "發送中...",
+      "send_success": "評論發布成功！",
+      "send_failed": "發布評論失敗",
+      "rate_limit": "評論過於頻繁，請稍後再試",
+      "rate_limit_minutes": "評論過於頻繁，請{minutes}分{seconds}秒後再試",
+      "rate_limit_seconds": "評論過於頻繁，請{seconds}秒後再試",
+      "no_comments": "暫無評論，快來發表第一條評論吧！",
+      "load_failed": "載入評論失敗",
+      "retry": "重試",
+      "emoji": "表情",
+      "keyboard": "鍵盤",
       "time": {
         "just_now": "剛剛",
         "minutes_ago": "{minutes}分鐘前",

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/video_model.dart';
 import 'video_item_widget.dart';
+import '../../video_player/providers/video_player_provider.dart'; // 导入自定义滚动物理效果
 
 class VideoFeedWidget extends StatefulWidget {
   final List<VideoModel> videos;
@@ -69,6 +70,15 @@ class _VideoFeedWidgetState extends State<VideoFeedWidget> {
     return PageView.builder(
       controller: _pageController,
       scrollDirection: Axis.vertical,
+      // 优化滑动体验
+      pageSnapping: true, // 启用页面吸附
+      scrollBehavior: const ScrollBehavior().copyWith(
+        scrollbars: false, // 隐藏滚动条
+      ),
+      // 减少滑动距离，提高响应性 - 使用ClampingScrollPhysics减少滑动距离要求
+      physics: const SensitivePageScrollPhysics(
+        parent: BouncingScrollPhysics(), // 使用弹性滚动
+      ),
       onPageChanged: (index) {
         setState(() {
           _currentIndex = index;

@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             ),
           ),
           Positioned(
-            top: 20,
+            top: 38,
             right: 20,
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -415,6 +415,15 @@ class _ProfileScreenState extends State<ProfileScreen>
         },
       );
 
+      // 添加超时机制，防止loading一直显示
+      bool isDialogClosed = false;
+      Future.delayed(const Duration(seconds: 10), () {
+        if (!isDialogClosed && context.mounted) {
+          Navigator.of(context).pop();
+          isDialogClosed = true;
+        }
+      });
+
       // 调用登出API
       final response = await LogoutService.logout();
       
@@ -422,7 +431,10 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (!context.mounted) return;
       
       // 关闭加载指示器
-      Navigator.of(context).pop();
+      if (!isDialogClosed) {
+        Navigator.of(context).pop();
+        isDialogClosed = true;
+      }
 
       if (response['status'] == 'SUCCESS') {
         if (kIsWeb) {
@@ -432,10 +444,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         // 显示成功消息
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-            content: Text(FlutterI18n.translate(context, 'profile.logout.success')),
-            backgroundColor: Colors.green,
-          ),
+            SnackBar(
+              content: Text(FlutterI18n.translate(context, 'profile.logout.success')),
+              backgroundColor: Colors.green,
+            ),
           );
         }
 
@@ -447,6 +459,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           
           // 使用go_router跳转到登录页
           if (context.mounted) {
+            // 强制跳转到登录页，清除所有路由历史
             context.go('/auth/login');
           }
         }
@@ -458,10 +471,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         // 显示错误消息
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-            content: Text('${FlutterI18n.translate(context, 'profile.logout.failed')}: ${response['message'] ?? FlutterI18n.translate(context, 'common.error')}'),
-            backgroundColor: Colors.red,
-          ),
+            SnackBar(
+              content: Text('${FlutterI18n.translate(context, 'profile.logout.failed')}: ${response['message'] ?? FlutterI18n.translate(context, 'common.error')}'),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       }
@@ -484,6 +497,20 @@ class _ProfileScreenState extends State<ProfileScreen>
             backgroundColor: Colors.red,
           ),
         );
+      }
+      
+      // 即使出错也尝试清除本地数据并跳转
+      try {
+        if (context.mounted) {
+          final authProvider = context.read<AuthProvider>();
+          await authProvider.logout();
+          
+          if (context.mounted) {
+            context.go('/auth/login');
+          }
+        }
+      } catch (logoutError) {
+        print('Error during fallback logout: $logoutError');
       }
     }
   }

@@ -57,52 +57,58 @@ class _FollowingScreenState extends State<FollowingScreen>
     
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Column(
-        children: [
-          // 直接在body顶部放置TabBar
-          Container(
-            color: Colors.black,
-            child: TabBar(
-              controller: _tabController,
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: Colors.blue,
-              indicatorWeight: 3,
-              labelStyle: const TextStyle(fontSize: 14),
-              unselectedLabelStyle: const TextStyle(fontSize: 14),
-              tabs: [
-                Tab(text: FlutterI18n.translate(context, 'following.tabs.videos')),
-                Tab(text: FlutterI18n.translate(context, 'following.tabs.users')),
-              ],
-              onTap: (index) {
-                // print('🔍 FollowingScreen - Tab切换到索引: $index');
-                // 切换tab时重置刷新控制器
-                _videosRefreshController.resetNoData();
-                _usersRefreshController.resetNoData();
-                
-                // 如果切换到用户tab，加载用户数据
-                if (index == 1) {
-                  final followingProvider = context.read<FollowingProvider>();
-                  // print('🔍 FollowingScreen - 切换到用户tab，开始加载用户数据');
-                  followingProvider.loadMyFollows(refresh: true);
-                }
-              },
+      body: SafeArea(
+        child: Column(
+          children: [
+            // 添加状态栏高度的顶部间距
+            const SizedBox(height: 2), // MediaQuery.of(context).padding.top
+            
+            // TabBar
+            Container(
+              color: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TabBar(
+                controller: _tabController,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: Colors.blue,
+                indicatorWeight: 3,
+                labelStyle: const TextStyle(fontSize: 14),
+                unselectedLabelStyle: const TextStyle(fontSize: 14),
+                tabs: [
+                  Tab(text: FlutterI18n.translate(context, 'following.tabs.videos')),
+                  Tab(text: FlutterI18n.translate(context, 'following.tabs.users')),
+                ],
+                onTap: (index) {
+                  // print('🔍 FollowingScreen - Tab切换到索引: $index');
+                  // 切换tab时重置刷新控制器
+                  _videosRefreshController.resetNoData();
+                  _usersRefreshController.resetNoData();
+                  
+                  // 如果切换到用户tab，加载用户数据
+                  if (index == 1) {
+                    final followingProvider = context.read<FollowingProvider>();
+                    // print('🔍 FollowingScreen - 切换到用户tab，开始加载用户数据');
+                    followingProvider.loadMyFollows(refresh: true);
+                  }
+                },
+              ),
             ),
-          ),
-          
-          // TabBarView内容
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // 关注的用户作品
-                _buildFollowingVideosTab(),
-                // 关注的用户列表
-                _buildFollowingUsersTab(),
-              ],
+            
+            // TabBarView内容
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // 关注的用户作品
+                  _buildFollowingVideosTab(),
+                  // 关注的用户列表
+                  _buildFollowingUsersTab(),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

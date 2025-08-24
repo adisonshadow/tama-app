@@ -205,6 +205,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     return PageView.builder(
       controller: provider.pageController,
       scrollDirection: Axis.vertical,
+      // 优化滑动体验
+      pageSnapping: true, // 启用页面吸附
+      scrollBehavior: const ScrollBehavior().copyWith(
+        scrollbars: false, // 隐藏滚动条
+      ),
+      // 减少滑动距离，提高响应性 - 使用自定义的敏感滚动物理效果
+      physics: const SensitivePageScrollPhysics(
+        parent: BouncingScrollPhysics(), // 使用弹性滚动
+      ),
       onPageChanged: (index) {
         provider.onPageChanged(index);
         // 更新封面URL

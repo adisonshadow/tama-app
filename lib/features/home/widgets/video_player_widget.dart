@@ -75,7 +75,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       // print('🔍 Tags: ${widget.video.tags}');
       // print('🔍 视频数据打印完成');
       
-      _disposeController();
+      // 安全地释放之前的播放器
+      _safeDisposeController();
       _initializeVideo();
       _hasMarkedAsPlayed = false;
     }
@@ -84,16 +85,47 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       _handleActiveStateChange();
     }
   }
+  
+  /// 安全地释放播放器控制器
+  void _safeDisposeController() {
+    try {
+      // 先暂停播放
+      if (_useVlcPlayer && _vlcController != null) {
+        try {
+          _vlcController!.pause();
+        } catch (e) {
+          print('Error pausing VLC controller: $e');
+        }
+      }
+      
+      // 等待一小段时间让OpenGL上下文稳定
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          _disposeController();
+        }
+      });
+    } catch (e) {
+      print('Error in safe dispose: $e');
+      // 如果出错，强制清理
+      _disposeController();
+    }
+  }
 
   @override
   void dispose() {
-    // 清理全屏覆盖层
+    // 先退出全屏模式
     if (_fullscreenOverlay != null) {
-      _fullscreenOverlay!.remove();
+      try {
+        _fullscreenOverlay!.remove();
+      } catch (e) {
+        print('Error removing fullscreen overlay: $e');
+      }
       _fullscreenOverlay = null;
     }
     
-    _disposeController();
+    // 安全地释放播放器
+    _safeDisposeController();
+    
     super.dispose();
   }
 
@@ -239,6 +271,16 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   /// 初始化VLC播放器
   Future<void> _initializeVlcPlayer(String videoUrl) async {
     try {
+      // 先释放之前的VLC控制器
+      if (_vlcController != null) {
+        try {
+          _vlcController!.dispose();
+        } catch (e) {
+          print('Error disposing previous VLC controller: $e');
+        }
+        _vlcController = null;
+      }
+      
       _vlcController = VlcPlayerController.network(
         videoUrl,
         hwAcc: HwAcc.full, // 启用硬件加速
@@ -248,16 +290,20 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       // 监听播放状态
       _vlcController!.addListener(() {
         if (mounted) {
-          final isPlaying = _vlcController!.value.isPlaying;
-          if (_isPlaying != isPlaying) {
-            setState(() {
-              _isPlaying = isPlaying;
-            });
-            
-            // 检查是否开始播放
-            if (!_hasMarkedAsPlayed && isPlaying) {
-              _markVideoAsPlayed();
+          try {
+            final isPlaying = _vlcController!.value.isPlaying;
+            if (_isPlaying != isPlaying) {
+              setState(() {
+                _isPlaying = isPlaying;
+              });
+              
+              // 检查是否开始播放
+              if (!_hasMarkedAsPlayed && isPlaying) {
+                _markVideoAsPlayed();
+              }
             }
+          } catch (e) {
+            print('Error in VLC listener: $e');
           }
         }
       });
@@ -269,7 +315,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         _useVlcPlayer = true;
       });
       
-      print('VLC player initialized successfully for HLS video');
+      print('VLC player initialized successfully for m3u8 video');
       
     } catch (e) {
       print('VLC player initialization error: $e');
@@ -368,14 +414,21 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   void _disposeController() {
     if (_useVlcPlayer) {
-      _vlcController?.dispose();
+      try {
+        if (_vlcController != null) {
+          _vlcController!.dispose();
+          _vlcController = null;
+        }
+      } catch (e) {
+        print('Error disposing VLC controller: $e');
+        _vlcController = null;
+      }
     } else if (_useAndroidPlayer) {
       _androidPlayerService.disposePlayer();
     } else {
       _controller?.dispose();
     }
     _controller = null;
-    _vlcController = null;
     _isInitialized = false;
     _hasError = false;
     _isPlaying = false;
@@ -401,46 +454,64 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   /// 退出全屏模式
   void _exitFullscreen() {
-    // print('🔍 退出全屏模式');
+    // print('�� 退出全屏模式');
     
-    // 移除全屏覆盖层
-    if (_fullscreenOverlay != null) {
-      _fullscreenOverlay!.remove();
+    try {
+      // 移除全屏覆盖层
+      if (_fullscreenOverlay != null) {
+        _fullscreenOverlay!.remove();
+        _fullscreenOverlay = null;
+      }
+      
+      // 强制重建UI
+      if (mounted) {
+        setState(() {
+          // 确保UI状态正确更新
+        });
+      }
+    } catch (e) {
+      print('Error exiting fullscreen: $e');
+      // 如果移除失败，强制清理
       _fullscreenOverlay = null;
+      if (mounted) {
+        setState(() {});
+      }
     }
-    
-    setState(() {
-      // 全屏状态已通过 OverlayEntry 管理
-    });
   }
 
   /// 构建全屏覆盖层
   Widget _buildFullscreenOverlay() {
     return Material(
       color: Colors.black,
-      child: Stack(
-        children: [
-          // 全屏视频播放器
-          Center(
-            child: Transform.rotate(
-              angle: 90 * 3.14159 / 180, // 90度转换为弧度
-              child: SizedBox(
-                // 确保视频完全填充屏幕，不留黑边
-                width: MediaQuery.of(context).size.height * 1.2, // 增加宽度避免黑边
-                height: MediaQuery.of(context).size.width * 1.2,  // 增加高度避免黑边
-                child: _useVlcPlayer
-                    ? _buildVlcFullscreenPlayer()
-                    : _useAndroidPlayer
-                        ? _buildAndroidFullscreenPlayer()
-                        : VideoView(
-                            controller: _controller!,
-                          ),
+      child: WillPopScope(
+        onWillPop: () async {
+          _exitFullscreen();
+          return false; // 阻止默认的返回行为
+        },
+        child: Stack(
+          children: [
+            // 全屏视频播放器 - 90度旋转
+            Center(
+              child: Transform.rotate(
+                angle: 90 * 3.14159 / 180, // 90度转换为弧度
+                child: SizedBox(
+                  // 确保视频完全填充屏幕，不留黑边
+                  width: MediaQuery.of(context).size.height * 1.2, // 增加宽度避免黑边
+                  height: MediaQuery.of(context).size.width * 1.2,  // 增加高度避免黑边
+                  child: _useVlcPlayer
+                      ? _buildVlcFullscreenPlayer()
+                      : _useAndroidPlayer
+                          ? _buildAndroidFullscreenPlayer()
+                          : VideoView(
+                              controller: _controller!,
+                            ),
+                ),
               ),
             ),
-          ),
-          // 全屏关闭按钮
-          _buildFullscreenCloseButton(),
-        ],
+            // 全屏关闭按钮
+            _buildFullscreenCloseButton(),
+          ],
+        ),
       ),
     );
   }
@@ -466,7 +537,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               color: Colors.white,
               size: 80,
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 16),
             Text(
               'Android Native Player - Fullscreen',
               style: TextStyle(
@@ -572,7 +643,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       top: 50,
       right: 20,
       child: GestureDetector(
-        onTap: _exitFullscreen,
+        onTap: () {
+          print('🔍 全屏关闭按钮被点击');
+          _exitFullscreen();
+        },
+        behavior: HitTestBehavior.opaque,
         child: Container(
           width: 50,
           height: 50,
@@ -619,6 +694,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   
   /// 构建VLC播放器的UI
   Widget _buildVlcPlayerUI() {
+    // 安全检查VLC控制器
+    if (_vlcController == null) {
+      return _buildThumbnailView();
+    }
+    
     return Stack(
       children: [
         // VLC播放器
@@ -637,6 +717,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             ),
           ),
         ),
+        // 加载指示器
+        if (!_isPlaying && _isInitialized)
+          const Center(
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 3,
+              ),
+            ),
+          ),
         // 播放/暂停按钮
         _buildPlayButton(),
         // 全屏按钮（仅横屏视频显示，放在最上层）
@@ -684,6 +776,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             ),
           ),
         ),
+        // 加载指示器
+        if (!_isPlaying && _isInitialized)
+          const Center(
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 3,
+              ),
+            ),
+          ),
         // 播放/暂停按钮
         _buildPlayButton(),
         // 全屏按钮（仅横屏视频显示，放在最上层）
@@ -715,6 +819,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             ),
           ),
         ),
+        // 加载指示器
+        if (!_isPlaying && _isInitialized)
+          const Center(
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 3,
+              ),
+            ),
+          ),
         // 播放/暂停按钮
         _buildPlayButton(),
         // 全屏按钮（仅横屏视频显示，放在最上层）

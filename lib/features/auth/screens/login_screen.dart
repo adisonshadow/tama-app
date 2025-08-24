@@ -102,17 +102,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   // 主要内容
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 22),
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 60),
+                          const SizedBox(height: 26),
                           
                           // Logo
                           const Image(
                             image: AssetImage('assets/images/logo.png'),
-                            width: 80,
-                            height: 80,
+                            width: 68,
+                            height: 68,
                           ),
                           
                           const SizedBox(height: 20),
@@ -123,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return Text(
                                 FlutterI18n.translate(context, 'auth.login.title'),
                                 style: const TextStyle(
-                                  fontSize: 32,
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
@@ -131,22 +131,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           
-                          const SizedBox(height: 8),
+                          // const SizedBox(height: 8),
+                          //
+                          // // 副标题
+                          // Consumer<LanguageProvider>(
+                          //   builder: (context, languageProvider, _) {
+                          //     return Text(
+                          //       FlutterI18n.translate(context, 'auth.login.subtitle'),
+                          //       style: const TextStyle(
+                          //         fontSize: 16,
+                          //         color: Colors.grey,
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
                           
-                          // 副标题
-                          Consumer<LanguageProvider>(
-                            builder: (context, languageProvider, _) {
-                              return Text(
-                                FlutterI18n.translate(context, 'auth.login.subtitle'),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            },
-                          ),
-                          
-                          const SizedBox(height: 80),
+                          const SizedBox(height: 40),
                           
                           // 登录表单
                           Consumer<LanguageProvider>(

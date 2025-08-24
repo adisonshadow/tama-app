@@ -16,9 +16,9 @@ class MessageService {
       // 第一页：系统消息
       messages.add(MessageModel(
         id: 'system_001',
-        nickname: '系统',
+        nickname: 'TAMA',
         avatar: null,
-        message: '欢迎加入我们，一起分享快乐🎉',
+        message: 'Welcome to TAMA🎉, let us share the fun together!',
         timestamp: DateTime.now().subtract(const Duration(hours: 2)),
         isRead: false,
       ));

@@ -1,10 +1,12 @@
 // 视频播放组件
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart'; // 添加剪贴板支持
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:ui';
+// import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:ui'; // 添加ImageFilter支持
 
 // import '../../../core/constants/app_constants.dart';
 import '../models/video_model.dart';
@@ -126,6 +128,8 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
+                        overflow: TextOverflow.ellipsis, // 溢出时隐藏
+                        maxLines: 2, // 限制为两行
                       ),
                       const SizedBox(height: 16),
                       // 标签
@@ -158,6 +162,8 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
+                                overflow: TextOverflow.ellipsis, // 溢出时隐藏
+                                maxLines: 1, // 限制为单行
                               ),
                             ),
                           )).toList(),
@@ -181,6 +187,8 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
                             fontSize: 16,
                             color: Colors.white.withValues(alpha: 0.9),
                           ),
+                          overflow: TextOverflow.ellipsis, // 溢出时隐藏
+                          maxLines: 3, // 限制为三行
                         ),
                       ],
                     ],
@@ -251,12 +259,16 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
                         // 第一行：作者名和时间
                         Row(
                           children: [
-                            Text(
-                              '@${widget.video.nickname ?? FlutterI18n.translate(context, 'common.unknown_user')}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                            Flexible(
+                              child: Text(
+                                '@${widget.video.nickname ?? FlutterI18n.translate(context, 'common.unknown_user')}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                overflow: TextOverflow.ellipsis, // 溢出时隐藏
+                                maxLines: 1, // 限制为单行
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -325,10 +337,33 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
                   setState(() {});
                 }
               },
-              onShare: () {
-                // TODO: 实现分享功能
-                if (kIsWeb) {
-                  // debugPrint('🔍 分享按钮被点击');
+              onShare: () async {
+                final String videoUrl = 'https://www.tamalook.com/detail/${widget.video.id}';
+                try {
+                  await Clipboard.setData(ClipboardData(text: videoUrl));
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(FlutterI18n.translate(context, 'home.video.share.success')),
+                        backgroundColor: Colors.green,
+                        duration: const Duration(seconds: 2),
+                        behavior: SnackBarBehavior.floating,
+                        margin: const EdgeInsets.all(16),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(FlutterI18n.translate(context, 'home.video.share.failed')),
+                        backgroundColor: Colors.red,
+                        duration: const Duration(seconds: 2),
+                        behavior: SnackBarBehavior.floating,
+                        margin: const EdgeInsets.all(16),
+                      ),
+                    );
+                  }
                 }
               },
               onComment: () {

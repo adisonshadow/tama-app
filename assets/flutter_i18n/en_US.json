@@ -44,7 +44,7 @@
       "following": "Following",
       "create": "Create",
       "message": "Message",
-      "profile": "Profile"
+      "profile": "My"
     },
     "video": {
       "recommend": "Recommend",
@@ -72,12 +72,40 @@
         "bookmark": "Bookmark",
         "report": "Report",
         "search": "Search videos"
+      },
+      "share": {
+        "success": "Share link copied to clipboard",
+        "failed": "Failed to copy share link",
+        "url_copied": "Video link copied"
       }
     },
     "player": {
       "fullscreen": "Fullscreen",
       "video_unavailable": "Video temporarily unavailable",
       "description": "Description",
+      "time": {
+        "just_now": "Just now",
+        "minutes_ago": "{minutes} minutes ago",
+        "hours_ago": "{hours} hours ago",
+        "days_ago": "{days} days ago"
+      }
+    },
+    "comments": {
+      "title": "Comments",
+      "count": "{count} comments",
+      "input_hint": "Say something...",
+      "send": "Send",
+      "sending": "Sending...",
+      "send_success": "Comment posted successfully!",
+      "send_failed": "Failed to post comment",
+      "rate_limit": "Comment too frequently, please try again later",
+      "rate_limit_minutes": "Comment too frequently, please try again in {minutes} minutes {seconds} seconds",
+      "rate_limit_seconds": "Comment too frequently, please try again in {seconds} seconds",
+      "no_comments": "No comments yet, be the first to comment!",
+      "load_failed": "Failed to load comments",
+      "retry": "Retry",
+      "emoji": "Emoji",
+      "keyboard": "Keyboard",
       "time": {
         "just_now": "Just now",
         "minutes_ago": "{minutes} minutes ago",
