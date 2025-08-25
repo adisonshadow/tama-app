@@ -9,6 +9,7 @@ import '../providers/video_provider.dart';
 import '../widgets/video_feed_widget.dart';
 import '../../../shared/widgets/search_manager.dart';
 import '../../../shared/providers/language_provider.dart';
+import '../../../shared/services/version_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,12 +28,10 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   @override
   void initState() {
     super.initState();
-    // print('🔍 HomeScreen - initState 开始');
-    // print('🔍 HomeScreen - _currentVideoCoverUrl 初始值: $_currentVideoCoverUrl');
     
+    // 初始化时加载随机推荐文章
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // print('🔍 HomeScreen - addPostFrameCallback 执行');
-      context.read<VideoProvider>().loadRandomRecommendedVideos(refresh: true);
+      context.read<VideoProvider>().loadRandomArticles(refresh: true);
     });
   }
 
@@ -82,6 +81,26 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     setState(() {
       _currentVideoCoverUrl = coverUrl;
     });
+  }
+
+  /// 检查版本更新
+  Future<void> _checkVersionUpdate() async {
+    try {
+      // 延迟检查，等待页面完全加载
+      await Future.delayed(const Duration(seconds: 1));
+      
+      if (mounted) {
+        // 使用 try-catch 包装版本检查调用
+        try {
+          await VersionManager().checkVersionOnStartup(context);
+        } catch (e) {
+          print('启动时版本检查失败: $e');
+          // 启动时版本检查失败不影响应用正常使用
+        }
+      }
+    } catch (e) {
+      print('版本检查延迟失败: $e');
+    }
   }
 
   @override
@@ -228,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                           image: NetworkImage(_currentVideoCoverUrl!),
                           fit: BoxFit.cover,
                           colorFilter: ColorFilter.mode(
-                            Colors.black.withValues(alpha: 0.26), // 添加半透明黑色遮罩
+                            Colors.black.withValues(alpha: 0.27), // 添加半透明黑色遮罩
                             BlendMode.dstATop,
                           ),
                         ),
@@ -276,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
-                          videoProvider.loadRandomRecommendedVideos(refresh: true);
+                          videoProvider.loadRandomArticles(refresh: true);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,

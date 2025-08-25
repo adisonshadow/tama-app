@@ -16,6 +16,8 @@ import 'video_player_widget.dart';
 import 'video_action_buttons.dart';
 import 'comment_sheet.dart';
 
+import '../../../core/constants/app_constants.dart';
+
 class VideoPlaybackComponent extends StatefulWidget {
   final VideoModel video;
   final bool isActive;
@@ -338,7 +340,7 @@ class _VideoPlaybackComponentState extends State<VideoPlaybackComponent> {
                 }
               },
               onShare: () async {
-                final String videoUrl = 'https://www.tamalook.com/detail/${widget.video.id}';
+                final String videoUrl = '${AppConstants.baseUrl}/detail/${widget.video.id}';
                 try {
                   await Clipboard.setData(ClipboardData(text: videoUrl));
                   if (mounted) {

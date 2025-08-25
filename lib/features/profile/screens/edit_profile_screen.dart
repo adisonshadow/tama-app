@@ -11,10 +11,12 @@ import '../../../core/constants/app_constants.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserModel user;
+  final ProfileProvider profileProvider;
 
   const EditProfileScreen({
     super.key,
     required this.user,
+    required this.profileProvider,
   });
 
   @override
@@ -54,55 +56,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProfileProvider(),
-      child: Consumer<ProfileProvider>(
-        builder: (context, profileProvider, child) {
-          return Scaffold(
-            backgroundColor: Colors.black,
-            appBar: AppBar(
-              backgroundColor: Colors.black,
-              foregroundColor: Colors.white,
-              title: Text(FlutterI18n.translate(context, 'profile.edit_profile.title')),
-              actions: [
-                TextButton(
-                  onPressed: _isLoading ? null : () => _saveProfile(profileProvider),
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : Text(
-                          FlutterI18n.translate(context, 'profile.edit_profile.save'),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                ),
-              ],
-            ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildAvatarSection(profileProvider),
-                  const SizedBox(height: 30),
-                  _buildCoverSection(profileProvider),
-                  const SizedBox(height: 30),
-                  _buildNicknameSection(),
-                  const SizedBox(height: 20),
-                  _buildBioSection(),
-                ],
-              ),
-            ),
-          );
-        },
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        title: Text(FlutterI18n.translate(context, 'profile.edit_profile.title')),
+        actions: [
+          TextButton(
+            onPressed: _isLoading ? null : () => _saveProfile(widget.profileProvider),
+            child: _isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Text(
+                    FlutterI18n.translate(context, 'profile.edit_profile.save'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildAvatarSection(widget.profileProvider),
+            const SizedBox(height: 30),
+            _buildCoverSection(widget.profileProvider),
+            const SizedBox(height: 20),
+            _buildNicknameSection(),
+            const SizedBox(height: 20),
+            _buildBioSection(),
+          ],
+        ),
       ),
     );
   }
@@ -140,17 +135,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
               ),
-              if (_selectedAvatarFile != null)
-                TextButton(
-                  onPressed: _isLoading ? null : () => _cropImage('avatar'),
-                  child: Text(
-                    FlutterI18n.translate(context, 'profile.edit_profile.crop_avatar'),
-                    style: const TextStyle(
-                      color: Colors.orange,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
             ],
           ),
         ],
@@ -203,17 +187,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                   ),
-                  if (_selectedCoverFile != null)
-                    TextButton(
-                      onPressed: _isLoading ? null : () => _cropImage('cover'),
-                      child: Text(
-                        FlutterI18n.translate(context, 'profile.edit_profile.crop_cover'),
-                        style: const TextStyle(
-                          color: Colors.orange,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ],
@@ -434,17 +407,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           // debugPrint('🔍 选择了${type == 'avatar' ? '头像' : '封面'}图片: ${imageFile.path}');
         }
         
-        // 选择图片成功后，显示提示
+        // 选择图片成功后，自动打开裁剪功能
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.image_selected', translationParams: {
-                'type': type == 'avatar' ? FlutterI18n.translate(context, 'profile.edit_profile.avatar') : FlutterI18n.translate(context, 'profile.edit_profile.cover')
-              })),
-              backgroundColor: Colors.blue,
-              duration: const Duration(seconds: 3),
-            ),
-          );
+          // 延迟一下，确保setState完成后再打开裁剪
+          Future.delayed(const Duration(milliseconds: 100), () async {
+            if (mounted) {
+              // 直接调用ProfileProvider的裁剪方法
+              final imageFile = type == 'avatar' ? _selectedAvatarFile : _selectedCoverFile;
+              if (imageFile != null) {
+                final croppedFile = await widget.profileProvider.cropImage(
+                  imageFile,
+                  cropType: type,
+                  context: context,
+                );
+                
+                if (croppedFile != null) {
+                  // 更新裁剪后的图片
+                  setState(() {
+                    if (type == 'avatar') {
+                      _selectedAvatarFile = croppedFile;
+                      _tempAvatarUrl = null;
+                    } else {
+                      _selectedCoverFile = croppedFile;
+                      _tempCoverUrl = null;
+                    }
+                  });
+                  
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${type == 'avatar' ? '头像' : '封面'}裁剪成功'),
+                        backgroundColor: Colors.green,
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                }
+              }
+            }
+          });
         }
       } else {
         // 用户取消选择
@@ -477,161 +478,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   /// 处理 Web 平台选择的图片文件 - 暂时移除
   // void _handleWebImageFile(html.File htmlFile, String type) { ... }
 
-  /// 裁剪图片
-  Future<void> _cropImage(String type) async {
-    try {
-      if (kIsWeb) {
-        // Web 平台使用 image_cropper
-        debugPrint('🔍 Web平台：使用image_cropper进行裁剪');
-        
-        // 检查是否有选择的图片
-        final hasImage = type == 'avatar' 
-            ? (_selectedAvatarFile != null || _tempAvatarUrl != null)
-            : (_selectedCoverFile != null || _tempCoverUrl != null);
-        
-        if (!hasImage) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('请先选择${type == 'avatar' ? '头像' : '封面'}图片'),
-                backgroundColor: Colors.orange,
-                action: SnackBarAction(
-                  label: '选择图片',
-                  textColor: Colors.white,
-                  onPressed: () {
-                    final profileProvider = context.read<ProfileProvider>();
-                    _pickImage(type, profileProvider);
-                  },
-                ),
-              ),
-            );
-          }
-          return;
-        }
-        
-        // Web 平台暂时显示提示，因为 image_cropper 在 Web 上需要特殊处理
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.web_crop_developing', translationParams: {
-                'type': type == 'avatar' ? FlutterI18n.translate(context, 'profile.edit_profile.avatar') : FlutterI18n.translate(context, 'profile.edit_profile.cover')
-              })),
-              backgroundColor: Colors.orange,
-              duration: const Duration(seconds: 3),
-            ),
-          );
-        }
-        return;
-      }
-
-      final imageFile = type == 'avatar' ? _selectedAvatarFile : _selectedCoverFile;
-      
-      if (imageFile == null) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.please_select_image_first', translationParams: {
-                'type': type == 'avatar' ? FlutterI18n.translate(context, 'profile.edit_profile.avatar') : FlutterI18n.translate(context, 'profile.edit_profile.cover')
-              })),
-              backgroundColor: Colors.orange,
-              action: SnackBarAction(
-                label: FlutterI18n.translate(context, 'profile.edit_profile.select_image'),
-                textColor: Colors.white,
-                onPressed: () {
-                  final profileProvider = context.read<ProfileProvider>();
-                  _pickImage(type, profileProvider);
-                },
-              ),
-            ),
-          );
-        }
-        return;
-      }
-
-      // 获取 ProfileProvider 实例
-      final profileProvider = context.read<ProfileProvider>();
-      
-      // 显示裁剪中提示
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(FlutterI18n.translate(context, 'profile.edit_profile.opening_crop_interface')),
-            backgroundColor: Colors.blue,
-            duration: const Duration(seconds: 1),
-          ),
-        );
-      }
-      
-      // 使用新的裁剪功能
-      final croppedFile = await profileProvider.cropImage(
-        imageFile, 
-        cropType: type,
-        context: context,
-      );
-
-      if (croppedFile != null) {
-        if (kIsWeb) {
-          // debugPrint('🔍 图片裁剪成功，准备上传');
-        }
-        
-        // 更新选择的文件为裁剪后的文件
-        setState(() {
-          if (type == 'avatar') {
-            _selectedAvatarFile = croppedFile;
-          } else {
-            _selectedCoverFile = croppedFile;
-          }
-        });
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.crop_success', translationParams: {
-                'type': type == 'avatar' ? FlutterI18n.translate(context, 'profile.edit_profile.avatar') : FlutterI18n.translate(context, 'profile.edit_profile.cover')
-              })),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 3),
-            ),
-          );
-        }
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(FlutterI18n.translate(context, 'profile.edit_profile.crop_failed', translationParams: {
-                'type': type == 'avatar' ? FlutterI18n.translate(context, 'profile.edit_profile.avatar') : FlutterI18n.translate(context, 'profile.edit_profile.cover')
-              })),
-              backgroundColor: Colors.red,
-              action: SnackBarAction(
-                label: FlutterI18n.translate(context, 'common.retry'),
-                textColor: Colors.white,
-                onPressed: () => _cropImage(type),
-              ),
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      if (kIsWeb) {
-        debugPrint('❌ 裁剪图片失败: $e');
-      }
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${FlutterI18n.translate(context, 'profile.edit_profile.crop_image_failed')}: $e'),
-            backgroundColor: Colors.red,
-            action: SnackBarAction(
-              label: FlutterI18n.translate(context, 'common.retry'),
-              textColor: Colors.white,
-              onPressed: () => _cropImage(type),
-            ),
-          ),
-        );
-      }
-    }
-  }
-
+  /// 更新用户信息
   Future<void> _saveProfile(ProfileProvider profileProvider) async {
     if (_nicknameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -6,27 +6,30 @@ import '../../../shared/services/storage_service.dart';
 class VideoProvider extends ChangeNotifier {
   List<VideoModel> _videos = [];
   bool _isLoading = false;
-  bool _hasMore = true;
+  bool _hasMore = true; // 始终为true，因为每次都是随机推荐
   String? _error;
-  int _currentPage = 1;
 
   List<VideoModel> get videos => _videos;
   bool get isLoading => _isLoading;
   bool get hasMore => _hasMore;
   String? get error => _error;
 
-  Future<void> loadRandomRecommendedVideos({bool refresh = false}) async {
+  /// 加载随机推荐文章
+  /// 使用 GET /api/articles/random 接口
+  /// 服务端会自动排除用户已看过的视频
+  /// 每次调用都是随机推荐，无需分页
+  Future<void> loadRandomArticles({bool refresh = false}) async {
     if (_isLoading) return;
 
     try {
       if (refresh) {
-        _currentPage = 1;
-        _hasMore = true;
         _videos.clear();
       }
 
       _setLoading(true);
       _clearError();
+
+      print('🔍 VideoProvider - 加载随机推荐文章，刷新: $refresh');
 
       final response = await VideoService.getRandomVideos(
         pageSize: 20,
@@ -34,7 +37,7 @@ class VideoProvider extends ChangeNotifier {
 
       // 添加调试信息
       if (kIsWeb) {
-        // debugPrint('🔍 Random Videos API Response: $response');
+        // debugPrint('🔍 Random Articles API Response: $response');
       }
 
       if (response['status'] == 'SUCCESS') {
@@ -42,11 +45,13 @@ class VideoProvider extends ChangeNotifier {
         
         // 添加调试信息
         if (kIsWeb) {
-          debugPrint('🔍 Video Data Count: ${videoData.length}');
+          debugPrint('🔍 Random Articles Count: ${videoData.length}');
           if (videoData.isNotEmpty) {
-            // debugPrint('🔍 First Video Data: ${videoData.first}');
+            // debugPrint('🔍 First Article Data: ${videoData.first}');
           }
         }
+        
+        print('🔍 VideoProvider - API返回视频数量: ${videoData.length}');
         
         try {
           final List<VideoModel> newVideos = videoData
@@ -55,27 +60,32 @@ class VideoProvider extends ChangeNotifier {
 
           if (refresh) {
             _videos = newVideos;
+            print('🔍 VideoProvider - 刷新模式，设置视频列表，数量: ${_videos.length}');
           } else {
             _videos.addAll(newVideos);
+            print('🔍 VideoProvider - 追加模式，添加视频数量: ${newVideos.length}，总数量: ${_videos.length}');
           }
-
-          _currentPage++;
-          _hasMore = newVideos.length >= 20;
+          
+          // random接口每次都是随机推荐，始终有更多数据
+          _hasMore = true;
+          
+          print('🔍 VideoProvider - 随机推荐模式，始终有更多数据: $_hasMore');
+          
         } catch (parseError) {
           if (kIsWeb) {
             debugPrint('❌ VideoModel.fromJsonSafe failed: $parseError');
             if (videoData.isNotEmpty) {
-              debugPrint('❌ First video data that caused error: ${videoData.first}');
+              debugPrint('❌ First article data that caused error: ${videoData.first}');
             }
           }
-          _setError('视频数据解析失败：$parseError');
+          _setError('文章数据解析失败：$parseError');
         }
       } else {
         _setError(response['message'] ?? '加载失败');
       }
     } catch (e) {
       if (kIsWeb) {
-        debugPrint('❌ Load random videos API call failed: $e');
+        debugPrint('❌ Load random articles API call failed: $e');
       }
       _setError('网络错误：$e');
     } finally {
@@ -83,13 +93,14 @@ class VideoProvider extends ChangeNotifier {
     }
   }
 
+  /// 加载推荐视频
+  /// 使用 GET /api/articles/recommended2 接口
+  /// 注意: 服务端会自动检查用户是否已经看过视频并排除已看过的视频
   Future<void> loadRecommendedVideos({bool refresh = false}) async {
     if (_isLoading) return;
 
     try {
       if (refresh) {
-        _currentPage = 1;
-        _hasMore = true;
         _videos.clear();
       }
 
@@ -97,7 +108,7 @@ class VideoProvider extends ChangeNotifier {
       _clearError();
 
       final response = await VideoService.getRecommendedVideos(
-        page: _currentPage,
+        page: 1, // 推荐视频接口支持分页，但这里简化处理
         pageSize: 20,
       );
 
@@ -113,7 +124,7 @@ class VideoProvider extends ChangeNotifier {
           _videos.addAll(newVideos);
         }
 
-        _currentPage++;
+        // 推荐视频接口支持分页，但这里简化处理
         _hasMore = newVideos.length >= 20;
       } else {
         _setError(response['message'] ?? '加载失败');
@@ -126,12 +137,20 @@ class VideoProvider extends ChangeNotifier {
   }
 
   Future<void> refreshVideos() async {
-    await loadRandomRecommendedVideos(refresh: true);
+    await loadRandomArticles(refresh: true);
   }
 
+  /// 手动加载更多视频
+  /// 用于在用户播放到倒数第二条视频时自动触发
+  /// 注意: random接口每次都是随机推荐，服务端自动排除已看过的视频
   Future<void> loadMoreVideos() async {
-    if (!_hasMore || _isLoading) return;
-    await loadRandomRecommendedVideos(refresh: false);
+    if (!_hasMore || _isLoading) {
+      print('🔍 VideoProvider - 无法加载更多视频，hasMore: $_hasMore, isLoading: $_isLoading');
+      return;
+    }
+    
+    print('🔍 VideoProvider - 手动加载更多视频');
+    await loadRandomArticles(refresh: false);
   }
 
   /// 标记视频为已播放

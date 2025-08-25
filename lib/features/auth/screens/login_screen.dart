@@ -8,6 +8,7 @@ import '../providers/auth_provider.dart';
 import '../../../shared/utils/error_utils.dart';
 import '../../../shared/widgets/language_selector.dart';
 import '../../../shared/providers/language_provider.dart';
+import '../../../shared/services/storage_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,10 +26,26 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    _loadSavedEmail();
     // 在调试模式下自动填充测试账号
-    if (!const bool.fromEnvironment('dart.vm.product')) {
-      _emailController.text = 'yoyo@love.com';
-      _passwordController.text = '123456';
+    // if (!const bool.fromEnvironment('dart.vm.product')) {
+    //   _emailController.text = 'yoyo@love.com';
+    //   _passwordController.text = '123456';
+    // }
+  }
+  
+  /// 加载保存的用户邮箱
+  Future<void> _loadSavedEmail() async {
+    try {
+      final savedEmail = await StorageService.getUserEmail();
+      if (savedEmail != null && savedEmail.isNotEmpty) {
+        setState(() {
+          _emailController.text = savedEmail;
+        });
+      }
+    } catch (e) {
+      // 忽略错误，不影响正常登录流程
+      debugPrint('加载保存的邮箱失败: $e');
     }
   }
 
@@ -51,6 +68,15 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (success && mounted) {
+      // 登录成功后保存用户邮箱
+      try {
+        await StorageService.saveUserEmail(_emailController.text.trim());
+        debugPrint('用户邮箱已保存: ${_emailController.text.trim()}');
+      } catch (e) {
+        // 忽略保存邮箱失败的错误，不影响登录流程
+        debugPrint('保存用户邮箱失败: $e');
+      }
+      
       context.go('/home');
     } else if (mounted) {
       ErrorUtils.showError(

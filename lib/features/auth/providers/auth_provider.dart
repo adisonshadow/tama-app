@@ -155,11 +155,18 @@ class AuthProvider extends ChangeNotifier {
         // API调用失败不影响本地登出
       }
     } finally {
-      // 无论API调用是否成功都清除本地数据
+      // 无论API调用是否成功都清除本地数据，但保留用户邮箱
       try {
         _user = null;
-        await StorageService.clearAll();
-        print('Local data cleared successfully');
+        
+        // 分别清除需要清除的数据，而不是清除所有数据
+        await StorageService.clearToken();
+        await StorageService.clearVideoToken();
+        await StorageService.clearUser();
+        await StorageService.clearPlayedVideoIds();
+        
+        // 用户邮箱会自动保留，因为我们没有调用clearAll()
+        print('Local data cleared successfully, email preserved');
       } catch (e) {
         print('Error clearing local data: $e');
         // 即使清除本地数据失败，也要清除内存中的用户状态

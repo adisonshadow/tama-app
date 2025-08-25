@@ -36,7 +36,7 @@ dependencies:
   
   # 图片选择和裁剪
   image_picker: ^1.1.2
-  image_cropper: ^9.1.0
+  crop_your_image: ^2.0.0
   
   # 本地存储
   shared_preferences: ^2.2.2
@@ -50,6 +50,11 @@ dependencies:
   # 工具类
   json_annotation: ^4.8.1
   intl: ^0.20.2
+  
+  # 版本检查和下载
+  package_info_plus: ^8.0.2
+  url_launcher: ^6.2.4
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:

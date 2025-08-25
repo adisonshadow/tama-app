@@ -74,10 +74,36 @@
         "search": "搜尋影片"
       },
       "share": {
-        "success": "分享連結已複製到剪貼簿",
+        "success": "分享連結已複製到剪貼簿 🎉",
         "failed": "複製分享連結失敗",
         "url_copied": "影片連結已複製"
       }
+    },
+    "version": {
+      "update": {
+        "title": "版本更新",
+        "current_version": "當前版本",
+        "latest_version": "最新版本",
+        "changelog": "更新日誌",
+        "force_update_tip": "此版本為強制更新，請立即升級以繼續使用",
+        "recommended_update_tip": "發現新版本，建議您升級以獲得更好的體驗",
+        "download": "下載更新",
+        "downloading": "正在下載...",
+        "checking": "檢查中...",
+        "download_started": "下載已開始",
+        "download_failed": "下載失敗",
+        "download_error": "下載出錯",
+        "no_update": "當前已是最新版本",
+        "check_failed": "版本檢查失敗"
+      },
+      "manager": {
+        "checking": "檢查中...",
+        "up_to_date": "當前已是最新版本",
+        "version_check_failed": "版本檢查失敗"
+      }
+    },
+    "common": {
+      "cancel": "取消"
     },
     "player": {
       "fullscreen": "全螢幕",
@@ -157,7 +183,10 @@
       "opening_crop_interface": "正在打開裁剪界面...",
       "crop_success": "{type}裁剪成功！點擊「儲存」按鈕上傳",
       "crop_failed": "{type}裁剪失敗，請重試",
-      "crop_image_failed": "裁剪圖片失敗"
+      "crop_image_failed": "裁剪圖片失敗",
+      "crop_title": "裁剪{type}",
+      "crop_complete": "完成",
+      "web_platform_crop_developing": "Web平台圖片裁剪功能開發中"
     },
     "fans": {
       "title": "粉絲",

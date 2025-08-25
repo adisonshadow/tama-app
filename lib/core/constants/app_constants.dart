@@ -1,6 +1,6 @@
 class AppConstants {
   // API配置
-  static const String baseUrl = 'https://www.tamalook.com'; // https://www.**.com  localhost:5200
+  static const String baseUrl = 'http://192.168.110.77:5200';
   static const String apiPrefix = '/api';
   
   // 存储键名
@@ -8,6 +8,7 @@ class AppConstants {
   static const String userKey = 'user_info';
   static const String playedVideoIdsKey = 'played_video_ids';
   static const String videoTokenKey = 'video_token';
+  static const String userEmailKey = 'user_email';
   
   // 网络请求配置
   static const int connectTimeout = 15000;

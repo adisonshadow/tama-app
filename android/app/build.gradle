@@ -51,7 +51,12 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            minifyEnabled true  // 启用代码压缩
+            shrinkResources true  // 启用资源压缩
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro' // 启用混淆规则
+        }
+        debug {
+            signingConfig signingConfigs.debug  // 启用签名配置
         }
     }
 }

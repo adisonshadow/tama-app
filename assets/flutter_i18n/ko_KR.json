@@ -79,6 +79,32 @@
         "url_copied": "동영상 링크가 복사되었습니다"
       }
     },
+    "version": {
+      "update": {
+        "title": "버전 업데이트",
+        "current_version": "현재 버전",
+        "latest_version": "최신 버전",
+        "changelog": "업데이트 내역",
+        "force_update_tip": "이것은 강제 업데이트입니다. 앱 사용을 계속하려면 즉시 업그레이드하세요",
+        "recommended_update_tip": "새로운 버전을 사용할 수 있습니다. 더 나은 경험을 위해 업그레이드하는 것을 권장합니다",
+        "download": "업데이트 다운로드",
+        "downloading": "다운로드 중...",
+        "checking": "확인 중...",
+        "download_started": "다운로드가 시작되었습니다",
+        "download_failed": "다운로드에 실패했습니다",
+        "download_error": "다운로드 오류",
+        "no_update": "이미 최신 버전을 사용하고 있습니다",
+        "check_failed": "버전 확인에 실패했습니다"
+      },
+      "manager": {
+        "checking": "확인 중...",
+        "up_to_date": "이미 최신 버전을 사용하고 있습니다",
+        "version_check_failed": "버전 확인에 실패했습니다"
+      }
+    },
+    "common": {
+      "cancel": "취소"
+    },
     "player": {
       "fullscreen": "전체화면",
       "video_unavailable": "동영상을 일시적으로 사용할 수 없습니다",
@@ -157,7 +183,10 @@
       "opening_crop_interface": "자르기 화면을 여는 중...",
       "crop_success": "{type} 자르기가 완료되었습니다! '저장' 버튼을 클릭하여 업로드하세요",
       "crop_failed": "{type} 자르기에 실패했습니다. 다시 시도해주세요",
-      "crop_image_failed": "이미지 자르기에 실패했습니다"
+      "crop_image_failed": "이미지 자르기에 실패했습니다",
+      "crop_title": "{type} 자르기",
+      "crop_complete": "완료",
+      "web_platform_crop_developing": "웹 플랫폼 이미지 자르기 기능은 개발 중입니다"
     },
     "fans": {
       "title": "팬",

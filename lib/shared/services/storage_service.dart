@@ -60,6 +60,19 @@ class StorageService {
     await _prefs.remove(AppConstants.userKey);
   }
   
+  // 用户邮箱操作
+  static Future<void> saveUserEmail(String email) async {
+    await _prefs.setString(AppConstants.userEmailKey, email);
+  }
+  
+  static Future<String?> getUserEmail() async {
+    return _prefs.getString(AppConstants.userEmailKey);
+  }
+  
+  static Future<void> clearUserEmail() async {
+    await _prefs.remove(AppConstants.userEmailKey);
+  }
+  
   // 播放过的视频ID操作
   static Future<void> addPlayedVideoId(String videoId) async {
     final playedIds = await getPlayedVideoIds();

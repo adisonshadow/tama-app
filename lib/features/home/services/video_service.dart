@@ -3,8 +3,11 @@ import '../../../core/network/dio_client.dart';
 import '../../../shared/services/network_service.dart';
 
 class VideoService {
+  /// 获取随机推荐文章
+  /// 接口: GET /api/articles/random
+  /// 注意: 服务端会自动检查用户是否已经看过视频并排除已看过的视频
+  /// 每次调用都是随机推荐，无需传递页码参数
   static Future<Map<String, dynamic>> getRandomVideos({
-    int page = 1,
     int pageSize = 20,
     BuildContext? context,
   }) async {
@@ -29,13 +32,17 @@ class VideoService {
     } catch (e) {
       return {
         'status': 'ERROR',
-        'message': '获取随机视频失败: $e',
+        'message': '获取随机推荐文章失败: $e',
         'data': null,
         'statusCode': 0,
       };
     }
   }
 
+  /// 获取推荐视频
+  /// 接口: GET /api/articles/recommended2
+  /// 注意: 服务端会自动检查用户是否已经看过视频并排除已看过的视频
+  /// 无需传递excludeIds参数
   static Future<Map<String, dynamic>> getRecommendedVideos({
     int page = 1,
     int pageSize = 20,
@@ -70,6 +77,10 @@ class VideoService {
     }
   }
 
+  /// 获取热门视频
+  /// 接口: GET /api/articles/hot
+  /// 注意: 服务端会自动检查用户是否已经看过视频并排除已看过的视频
+  /// 无需传递excludeIds参数
   static Future<Map<String, dynamic>> getHotVideos({
     int page = 1,
     int pageSize = 20,
@@ -104,6 +115,10 @@ class VideoService {
     }
   }
 
+  /// 获取短视频
+  /// 接口: GET /api/articles/short
+  /// 注意: 服务端会自动检查用户是否已经看过视频并排除已看过的视频
+  /// 无需传递excludeIds参数
   static Future<Map<String, dynamic>> getShortVideos({
     int page = 1,
     int pageSize = 20,
@@ -138,6 +153,8 @@ class VideoService {
     }
   }
 
+  /// 获取视频详情
+  /// 接口: GET /api/articles/{videoId}
   static Future<Map<String, dynamic>> getVideoDetail(
     String videoId, {
     BuildContext? context,

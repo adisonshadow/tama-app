@@ -13,7 +13,6 @@ import 'features/home/providers/video_provider.dart';
 import 'features/following/providers/following_provider.dart';
 import 'shared/providers/follow_provider.dart';
 import 'shared/providers/language_provider.dart';
-import 'features/video_player/providers/video_player_provider.dart';
 import 'shared/services/storage_service.dart';
 import 'shared/services/video_token_manager.dart';
 import 'shared/services/screen_orientation_service.dart';
@@ -38,6 +37,9 @@ void main() async {
   // 尝试获取视频播放token（如果用户已登录）
   _tryFetchVideoToken();
   
+  // 检查版本更新
+  _checkVersionUpdate();
+  
   // 关闭 overflow 警告（仅在开发时使用）
   // OverflowDebugUtils.disableOverflowWarning();
   
@@ -55,6 +57,19 @@ Future<void> _tryFetchVideoToken() async {
     }
   } catch (e) {
     debugPrint('Failed to fetch video token on startup: $e');
+  }
+}
+
+/// 检查版本更新
+Future<void> _checkVersionUpdate() async {
+  try {
+    // 延迟检查，等待应用完全启动
+    await Future.delayed(const Duration(seconds: 2));
+    
+    // 注意：这里不能直接调用VersionManager，因为还没有BuildContext
+    // 版本检查将在应用启动后的第一个页面中进行
+  } catch (e) {
+    debugPrint('Failed to check version update on startup: $e');
   }
 }
 

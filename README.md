@@ -1,170 +1,176 @@
 # TAMA APP Client
 
-基于Flutter开发的移动端应用，仿抖音风格的美食视频分享平台。
+A mobile application developed with Flutter, featuring a TikTok-style food video sharing platform.
 
-## 项目特性
-- 🎬 **推荐页面** - 抖音风格的视频推荐流
-- 👥 **关注功能** - 关注用户和查看关注的内容  
-- 🔐 **用户认证** - 完整的登录注册系统
-- 📱 **响应式设计** - 适配不同屏幕尺寸
-- 🚀 **性能优化** - 视频预加载和图片缓存
-- 🍄 **支持多语言** - 使用i18n
+## Features
+- 🎬 **Recommendation Page** - TikTok-style video recommendation feed
+- 👥 **Follow Functionality** - Follow users and view followed content  
+- 🔐 **User Authentication** - Complete login and registration system
+- 📱 **Responsive Design** - Adapts to different screen sizes
+- 🚀 **Performance Optimization** - Video preloading and image caching
+- 🍄 **Multi-language Support** - Using i18n
 
-## 功能说明
+## Feature Description
 
-### ✅ 推荐页面
+### ✅ Recommendation Page
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/home.png" alt="推荐截图" width="188">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/home.png" alt="Recommendation Screenshot" width="188">
 
-- 垂直滑动切换视频
-- 自动播放/暂停/全屏播放
-- 点赞、收藏、分享、评论和评论浏览
-- 作者信息展示
-- 视频详情展示
+- Vertical swipe to switch videos
+- Auto play/pause/fullscreen playback
+- Like, favorite, share, comment and comment browsing
+- Author information display
+- Video detail display
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/video%20detail.png" alt="视频详情截图" width="188">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/video%20detail.png" alt="Video Detail Screenshot" width="188">
 
-- 搜索
-- 根据tag浏览更多视频
-- 用户Space
+- Search functionality
+- Browse more videos by tags
+- User Space
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/user%20space.png" alt="用户Space截图" width="188">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/user%20space.png" alt="User Space Screenshot" width="188">
 
 
-### ✅ 关注功能
+### ✅ Follow Functionality
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/following%20videos.png" alt="关注截图" width="188">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/following%20videos.png" alt="Following Screenshot" width="188">
 
-- 查看关注的用户列表
-- 浏览关注用户的作品
-- 取消关注操作
+- View followed users list
+- Browse followed users' works
+- Unfollow operations
 
-### ✅ 用户认证
-- 邮箱注册/登录
+### ✅ User Authentication
+- Email registration/login
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/auth.png" alt="登录截图" width="188">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/auth.png" alt="Login Screenshot" width="188">
 
-- JWT Token管理
-- 自动登录
-- 安全登出
+- JWT Token management
+- Auto login
+- Secure logout
 
-### ✅ 消息
+### ✅ Messages
 
-### ⏳ 发布视频 
+### ⏳ Video Publishing 
 
-### ✅ 我
-- 个人资料展示、编辑
-- 粉丝、点赞、收藏
+### ✅ Profile
+- Personal profile display and editing
+- Followers, likes, favorites
 
-## 技术性功能
+## Technical Features
 
-- ✅ 多语言
+- ✅ Multi-language
 
-<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/i18n.png" alt="切换语言截图" width="188">
+<img src="https://raw.githubusercontent.com/adisonshadow/tama-app/main/Screenshots/i18n.png" alt="Language Switch Screenshot" width="188">
 
-- ⏳ OTA更新
+- ✅ Check for new versions and install
 
-## 技术栈
+## TODO
+- ⏳ OTA updates
+- ⏳ Android multi-device adaptation (incomplete), iOS not started yet
+- ⏳ Video vertical swipe switching not as smooth as TikTok on some low-end devices
+- ⏳ Video player interface lacks drag scrollbar, fast forward, volume adjustment
 
-- **Flutter** - UI框架
-- **Provider** - 状态管理
-- **Dio** - 网络请求
-- **Go Router** - 路由管理
-- **Video Player** - 视频播放
-- **Cached Network Image** - 图片缓存
-- **flutter i18n** - 多语言
+## Tech Stack
 
-## 项目结构
+- **Flutter** - UI framework
+- **Provider** - State management
+- **Dio** - Network requests
+- **Go Router** - Route management
+- **Video Player** - Video playback
+- **Cached Network Image** - Image caching
+- **flutter i18n** - Multi-language support
+
+## Project Structure
 
 ```
 lib/
-├── core/                 # 核心功能
-│   ├── constants/        # 常量定义
-│   ├── network/          # 网络配置
-│   └── utils/            # 工具函数
-├── features/             # 功能模块
-│   ├── auth/             # 认证模块
-│   ├── home/             # 首页模块
-│   └── following/        # 关注模块
-└── shared/               # 共享组件
-    ├── models/           # 数据模型
-    ├── services/         # 服务层
-    └── widgets/          # 通用组件
+├── core/                 # Core functionality
+│   ├── constants/        # Constant definitions
+│   ├── network/          # Network configuration
+│   └── utils/            # Utility functions
+├── features/             # Feature modules
+│   ├── auth/             # Authentication module
+│   ├── home/             # Home module
+│   └── following/        # Following module
+└── shared/               # Shared components
+    ├── models/           # Data models
+    ├── services/         # Service layer
+    └── widgets/          # Common components
 ```
 
-## 开发环境要求
+## Development Environment Requirements
 
 - Flutter SDK >= 3.13.0
 - Dart SDK >= 3.1.0
-- Android SDK (Android开发)
-- Xcode (iOS开发，可选)
+- Android SDK (for Android development)
+- Xcode (for iOS development, optional)
 
-## 快速开始
+## Quick Start
 
-### 1. 安装依赖
+### 1. Install Dependencies
 
 ```bash
 flutter pub get
 ```
 
-### 2. 生成代码
+### 2. Generate Code
 
 ```bash
 flutter packages pub run build_runner build
 ```
 
-### 3. 运行项目
+### 3. Run Project
 
 ```bash
 # Android
 flutter run
 
-# iOS (需要macOS环境)
+# iOS (requires macOS environment)
 flutter run -d ios
 
 # Chrome
 flutter run -d chrome --hot
 
-# Validate 多语言
+# Validate multi-language
 flutter pub run flutter_i18n validate
 
-# 项目语法性检测
+# Project syntax validation
 flutter analyze
 ```
 
-### 4. 编译项目
+### 4. Build Project
 ```bash
 
 # Android
 flutter build apk --release
-# gradle 配置在 android/gradle/wrapper/gradle-wrapper.properties
-# 注意 gradle 与 Java 版本的对应关系
-# 注意墙
 
-# ios
+# If only 64-bit ARM is needed (more common on modern devices)
+flutter build apk --release --target-platform android-arm64
+
+# iOS
 flutter build ios --release
 
 ```
 
 
-## API接口
+## API Interface
 
-应用连接到现有的后端API服务：
+The application connects to an existing backend API service:
 
-- **基础URL**: `http://localhost:3003/api`
-- **认证**: JWT Token
-- **主要接口**:
-  - `POST /auth/login` - 用户登录
-  - `POST /auth/register` - 用户注册
-  - `GET /articles/recommendeds` - 获取推荐视频
-  - `GET /my/getMyFollows` - 获取关注列表
+- **Base URL**: `http://localhost:3003/api` (configured in lib/core/constants/app_constants.dart)
+- **Authentication**: JWT Token
+- **Main Interfaces**:
+  - `POST /auth/login` - User login
+  - `POST /auth/register` - User registration
+  - `GET /articles/recommendeds` - Get recommended videos
+  - `GET /my/getMyFollows` - Get follow list
 
-## 注意事项
+## Notes
 
-1. 确保后端API服务正在运行
-2. 视频播放需要网络连接
-3. 首次运行可能需要较长时间下载依赖
-4. Android需要允许网络明文传输（开发环境）
+1. Ensure the backend API service is running
+2. Video playback requires network connection
+3. First run may take longer to download dependencies
+4. Android requires allowing cleartext network traffic (development environment)
 
-## 许可证
+## License
 MIT License

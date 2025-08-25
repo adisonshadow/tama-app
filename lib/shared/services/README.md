@@ -1,137 +1,131 @@
-# 关注功能使用说明
+# 版本检查服务
 
 ## 概述
-本模块提供了完整的用户关注功能，包括检查关注状态、切换关注状态等。所有功能都是可复用的，可以在多个页面中使用。
 
-## 组件结构
+版本检查服务用于在应用启动时自动检查客户端版本是否需要升级，支持强制升级和推荐升级两种模式。
 
-### 1. FollowService (关注服务)
-- **位置**: `lib/shared/services/follow_service.dart`
-- **功能**: 提供关注相关的API调用
-- **方法**:
-  - `checkFollowStatus(String targetUserId)`: 检查是否已关注用户
-  - `toggleFollow(String targetUserId)`: 切换关注状态
+## 功能特性
 
-### 2. FollowProvider (关注状态管理器)
-- **位置**: `lib/shared/providers/follow_provider.dart`
-- **功能**: 管理关注状态，提供状态管理和缓存
-- **特性**:
-  - 支持多个用户的关注状态管理
-  - 自动缓存关注状态
-  - 提供加载状态管理
-  - 支持批量检查关注状态
+- **自动版本检查**: 应用启动时自动检查版本更新
+- **智能检查频率**: 24小时内只检查一次，避免频繁请求
+- **强制升级**: 必须升级才能继续使用应用
+- **推荐升级**: 用户可以选择是否升级
+- **多语言支持**: 支持中文、英文、日文、韩文
+- **Changelog展示**: 可展开查看更新日志
+- **下载管理**: 点击下载按钮后自动跳转到下载链接
 
-### 3. FollowButton (关注按钮组件)
-- **位置**: `lib/shared/widgets/follow_button.dart`
-- **功能**: 可复用的关注按钮UI组件
-- **特性**:
-  - 自动显示关注/已关注状态
-  - 支持自定义样式（颜色、大小、字体等）
-  - 内置加载状态显示
-  - 支持状态改变回调
+## 文件结构
+
+```
+lib/shared/services/
+├── version_check_service.dart    # 版本检查核心服务
+├── version_manager.dart          # 版本管理器和启动检查
+└── ../widgets/
+    └── version_update_dialog.dart # 版本升级对话框
+```
 
 ## 使用方法
 
-### 在页面中使用
+### 1. 自动版本检查
 
-#### 1. 添加Provider
+应用启动时会自动检查版本更新，无需手动调用：
+
 ```dart
-import 'package:provider/provider.dart';
-import '../../../shared/providers/follow_provider.dart';
-
-class MyPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => FollowProvider(),
-      child: MyPageContent(),
-    );
-  }
-}
+// 在 main.dart 中已经配置
+// 在 HomeScreen 的 initState 中自动调用
+_checkVersionUpdate();
 ```
 
-#### 2. 使用FollowButton组件
-```dart
-import '../../../shared/widgets/follow_button.dart';
+### 2. 手动版本检查
 
-FollowButton(
-  userId: 'user123',
-  onFollowChanged: () {
-    print('关注状态已改变');
-  },
-)
+用户可以在Profile页面手动检查版本更新：
+
+```dart
+// 点击版本检查按钮
+VersionManager().checkVersionManually(context);
 ```
 
-#### 3. 在Provider中检查关注状态
-```dart
-Consumer<FollowProvider>(
-  builder: (context, followProvider, child) {
-    final isFollowing = followProvider.isFollowing('user123');
-    
-    return Text(isFollowing ? '已关注' : '未关注');
-  },
-)
-```
-
-### 自定义样式
+### 3. 版本检查API
 
 ```dart
-FollowButton(
-  userId: 'user123',
-  width: 80,
-  height: 36,
-  fontSize: 14,
-  borderRadius: BorderRadius.circular(18),
-  followingColor: Colors.grey,
-  unfollowingColor: Colors.blue,
-  textColor: Colors.white,
-  onFollowChanged: () {
-    // 处理关注状态改变
-  },
-)
+// 检查版本更新
+final versionInfo = await VersionCheckService().checkVersion();
+
+// 下载新版本
+final success = await VersionCheckService().downloadUpdate(downloadUrl);
 ```
 
 ## API接口
 
-### 检查关注状态
-- **端点**: `GET /api/my/isFollowed/{targetUserId}`
-- **返回**: 
+### 版本检查接口
+
+**POST** `/api/version/check`
+
+请求参数：
+```json
+{
+  "currentVersion": "1.0.0",
+  "platform": "android" // 或 "ios"
+}
+```
+
+响应数据：
 ```json
 {
   "status": "SUCCESS",
   "data": {
-    "is_following": true
+    "currentVersion": "1.0.0",
+    "latestVersion": "1.1.0",
+    "downloadUrl": "https://example.com/app.apk",
+    "changelog": "修复了一些bug，提升了性能",
+    "forceUpdate": false,
+    "hasUpdate": true
   }
 }
 ```
 
-### 切换关注状态
-- **端点**: `POST /api/my/toggleFollow/{targetUserId}`
-- **返回**:
-```json
-{
-  "status": "SUCCESS",
-  "data": {
-    "is_following": true
-  }
-}
+## 配置说明
+
+### 检查频率
+
+默认24小时检查一次，可在 `version_manager.dart` 中修改：
+
+```dart
+static const Duration _checkInterval = Duration(hours: 24);
 ```
+
+### 多语言支持
+
+支持的语言：
+- 中文 (zh_TW)
+- 英文 (en_US)  
+- 日文 (ja_JP)
+- 韩文 (ko_KR)
+
+语言文件位置：`assets/flutter_i18n/`
 
 ## 注意事项
 
-1. **Provider管理**: 确保在使用FollowButton的页面中添加了FollowProvider
-2. **状态同步**: 关注状态会在多个页面间自动同步
-3. **错误处理**: 网络错误不会影响UI显示，会保持当前状态
-4. **性能优化**: 关注状态会被缓存，避免重复请求
+1. **强制升级**: 当 `forceUpdate: true` 时，用户无法取消对话框，必须升级
+2. **网络权限**: 需要网络权限来检查版本和下载更新
+3. **平台检测**: 自动检测Android/iOS平台，调用相应的下载链接
+4. **错误处理**: 网络错误或API错误时会显示相应的错误提示
 
-## 示例页面
+## 测试
 
-- **用户空间页面**: `lib/features/user_space/screens/user_space_screen.dart`
-- **视频操作按钮**: `lib/features/home/widgets/video_action_buttons.dart`
+### 重置版本检查记录
 
-## 扩展功能
+```dart
+// 用于测试，重置版本检查记录
+await VersionManager().resetVersionCheckRecord();
+```
 
-如需添加更多功能，可以在FollowProvider中添加：
-- 批量关注/取消关注
-- 关注列表管理
-- 关注推荐等
+### 模拟版本更新
+
+修改API响应中的 `hasUpdate` 字段为 `true` 来测试版本更新流程。
+
+## 依赖包
+
+- `package_info_plus`: 获取应用版本信息
+- `url_launcher`: 打开下载链接
+- `shared_preferences`: 存储版本检查记录

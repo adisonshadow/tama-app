@@ -11,6 +11,7 @@ import '../providers/starred_provider.dart';
 import '../services/logout_service.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../features/auth/providers/auth_provider.dart';
+import '../../../shared/services/version_manager.dart';
 import 'edit_profile_screen.dart';
 import 'fans_screen.dart';
 import 'liked_screen.dart';
@@ -107,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       if (kIsWeb) {
                         // debugPrint('🔍 编辑按钮被点击');
                       }
-                      _navigateToEditProfile(context, user);
+                      _navigateToEditProfile(context, user, profileProvider);
                     },
                     borderRadius: BorderRadius.circular(20),
                     child: Container(
@@ -123,6 +124,37 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                       child: const Icon(
                         Icons.edit,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                // 版本检查按钮
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      if (kIsWeb) {
+                        // debugPrint('🔍 版本检查按钮被点击');
+                      }
+                      _checkVersionUpdate(context);
+                    },
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.system_update,
                         color: Colors.white,
                         size: 24,
                       ),
@@ -331,7 +363,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     return const StarredScreen();
   }
 
-  void _navigateToEditProfile(BuildContext context, user) {
+  void _navigateToEditProfile(BuildContext context, user, ProfileProvider profileProvider) {
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -348,9 +380,30 @@ class _ProfileScreenState extends State<ProfileScreen>
     
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => EditProfileScreen(user: user),
+        builder: (context) => EditProfileScreen(
+          user: user,
+          profileProvider: profileProvider,
+        ),
       ),
     );
+  }
+
+  /// 检查版本更新
+  void _checkVersionUpdate(BuildContext context) {
+    try {
+      VersionManager().checkVersionManually(context);
+    } catch (e) {
+      print('手动版本检查失败: $e');
+      // 显示错误提示
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Version check failed'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   void _showLogoutDialog(BuildContext context) {

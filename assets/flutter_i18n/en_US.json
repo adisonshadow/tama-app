@@ -74,10 +74,36 @@
         "search": "Search videos"
       },
       "share": {
-        "success": "Share link copied to clipboard",
+        "success": "Share link copied to clipboard 🎉",
         "failed": "Failed to copy share link",
         "url_copied": "Video link copied"
       }
+    },
+    "version": {
+      "update": {
+        "title": "Version Update",
+        "current_version": "Current Version",
+        "latest_version": "Latest Version",
+        "changelog": "Changelog",
+        "force_update_tip": "This is a forced update. Please upgrade immediately to continue using the app",
+        "recommended_update_tip": "A new version is available. We recommend upgrading for a better experience",
+        "download": "Download Update",
+        "downloading": "Downloading...",
+        "checking": "Checking...",
+        "download_started": "Download started",
+        "download_failed": "Download failed",
+        "download_error": "Download error",
+        "no_update": "You are already using the latest version",
+        "check_failed": "Version check failed"
+      },
+      "manager": {
+        "checking": "Checking...",
+        "up_to_date": "You are already using the latest version",
+        "version_check_failed": "Version check failed"
+      }
+    },
+    "common": {
+      "cancel": "Cancel"
     },
     "player": {
       "fullscreen": "Fullscreen",
@@ -157,7 +183,10 @@
       "opening_crop_interface": "Opening crop interface...",
       "crop_success": "{type} cropped successfully! Click 'Save' button to upload",
       "crop_failed": "{type} cropping failed, please retry",
-      "crop_image_failed": "Failed to crop image"
+      "crop_image_failed": "Failed to crop image",
+      "crop_title": "Crop {type}",
+      "crop_complete": "Complete",
+      "web_platform_crop_developing": "Web platform image cropping is under development"
     },
     "fans": {
       "title": "Fans",
