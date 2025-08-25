@@ -1,4 +1,6 @@
 
+google.crt
+maven.crt
 # Miscellaneous
 *.class
 *.log

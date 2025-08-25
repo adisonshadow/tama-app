@@ -1,6 +1,7 @@
 class AppConstants {
   // API配置
-  static const String baseUrl = 'http://192.168.110.77:5200';
+  static const String baseUrl = 'https://www.xx.com';
+  // static const String baseUrl = 'http://192.168.110.77:5200';
   static const String apiPrefix = '/api';
   
   // 存储键名
