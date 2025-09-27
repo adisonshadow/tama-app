@@ -4,6 +4,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 
 import '../../../shared/services/search_service.dart';
+import '../../../shared/widgets/error_widget.dart';
 import '../../home/models/video_model.dart';
 import '../../../shared/widgets/video_card.dart';
 import '../../video_player/screens/video_player_screen.dart';
@@ -221,32 +222,9 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     if (_errorMessage.isNotEmpty && _searchResults.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              _errorMessage,
-              style: TextStyle(color: Colors.red[400], fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => _performSearch(refresh: true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-              ),
-                                child: Text(FlutterI18n.translate(context, 'common.retry')),
-            ),
-          ],
-        ),
+      return AppErrorWidget(
+        errorMessage: _errorMessage,
+        onRetry: () => _performSearch(refresh: true),
       );
     }
 

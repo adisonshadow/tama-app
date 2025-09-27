@@ -12,6 +12,7 @@ import '../services/logout_service.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../features/auth/providers/auth_provider.dart';
 import '../../../shared/services/version_manager.dart';
+import '../../../shared/services/auth_state_manager.dart';
 import 'edit_profile_screen.dart';
 import 'fans_screen.dart';
 import 'liked_screen.dart';
@@ -449,107 +450,43 @@ class _ProfileScreenState extends State<ProfileScreen>
   Future<void> _performLogout(BuildContext context) async {
     try {
       if (kIsWeb) {
-        // debugPrint('🔍 开始执行登出操作');
+        debugPrint('🔍 开始执行登出操作 - 直接清除本地数据');
       }
 
-      // 显示加载指示器
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return const AlertDialog(
-            backgroundColor: Colors.transparent,
-            content: Center(
-              child: CircularProgressIndicator(
-                color: Colors.blue,
-              ),
-            ),
-          );
-        },
-      );
-
-      // 添加超时机制，防止loading一直显示
-      bool isDialogClosed = false;
-      Future.delayed(const Duration(seconds: 10), () {
-        if (!isDialogClosed && context.mounted) {
-          Navigator.of(context).pop();
-          isDialogClosed = true;
-        }
-      });
-
-      // 调用登出API
-      final response = await LogoutService.logout();
-      
-      // 检查context是否仍然有效
-      if (!context.mounted) return;
-      
-      // 关闭加载指示器
-      if (!isDialogClosed) {
-        Navigator.of(context).pop();
-        isDialogClosed = true;
-      }
-
-      if (response['status'] == 'SUCCESS') {
-        if (kIsWeb) {
-          // debugPrint('🔍 登出成功');
-        }
-        
-        // 显示成功消息
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(FlutterI18n.translate(context, 'profile.logout.success')),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
-
-        // 清除本地用户数据并跳转到登录页
-        // 调用AuthProvider的登出方法来清除本地状态
-        if (context.mounted) {
-          final authProvider = context.read<AuthProvider>();
-          await authProvider.logout();
-          
-          // 使用go_router跳转到登录页
-          if (context.mounted) {
-            // 强制跳转到登录页，清除所有路由历史
-            context.go('/auth/login');
-          }
-        }
-      } else {
-        if (kIsWeb) {
-          debugPrint('❌ 登出失败: ${response['message']}');
-        }
-        
-        // 显示错误消息
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${FlutterI18n.translate(context, 'profile.logout.failed')}: ${response['message'] ?? FlutterI18n.translate(context, 'common.error')}'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      // 检查context是否仍然有效
-      if (!context.mounted) return;
-      
-      // 关闭加载指示器
-      Navigator.of(context).pop();
+      // 直接清除本地数据，不调用任何API
+      final authProvider = context.read<AuthProvider>();
+      await authProvider.logout();
       
       if (kIsWeb) {
-        debugPrint('❌ 登出过程中发生错误: $e');
+        debugPrint('🔍 本地数据已清除，准备跳转');
       }
       
-      // 显示错误消息
+      // 等待一帧，确保状态更新完成
+      await Future.delayed(const Duration(milliseconds: 100));
+      
       if (context.mounted) {
+        // 显示成功消息
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${FlutterI18n.translate(context, 'profile.logout.failed')}: $e'),
-            backgroundColor: Colors.red,
+            content: Text(FlutterI18n.translate(context, 'profile.logout.success')),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
           ),
         );
+        
+        // 跳转到登录页
+        if (kIsWeb) {
+          debugPrint('🔍 正在跳转到登录页');
+        }
+        context.go('/auth/login');
+      }
+      
+      if (kIsWeb) {
+        debugPrint('🔍 登出完成，已跳转到登录页');
+      }
+    } catch (e) {
+      if (kIsWeb) {
+        debugPrint('❌ 登出过程中发生错误: $e');
       }
       
       // 即使出错也尝试清除本地数据并跳转
@@ -557,6 +494,9 @@ class _ProfileScreenState extends State<ProfileScreen>
         if (context.mounted) {
           final authProvider = context.read<AuthProvider>();
           await authProvider.logout();
+          
+          // 等待一帧
+          await Future.delayed(const Duration(milliseconds: 100));
           
           if (context.mounted) {
             context.go('/auth/login');

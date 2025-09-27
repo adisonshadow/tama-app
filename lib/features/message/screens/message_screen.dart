@@ -3,6 +3,7 @@ import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../shared/widgets/error_widget.dart';
 
 import '../models/message_model.dart';
 import '../services/message_service.dart';
@@ -163,35 +164,9 @@ class _MessageScreenState extends State<MessageScreen> {
     }
 
     if (_errorMessage.isNotEmpty && _messages.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.grey[600],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              _errorMessage,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => _loadMessages(refresh: true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-              ),
-              child: Text(FlutterI18n.translate(context, 'common.retry')),
-            ),
-          ],
-        ),
+      return AppErrorWidget(
+        errorMessage: _errorMessage,
+        onRetry: () => _loadMessages(refresh: true),
       );
     }
 

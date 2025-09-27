@@ -234,6 +234,9 @@
     "retry": "重試",
     "ok": "確定",
     "unknown_user": "未知用戶",
+    "auth_expired": "登入已過期",
+    "error_occurred": "發生錯誤",
+    "go_to_login": "前往登入",
     "search": {
       "title": "搜尋",
       "placeholder": "輸入關鍵詞搜尋影片...",

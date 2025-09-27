@@ -8,6 +8,7 @@ import 'dart:ui';
 import '../providers/video_provider.dart';
 import '../widgets/video_feed_widget.dart';
 import '../../../shared/widgets/search_manager.dart';
+import '../../../shared/widgets/error_widget.dart';
 import '../../../shared/providers/language_provider.dart';
 import '../../../shared/services/version_manager.dart';
 
@@ -274,41 +275,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               }
 
               if (videoProvider.error != null && videoProvider.videos.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 64,
-                        color: Colors.grey[600],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        videoProvider.error!,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          videoProvider.loadRandomArticles(refresh: true);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: Consumer<LanguageProvider>(
-                          builder: (context, languageProvider, _) {
-                            return Text(FlutterI18n.translate(context, 'common.retry'));
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                return AppErrorWidget(
+                  errorMessage: videoProvider.error!,
+                  onRetry: () {
+                    videoProvider.loadRandomArticles(refresh: true);
+                  },
                 );
               }
 

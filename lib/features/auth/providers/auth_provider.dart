@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../../../shared/models/user_model.dart';
 import '../../../shared/services/storage_service.dart';
 import '../../../shared/services/video_token_manager.dart';
+import '../../../shared/services/auth_state_manager.dart';
 import '../services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   UserModel? _user;
   bool _isLoading = false;
   String? _error;
+  StreamSubscription<bool>? _authStateSubscription;
 
   UserModel? get user => _user;
   bool get isLoading => _isLoading;
@@ -16,6 +19,7 @@ class AuthProvider extends ChangeNotifier {
 
   AuthProvider() {
     _loadUserFromStorage();
+    _listenToAuthStateChanges();
   }
 
   Future<void> _loadUserFromStorage() async {
@@ -147,31 +151,28 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> logout() async {
     try {
-      // 尝试调用API登出（可选）
-      try {
-        await AuthService.logout();
-      } catch (e) {
-        print('Logout API call failed: $e');
-        // API调用失败不影响本地登出
-      }
-    } finally {
-      // 无论API调用是否成功都清除本地数据，但保留用户邮箱
-      try {
-        _user = null;
-        
-        // 分别清除需要清除的数据，而不是清除所有数据
-        await StorageService.clearToken();
-        await StorageService.clearVideoToken();
-        await StorageService.clearUser();
-        await StorageService.clearPlayedVideoIds();
-        
-        // 用户邮箱会自动保留，因为我们没有调用clearAll()
-        print('Local data cleared successfully, email preserved');
-      } catch (e) {
-        print('Error clearing local data: $e');
-        // 即使清除本地数据失败，也要清除内存中的用户状态
-        _user = null;
-      }
+      // 直接清除本地数据，不调用任何API
+      _user = null;
+      
+      // 分别清除需要清除的数据，但保留用户邮箱
+      await StorageService.clearToken();
+      await StorageService.clearVideoToken();
+      await StorageService.clearUser();
+      await StorageService.clearPlayedVideoIds();
+      
+      // 重置认证状态
+      AuthStateManager.resetAuthState();
+      
+      // 用户邮箱会自动保留，因为我们没有调用clearAll()
+      print('Local data cleared successfully, email preserved');
+      
+      // 通知状态变化
+      notifyListeners();
+    } catch (e) {
+      print('Error clearing local data: $e');
+      // 即使清除本地数据失败，也要清除内存中的用户状态
+      _user = null;
+      AuthStateManager.resetAuthState();
       notifyListeners();
     }
   }
@@ -193,5 +194,23 @@ class AuthProvider extends ChangeNotifier {
   void _clearError() {
     _error = null;
     notifyListeners();
+  }
+
+  /// 监听认证状态变化
+  void _listenToAuthStateChanges() {
+    _authStateSubscription = AuthStateManager.authStateStream.listen((isExpired) {
+      if (isExpired && _user != null) {
+        // 认证失效，清除用户状态
+        _user = null;
+        notifyListeners();
+        print('🔐 认证失效，已清除用户状态');
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _authStateSubscription?.cancel();
+    super.dispose();
   }
 }

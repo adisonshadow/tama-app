@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 import '../../shared/services/storage_service.dart';
+import '../../shared/services/auth_state_manager.dart';
 import '../../shared/utils/error_utils.dart';
 
 class DioClient {
@@ -48,6 +49,11 @@ class DioClient {
         // 处理401错误，清除token
         if (error.response?.statusCode == 401) {
           await StorageService.clearToken();
+          await StorageService.clearUser();
+          await StorageService.clearVideoToken();
+          
+          // 设置全局认证失效标志
+          AuthStateManager.setAuthExpired(true);
         }
         
         // 记录错误类型
@@ -218,6 +224,7 @@ class DioClient {
         return '网络请求失败';
     }
   }
+
 }
 
 /// 重试拦截器

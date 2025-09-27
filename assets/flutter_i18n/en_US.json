@@ -234,6 +234,9 @@
     "retry": "Retry",
     "ok": "OK",
     "unknown_user": "Unknown User",
+    "auth_expired": "Login Expired",
+    "error_occurred": "An Error Occurred",
+    "go_to_login": "Go to Login",
     "search": {
       "title": "Search",
       "placeholder": "Enter keywords to search videos...",

@@ -239,6 +239,9 @@
     "retry": "再試行",
     "ok": "OK",
     "unknown_user": "不明なユーザー",
+    "auth_expired": "ログイン期限切れ",
+    "error_occurred": "エラーが発生しました",
+    "go_to_login": "ログインへ",
     "search": {
       "title": "検索",
       "placeholder": "キーワードを入力して動画を検索...",
